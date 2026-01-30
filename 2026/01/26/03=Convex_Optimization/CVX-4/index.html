@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
 <meta property="article:published_time" content="2026-01-26T08:32:00.000Z">
-<meta property="article:modified_time" content="2026-01-29T03:28:05.702Z">
+<meta property="article:modified_time" content="2026-01-29T15:39:01.315Z">
 <meta property="article:author" content="Tianhao Fei">
 <meta property="article:tag" content="affine">
 <meta property="article:tag" content="convex function">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          5.2k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          28 分钟
+          44 分钟
         
       </span>
     
@@ -293,21 +293,21 @@
               <div class="markdown-body">
                 
                 <blockquote>
-<p><strong>目标：读完这篇博客，应当能</strong></p>
+<p><strong>目标：本文档从零学习如何用梯度下降法求解凸优化问题。读完这篇文档，应当能</strong></p>
 </blockquote>
 <ul>
-<li>理解梯度下降法的基本原理与推导；</li>
+<li>理解梯度下降法的基本原理；</li>
 <li>学会如何用梯度下降法求解凸优化问题；</li>
-<li>理解梯度下降对步长选择的敏感性及收敛性；</li>
+<li>分析梯度下降的收敛性以及对步长选择的敏感性；</li>
 </ul>
 <hr>
 <h2 id="一问题描述">一、问题描述</h2>
-<p>本文档中，梯度下降的讨论对象是无约束、目标函数可微（光滑）的优化问题： <span class="math display">\[\begin{align}
+<p>本文档讨论的是无约束，目标函数为凸函数且可微的优化问题： <span class="math display">\[\begin{align}
 \label{eq:cvx-problem}
-\min_{x\in\mathbb{R}^n}~ f(x),
-\end{align}\]</span> 其中 <span class="math inline">\(f\)</span> 为可微凸函数。</p>
+\min_{x\in\mathbb{R}^n} f(x).
+\end{align}\]</span></p>
 <blockquote>
-<p>后续讨论前提：优化问题  有解，且最优值记为 <span class="math inline">\(f^\star\)</span>，最优解集合记为 <span class="math inline">\(\mathcal{X}^\star\)</span>。 注意优化问题  解不一定唯一，关于其存在性与唯一性的讨论可参考<a href="!--swig￼0--">凸优化学习系列 - 1. 基本概念</a>。</p>
+<p>后续讨论前提：优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span> 有解，且最优值记为 <span class="math inline">\(f^\star\)</span>，最优解集合记为 <span class="math inline">\(\mathcal{X}^\star\)</span>。 注意优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span> 解不一定唯一，关于其存在性与唯一性的讨论可参考<a href="/2026/01/26/03=Convex_Optimization/CVX-1/" title="凸优化学习系列 - 1. 基本概念">凸优化学习系列 - 1. 基本概念-2.3</a>。</p>
 </blockquote>
 <!-- > **为何从无约束开始**：无约束时更新形式最简洁，核心困难集中在“一阶信息 + 步长 + 曲率控制”。此框架也便于引出 Lipschitz 梯度、强凸、线搜索与收敛速率等基本概念。 -->
 <!-- ### 2. 带约束凸优化：梯度下降并非不能用，但需改造
@@ -361,231 +361,371 @@ $$
 当投影或近端子问题难以求解（例如一般不等式约束的复杂可行域），通常转向原始-对偶方法、内点法或增广拉格朗日法等，而非“朴素梯度 + 硬投影”。 -->
 <hr>
 <h2 id="二梯度下降法的推导与解读">二、梯度下降法的推导与解读</h2>
-<h3 id="为什么要做泰勒展开或局部模型且只到二阶">1. 为什么要做泰勒展开（或局部模型）且只到二阶？</h3>
-<p>梯度下降的经典推导来自在点 <span class="math inline">\(x\)</span> 附近构造一个<strong>可控且易最小化</strong>的局部二次模型。对可微函数，<span class="math inline">\(f\)</span> 在 <span class="math inline">\(x\)</span> 附近的一阶近似为： <span class="math display">\[
-\begin{align}
-f(y)\approx f(x)+\nabla f(x)^\top (y-x).
-\end{align}
-\]</span> 但仅用一阶项不足以“约束步子大小”，会导致线性模型在远处失真。为控制更新幅度，引入二次正则项（亦可视为“信赖域/近端项”）： <span class="math display">\[
-\begin{align}
-m_t(y;x)=f(x)+\nabla f(x)^\top (y-x)+\frac{1}{2t}\|y-x\|_2^2.
-\end{align}
-\]</span></p>
+<h3 id="梯度下降法的由来motivation">1. 梯度下降法的由来（motivation）</h3>
+<p>对于凸优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span>，真实的目标函数 <span class="math inline">\(f\)</span> 可能复杂难解，直接求解 <span class="math inline">\(\min_x f(x)\)</span> 不易（不能一眼看出来）。因此我们希望用一个更简单的函数（二次）近似原函数，从而简化优化问题的求解。最常见的方法是利用泰勒展开构造局部近似。 将可微函数 <span class="math inline">\(f\)</span> 在 <span class="math inline">\(x_k\)</span> 附近的二阶泰勒展开作为 <span class="math inline">\(f\)</span> 的近似： <span class="math display">\[\begin{align}
+\label{eq:taylor-second}
+\hat f(x;x_k) = f(x_k) + \nabla f(x_k)^\top (x - x_k) + \frac{1}{2}(x - x_k)^\top \nabla^2 f(x_k) (x - x_k).
+\end{align}\]</span></p>
+<div class="note note-info">
+            <ul>
+<li>问题一：为什么要对目标函数做<strong>二阶</strong>泰勒展开？
 <ul>
-<li><strong>二阶的角色</strong>：该二次项不是在严格意义上“必须做二阶泰勒展开”，而是构造一个强凸的 surrogate（替代）模型，以确保子问题可解且更新不会过大。</li>
-<li><strong>为何不展开更高阶</strong>：更高阶模型会显著增加每步代价；一阶方法的目标是保留“每步便宜”的优势，并以可控步长换取全局收敛保证。</li>
+<li>如果只用一阶信息：<span class="math inline">\(\hat f(x;x_k) = f(x_k) + \nabla f(x_k)^\top (x - x_k)\)</span>，这个近似函数对 <span class="math inline">\(x\)</span> 是线性的，没有最小值（除非梯度为零-常函数），无法进行更新。也即仅靠一阶展开不能定义出下一步应该去哪里找 <span class="math inline">\(x\)</span>。</li>
+<li>如果将二阶项纳入 <span class="math inline">\(\hat f(x;x_k)\)</span> 即有 <span class="math inline">\(\eqref{eq:taylor-second}\)</span>，则该近似函数为关于 <span class="math inline">\(x\)</span> 的二次函数，<strong>通常</strong>有唯一最小点，可以据此定义更新方向和步长。</li>
+</ul></li>
 </ul>
-<h3 id="为什么用-frac1ti-代替-hessian">2. 为什么用 <span class="math inline">\(\frac{1}{t}I\)</span> 代替 Hessian？</h3>
-<p>若函数二阶可导，局部二阶信息由 Hessian <span class="math inline">\(\nabla^2 f(x)\)</span> 决定。梯度下降可被理解为将 Hessian 近似为各向同性矩阵： <span class="math display">\[
-\begin{align}
-\nabla^2 f(x)\approx \frac{1}{t}I,
-\end{align}
-\]</span> 从而避免显式计算/求解 Hessian 相关的线性方程（这是牛顿法的核心代价）。</p>
+          </div>
+<p>基于 <span class="math inline">\(\eqref{eq:taylor-second}\)</span>，利用驻点条件，可构造牛顿法更新： <span class="math display">\[\begin{align}
+\label{eq:newton-update}
+x_{k+1} = x_k - (\nabla^2 f(x_k))^{-1} \nabla f(x_k).
+\end{align}\]</span> 如果按照 <span class="math inline">\(\eqref{eq:newton-update}\)</span> 迭代，那么每步都需要计算 Hessian <span class="math inline">\(\nabla^2 f(x_k)\)</span> 并求其逆矩阵，这在高维问题中代价巨大。 那么我们是否可以简化 <span class="math inline">\(\eqref{eq:taylor-second}\)</span>，从而避免 Hessian 的计算与求逆呢？首先，要明确我们的核心逻辑：</p>
+<blockquote>
+<p>我们需要一个<strong>二次项</strong>能正确“控制”函数在<strong>邻域</strong>内的变化的模型，不一定要精确的 Hessian，从而构造迭代收敛到最优解。</p>
+</blockquote>
+<p>因此，我们可以将复杂的 Hessian <span class="math inline">\(\nabla^2 f(x_k)\)</span> 替换为一个简单的 <span class="math inline">\(\frac{1}{t}I\)</span>，其中 <span class="math inline">\(t&gt;0\)</span> 是参数。这样，可以得到如下局部二次近似模型： <span class="math display">\[\begin{align}
+\label{eq:local-model}
+\hat f(x;x_k)=f(x_k)+\nabla f(x_k)^\top (x-x_k)+\frac{1}{2t}\|x-x_k\|_2^2.
+\end{align}\]</span></p>
+<div class="note note-info">
+            <ul>
+<li>问题二：为什么可以用 <span class="math inline">\(\frac{1}{t}I\)</span> 代替 Hessian？
 <ul>
-<li><strong>解释</strong>：<span class="math inline">\(\frac{1}{t}I\)</span> 以“统一曲率尺度”替代真实曲率；<span class="math inline">\(t\)</span> 越小，对步长惩罚越强，更新越保守。</li>
+<li>这样做最标准的理论前提是 <span class="math inline">\(\nabla f\)</span> 是 Lipschitz 连续的（也即 <span class="math inline">\(f\)</span> 为 <span class="math inline">\(L\)</span>-smooth）， 即存在常数 <span class="math inline">\(L&gt;0\)</span>，使得对任意 <span class="math inline">\(x,y\)</span>： <span class="math display">\[\begin{align}
+\|\nabla f(x) - \nabla f(y)\|_2 \le L \|x - y\|_2
+\label{eq:L-smooth}
+\end{align}\]</span> 基于 <span class="math inline">\(\eqref{eq:L-smooth}\)</span> 可得到 <span class="math display">\[\begin{align}
+f(x) \le f(x_k) + \nabla f(x_k)^\top (x - x_k) + \frac{L}{2} \|x - x_k\|_2^2
+\label{eq:descent-lemma}
+\end{align}\]</span> 这其实是<code>Descent Lemma</code>，具体证明见 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/369961290">【强凸与光滑性】</a>。将 <span class="math inline">\(\eqref{eq:local-model}\)</span> 中的 <span class="math inline">\(t\)</span> 取为 <span class="math inline">\(\frac{1}{L}\)</span>，即可保证 <span class="math inline">\(\hat f(x;x_0)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的上界。</li>
+<li>注意，如果 <span class="math inline">\(f\)</span> 确实是 <span class="math inline">\(L\)</span>-smooth 的，那么当然可以直接使用 <code>Descent Lemma</code> <span class="math inline">\(\eqref{eq:descent-lemma}\)</span>，从而将最小化 <span class="math inline">\(f(x)\)</span> 转化为最小化 <span class="math inline">\(f(x)\)</span> 的上界，通过牛顿法 <span class="math inline">\(\eqref{eq:newton-update}\)</span> 求解（将曲率替换为 <span class="math inline">\(\frac{1}{t}I\)</span>），也就不需要 <span class="math inline">\(f\)</span> 的二阶信息。</li>
+<li>但从二阶泰勒展开的视角更直观地揭示了梯度下降法的本质：<strong>用一个简单的二次模型替代真实函数，从而简化每步的优化问题。</strong></li>
+<li>另一方面，如果 <span class="math inline">\(f\)</span> 不是 <span class="math inline">\(L\)</span>-smooth，那么 <span class="math inline">\(\frac{1}{t}I\)</span> 就是用一个标量曲率上界来替代 Hessian，从而保证每步更新的稳定性（<strong>这种视角是否需要前提：<span class="math inline">\(f\)</span> 二阶可导？</strong>）。此时参数 <span class="math inline">\(t\)</span> 的选择就更为关键（没有 <span class="math inline">\(L\)</span> 作为参考），直接影响每步更新的稳定性与收敛性。在这种情况下，为了让 <span class="math inline">\(\eqref{eq:local-model}\)</span> 中的 <span class="math inline">\(\hat f(x;x_0)\)</span> 尽可能作为 <span class="math inline">\(f(x)\)</span> 的上界，我们<strong>一般</strong>希望 <span class="math inline">\(t\)</span> 较小。</li>
+</ul></li>
 </ul>
-<h3 id="为什么更新律是-xx-tnabla-fx">3. 为什么更新律是 <span class="math inline">\(x^+=x-t\nabla f(x)\)</span>？</h3>
-<p>令下一点 <span class="math inline">\(x^+\)</span> 为上述二次模型的最小点： <span class="math display">\[
-\begin{align}
-x^+ = \arg\min_{y}\left(f(x)+\nabla f(x)^\top (y-x)+\frac{1}{2t}\|y-x\|_2^2\right).
-\end{align}
-\]</span> 对 <span class="math inline">\(y\)</span> 求导并令其为零（该问题对 <span class="math inline">\(y\)</span> 强凸）： <span class="math display">\[
-\begin{align}
-0 &amp;= \nabla_y m_t(y;x)
-= \nabla f(x) +\frac{1}{t}(y-x),\\
-\Rightarrow\quad
-y &amp;= x-t\nabla f(x).
-\end{align}
-\]</span> 因此得到梯度下降更新： <span class="math display">\[
-\begin{align}
-x^+=x-t\nabla f(x).
-\end{align}
-\]</span></p>
-<h3 id="argmin-形式与显式更新是否等价">4. argmin 形式与显式更新是否等价？</h3>
-<p>由上一推导可知： <span class="math display">\[
-\begin{align}
-x^+ = \arg\min_y\left(f(x)+\nabla f(x)^\top (y-x)+\frac{1}{2t}\|y-x\|_2^2\right)
-\quad\Longleftrightarrow\quad
-x^+=x-t\nabla f(x).
-\end{align}
-\]</span> 二者完全等价，只是“优化子问题视角”与“闭式解视角”的两种写法。</p>
-<h3 id="最优解是否唯一不唯一时-gd-收敛到哪个解">5. 最优解是否唯一？不唯一时 GD 收敛到哪个解？</h3>
+          </div>
+<h3 id="梯度下降法的构造">2. 梯度下降法的构造</h3>
+<p>基于上述讨论，假设我们以及有了合适的参数 <span class="math inline">\(t\)</span> 使得 <span class="math inline">\(f(x)\)</span> 的上界由 <span class="math inline">\(\eqref{eq:local-model}\)</span> 刻画。因此，对于 <span class="math inline">\(f\)</span> 的凸优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span> 转为对于 <span class="math inline">\(f\)</span> 上界 <span class="math inline">\(\hat f\)</span> 的优化问题： <span class="math display">\[\begin{align}
+\label{eq:cvx-problem-2}
+    \min_x~ \hat f(x;x_k) = \min_x\left(f(x_k)+\nabla f(x_k)^\top (x-x_k)+\frac{1}{2t}\|x-x_k\|_2^2\right).
+\end{align}\]</span></p>
+<p>因此，下一点 <span class="math inline">\(x_{k+1}\)</span> 在二次函数 <span class="math inline">\(\hat f(x;x_k)\)</span> 的对称轴处取得： <span class="math display">\[\begin{align}
+\label{eq:gd-update}
+\begin{split}
+&amp; x_{k+1} = \arg\min_{x}\left(f(x_k)+\nabla f(x_k)^\top (x-x_k)+\frac{1}{2t}\|x-x_k\|_2^2\right), \\
+\Rightarrow \quad &amp; x_{k+1}=x_k - t\nabla f(x_k)
+\end{split}
+\end{align}\]</span> 式 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 即为求解凸优化问题 <span class="math inline">\(\eqref{eq:cvx-problem-2}\)</span> 的梯度下降法更新律，其中 <span class="math inline">\(t\)</span> 即为步长。</p>
+<div class="note note-info">
+            <p>问题三：问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span> 与 <span class="math inline">\(\eqref{eq:cvx-problem-2}\)</span> 是否等价？如果等价，为什么？如果不等价，谁是谁的充分条件/必要条件？ <!-- - 不等价。$\eqref{eq:cvx-problem-2}$ 是 $\eqref{eq:cvx-problem}$ 在 $x_k$ 附近的局部近似问题，其最优解 $x_{k+1}$ 仅作为 $\eqref{eq:cvx-problem}$ 的下一个迭代点，而非其最优解。
+  - 但如果 $t$ 选取合适，并且按照 $\eqref{eq:gd-update}$ 迭代足够多次，则 $\eqref{eq:cvx-problem-2}$ 的解 $x_{k+1}$ 会越来越接近 $x^\star$。 --></p>
+          </div>
+<h2 id="三.-梯度下降的收敛性">三. 梯度下降的收敛性</h2>
+<h3 id="是否能收敛">3.1 是否能收敛？</h3>
+<h3 id="收敛到哪里">3.2 收敛到哪里？</h3>
+<h3 id="以什么样的形式收敛">3.3 以什么样的形式收敛？</h3>
+<div class="note note-success">
+            <p><strong>定义一：对于凸优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span>，可从以下两种角度定义收敛性</strong></p>
 <ul>
-<li>若 <span class="math inline">\(f\)</span> <strong>强凸</strong>（或严格凸），则最优解唯一。</li>
-<li>若仅为凸但非严格凸，最优解集合 <span class="math inline">\(\mathcal{X}^\star\)</span> 可为一个凸集，解不唯一。</li>
-<li>此时梯度下降通常收敛到某个 <span class="math inline">\(x^\star\in\mathcal{X}^\star\)</span>，但<strong>具体收敛到哪一个最优解</strong>由初值与算法细节决定，一般无法在不加额外规则（例如正则化、约束偏好）的情况下指定。</li>
+<li><p>收敛速率：若存在函数 <span class="math inline">\(r(k)\)</span> 与常数 <span class="math inline">\(p &gt; 0\)</span>，使得对所有 <span class="math inline">\(k \ge 0\)</span>，有 <span class="math display">\[\begin{align}
+f(x^{(k)}) - f^\star \le p \cdot r(k),
+\end{align}\]</span> 则称算法以速率 <span class="math inline">\(O(r(k))\)</span> 收敛。</p></li>
+<li><p><span class="math inline">\(\varepsilon\)</span>-精度：给定精度 <span class="math inline">\(\varepsilon&gt;0\)</span>，令 <span class="math inline">\(T(\varepsilon) = \min_k \{f(x_k) - f^\star \le \varepsilon\}\)</span>，若存在常数 <span class="math inline">\(q &gt; 0\)</span>，使得 <span class="math display">\[\begin{align}
+T(\varepsilon) \le q \cdot g(\varepsilon)
+\end{align}\]</span> 则称算法有 <span class="math inline">\(\varepsilon\)</span>-精度，且迭代复杂度为 <span class="math inline">\(T(\varepsilon)\)</span>，<span class="math inline">\(x_k\)</span> 称为 <span class="math inline">\(\varepsilon\)</span>-近似解。</p></li>
 </ul>
+          </div>
+<ul>
+<li>两种指标的常见对应关系：
+<ul>
+<li>若 <span class="math inline">\(f(x_k) - f^\star \le O(\frac{1}{k})\)</span>，则 <span class="math inline">\(T(\varepsilon) = O(\frac{1}{\varepsilon})\)</span>；</li>
+<li>若 <span class="math inline">\(f(x_k) - f^\star \le O(\frac{1}{\sqrt{k}})\)</span>，则 <span class="math inline">\(T(\varepsilon) = O(\frac{1}{\varepsilon^2})\)</span>；</li>
+<li>若 <span class="math inline">\(f(x_k) - f^\star \le O(\rho^k)\)</span>，则 <span class="math inline">\(T(\varepsilon) = O(\log\frac{1}{\varepsilon})\)</span>。</li>
+</ul></li>
+</ul>
+<p><strong>对于凸优化问题 <span class="math inline">\(\eqref{eq:cvx-problem}\)</span>，梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 的收敛性依赖于目标函数 <span class="math inline">\(f\)</span> 的性质。下面总结几种常见情形下的收敛结果。</strong></p>
+<div class="note note-warning">
+            <p><strong>定理 1：</strong> 如果目标函数 <span class="math inline">\(f\)</span> 是凸函数且 Lipschitz 连续，则梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 以 <span class="math inline">\(O(\frac{1}{\varepsilon^2})\)</span> 收敛。</p>
+          </div>
+<details>
+<p>由平方范数展开（欧氏范数）： <span class="math display">\[\begin{align}
+\|x_{k+1}-x^\star\|_2^2
+&amp;=\|x_k-tg_k-x^\star\|_2^2 \\
+&amp;=\|x_k-x^\star\|_2^2 -2t\, g_k^\top(x_k-x^\star)+t^2\|g_k\|_2^2. \label{eq:t1-1}
+\end{align}\]</span></p>
+<p>由凸性的一阶次梯度不等式（对任意 <span class="math inline">\(g_k\in\partial f(x_k)\)</span>）： <span class="math display">\[\begin{align}
+f(x_k)-f^\star \le g_k^\top(x_k-x^\star). \label{eq:t1-subg}
+\end{align}\]</span></p>
+<p>将  代入  并用 <span class="math inline">\(\|g_k\|_2\le G\)</span>： <span class="math display">\[\begin{align}
+2t\,(f(x_k)-f^\star)
+&amp;\le 2t\, g_k^\top(x_k-x^\star) \\
+&amp;\le \|x_k-x^\star\|_2^2-\|x_{k+1}-x^\star\|_2^2+t^2 G^2. \label{eq:t1-2}
+\end{align}\]</span></p>
+<p>对 <span class="math inline">\(k=0,1,\dots,K-1\)</span> 求和，望远镜消去： <span class="math display">\[\begin{align}
+2t\sum_{k=0}^{K-1} (f(x_k)-f^\star)
+&amp;\le \|x_0-x^\star\|_2^2-\|x_K-x^\star\|_2^2 + K t^2 G^2 \\
+&amp;\le \|x_0-x^\star\|_2^2 + K t^2 G^2. \label{eq:t1-3}
+\end{align}\]</span></p>
+<p>令 <span class="math inline">\(\bar x_K=\frac{1}{K}\sum_{k=0}^{K-1} x_k\)</span>，由凸性（Jensen）： <span class="math display">\[\begin{align}
+f(\bar x_K)-f^\star \le \frac{1}{K}\sum_{k=0}^{K-1}(f(x_k)-f^\star)
+\le \frac{\|x_0-x^\star\|_2^2}{2tK}+\frac{tG^2}{2}. \label{eq:t1-4}
+\end{align}\]</span></p>
+<p>取最优常数步长（使右端两项平衡），例如 <span class="math display">\[\begin{align}
+t=\frac{\|x_0-x^\star\|_2}{G\sqrt{K}},
+\end{align}\]</span> 代入  得 <span class="math display">\[\begin{align}
+f(\bar x_K)-f^\star \le \frac{G\|x_0-x^\star\|_2}{\sqrt{K}}.
+\end{align}\]</span></p>
+因此若要求 <span class="math inline">\(f(\bar x_K)-f^\star\le \varepsilon\)</span>，只需 <span class="math display">\[\begin{align}
+K \ge \frac{G^2\|x_0-x^\star\|_2^2}{\varepsilon^2},
+\end{align}\]</span> 即迭代复杂度为 <span class="math inline">\(O(1/\varepsilon^2)\)</span>，证毕。
+</details>
 <hr>
-<h2 id="三如何选择更新步长">三、如何选择更新步长</h2>
-<p>步长 <span class="math inline">\(t\)</span> 决定每次更新幅度与稳定性。其核心作用可概括为：在局部线性化可信的范围内取尽可能大的步长，以加快收敛，同时避免过冲导致发散。</p>
-<h3 id="为什么步长大了会发散步长小了收敛慢">1. 为什么步长大了会发散、步长小了收敛慢？</h3>
-<p>用二次函数揭示本质。令： <span class="math display">\[
-\begin{align}
-f(x)=\frac{1}{2}x^\top Qx,\quad Q\succeq 0,
-\end{align}
-\]</span> 则 <span class="math display">\[
-\begin{align}
-\nabla f(x)=Qx,\quad
-x_{k+1}=x_k-tQx_k=(I-tQ)x_k.
-\end{align}
-\]</span> 收敛要求谱半径 <span class="math inline">\(\rho(I-tQ)&lt;1\)</span>，等价于 <span class="math display">\[
-\begin{align}
-0&lt;t&lt;\frac{2}{\lambda_{\max}(Q)}.
-\end{align}
-\]</span></p>
+<div class="note note-warning">
+            <p><strong>定理 2：</strong> 如果目标函数 <span class="math inline">\(f\)</span> 是凸函数且 <span class="math inline">\(L\)</span>-smooth，则梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 以 <span class="math inline">\(O(\frac{1}{\varepsilon})\)</span> 收敛。</p>
+          </div>
+<details>
+<p>由 <span class="math inline">\(L\)</span>-smooth 的下降引理（descent lemma）：对任意 <span class="math inline">\(x,y\)</span>， <span class="math display">\[\begin{align}
+f(y)\le f(x)+\nabla f(x)^\top(y-x)+\frac{L}{2}\|y-x\|_2^2. \label{eq:t2-descent}
+\end{align}\]</span></p>
+<p>取 <span class="math inline">\(x=x_k,\ y=x_{k+1}=x_k-\frac{1}{L}\nabla f(x_k)\)</span>，则 <span class="math display">\[\begin{align}
+f(x_{k+1})
+&amp;\le f(x_k)+\nabla f(x_k)^\top\Big(-\frac{1}{L}\nabla f(x_k)\Big)
++\frac{L}{2}\Big\|\frac{1}{L}\nabla f(x_k)\Big\|_2^2 \\
+&amp;= f(x_k)-\frac{1}{2L}\|\nabla f(x_k)\|_2^2. \label{eq:t2-1}
+\end{align}\]</span></p>
+<p>另一方面，由凸性一阶条件（对最优点 <span class="math inline">\(x^\star\)</span>）： <span class="math display">\[\begin{align}
+f(x_k)-f^\star \le \nabla f(x_k)^\top(x_k-x^\star). \label{eq:t2-cvx}
+\end{align}\]</span></p>
+<p>再利用“梯度一步”的平方距离展开（把 <span class="math inline">\(x^\star\)</span> 视为常量）： <span class="math display">\[\begin{align}
+\|x_{k+1}-x^\star\|_2^2
+&amp;=\Big\|x_k-\frac{1}{L}\nabla f(x_k)-x^\star\Big\|_2^2 \\
+&amp;=\|x_k-x^\star\|_2^2-\frac{2}{L}\nabla f(x_k)^\top(x_k-x^\star)+\frac{1}{L^2}\|\nabla f(x_k)\|_2^2. \label{eq:t2-2}
+\end{align}\]</span></p>
+<p>将  代入 ，并与  结合消去 <span class="math inline">\(\|\nabla f(x_k)\|^2\)</span>，可得经典不等式： <span class="math display">\[\begin{align}
+f(x_{k+1})-f^\star \le \frac{L}{2}\big(\|x_k-x^\star\|_2^2-\|x_{k+1}-x^\star\|_2^2\big). \label{eq:t2-3}
+\end{align}\]</span></p>
+<p>对 <span class="math inline">\(k=0,\dots,K-1\)</span> 求和并整理可得： <span class="math display">\[\begin{align}
+\sum_{k=0}^{K-1}\big(f(x_{k+1})-f^\star\big)
+&amp;\le \frac{L}{2}\big(\|x_0-x^\star\|_2^2-\|x_K-x^\star\|_2^2\big) \\
+&amp;\le \frac{L}{2}\|x_0-x^\star\|_2^2. \label{eq:t2-4}
+\end{align}\]</span></p>
+<p>由于 <span class="math inline">\(f(x_k)\)</span> 单调不增（由 ），有 <span class="math display">\[\begin{align}
+K\big(f(x_K)-f^\star\big)\le \sum_{k=0}^{K-1}\big(f(x_{k+1})-f^\star\big)
+\le \frac{L}{2}\|x_0-x^\star\|_2^2,
+\end{align}\]</span> 即 <span class="math display">\[\begin{align}
+f(x_K)-f^\star \le \frac{L\|x_0-x^\star\|_2^2}{2K}. \label{eq:t2-rate}
+\end{align}\]</span></p>
+令右端 <span class="math inline">\(\le \varepsilon\)</span> 得 <span class="math inline">\(K\ge \frac{L\|x_0-x^\star\|_2^2}{2\varepsilon}\)</span>， 故迭代复杂度为 <span class="math inline">\(O(1/\varepsilon)\)</span>，证毕。
+</details>
+<hr>
+<div class="note note-warning">
+            <p><strong>定理 3：</strong> 如果目标函数 <span class="math inline">\(f\)</span> 是 <span class="math inline">\(m\)</span>-强凸函数且 <span class="math inline">\(L\)</span>-smooth，则梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 以线性 <span class="math inline">\(O(\log(\frac{1}{\varepsilon}))\)</span> 收敛，其中 <span class="math inline">\(0 &lt; \rho &lt; 1\)</span>。</p>
+          </div>
+<details>
+<p>由定理 2 的下降结论（对任意 <span class="math inline">\(k\)</span>）： <span class="math display">\[\begin{align}
+f(x_{k+1}) \le f(x_k)-\frac{1}{2L}\|\nabla f(x_k)\|_2^2. \label{eq:t3-1}
+\end{align}\]</span></p>
+<p>对 <span class="math inline">\(m\)</span>-强凸且可微函数，有 Polyak–ojasiewicz 型下界（强凸 <span class="math inline">\(\Rightarrow\)</span> PL）： <span class="math display">\[\begin{align}
+\|\nabla f(x)\|_2^2 \ge 2m\big(f(x)-f^\star\big), \quad \forall x. \label{eq:t3-plfromsc}
+\end{align}\]</span> 证明要点：强凸给出 <span class="math display">\[\begin{align}
+f(y)\ge f(x)+\nabla f(x)^\top(y-x)+\frac{m}{2}\|y-x\|_2^2,
+\end{align}\]</span> 取 <span class="math inline">\(y=x^\star\)</span>，并对右端关于 <span class="math inline">\(y\)</span> 的二次函数最小化（或用 Cauchy-Schwarz 完成平方），即可得到 。</p>
+<p>将  代入 ： <span class="math display">\[\begin{align}
+f(x_{k+1})-f^\star
+&amp;\le f(x_k)-f^\star -\frac{1}{2L}\|\nabla f(x_k)\|_2^2 \\
+&amp;\le f(x_k)-f^\star -\frac{1}{2L}\cdot 2m\big(f(x_k)-f^\star\big) \\
+&amp;=\Big(1-\frac{m}{L}\Big)\big(f(x_k)-f^\star\big). \label{eq:t3-2}
+\end{align}\]</span></p>
+<p>令 <span class="math inline">\(\rho=1-\frac{m}{L}\in(0,1)\)</span>，迭代递推得 <span class="math display">\[\begin{align}
+f(x_k)-f^\star \le \rho^k \big(f(x_0)-f^\star\big). \label{eq:t3-lin}
+\end{align}\]</span></p>
+因此若要求 <span class="math inline">\(f(x_k)-f^\star\le \varepsilon\)</span>，只需 <span class="math display">\[\begin{align}
+k \ge \frac{\log\big((f(x_0)-f^\star)/\varepsilon\big)}{\log(1/\rho)}
+=O(\log(1/\varepsilon)),
+\end{align}\]</span> 证毕。
+</details>
+<hr>
+<div class="note note-warning">
+            <p><strong>定理 4：</strong> 如果目标函数 <span class="math inline">\(f\)</span> 满足 Polyak-Łojasiewicz (PL) 条件： <span class="math display">\[\begin{align}
+\frac{1}{2}\|\nabla f(x)\|_2^2 \ge \mu (f(x) - f^\star), \quad \forall x,
+\end{align}\]</span> 且 <span class="math inline">\(L\)</span>-smooth，则梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 以线性 <span class="math inline">\(O(\log(\frac{1}{\varepsilon}))\)</span> 收敛，其中 <span class="math inline">\(0 &lt; \rho &lt; 1\)</span>。</p>
+          </div>
+<details>
+<p>由 <span class="math inline">\(L\)</span>-smooth 的下降引理（同定理2推导）直接得到： <span class="math display">\[\begin{align}
+f(x_{k+1}) \le f(x_k)-\frac{1}{2L}\|\nabla f(x_k)\|_2^2. \label{eq:t4-1}
+\end{align}\]</span></p>
+<p>由 PL 条件 (11)： <span class="math display">\[\begin{align}
+\|\nabla f(x_k)\|_2^2 \ge 2\mu\big(f(x_k)-f^\star\big). \label{eq:t4-2}
+\end{align}\]</span></p>
+<p>将  代入 ： <span class="math display">\[\begin{align}
+f(x_{k+1})-f^\star
+&amp;\le f(x_k)-f^\star-\frac{1}{2L}\|\nabla f(x_k)\|_2^2 \\
+&amp;\le f(x_k)-f^\star-\frac{1}{2L}\cdot 2\mu\big(f(x_k)-f^\star\big) \\
+&amp;=\Big(1-\frac{\mu}{L}\Big)\big(f(x_k)-f^\star\big). \label{eq:t4-3}
+\end{align}\]</span></p>
+<p>令 <span class="math inline">\(\rho=1-\frac{\mu}{L}\in(0,1)\)</span>，递推得 <span class="math display">\[\begin{align}
+f(x_k)-f^\star \le \rho^k\big(f(x_0)-f^\star\big). \label{eq:t4-lin}
+\end{align}\]</span></p>
+因此达到精度 <span class="math inline">\(\varepsilon\)</span> 需要 <span class="math display">\[\begin{align}
+k \ge \frac{\log\big((f(x_0)-f^\star)/\varepsilon\big)}{\log(1/\rho)}
+=O(\log(1/\varepsilon)),
+\end{align}\]</span> 证毕。
+</details>
+<hr>
+<div class="note note-warning">
+            <p><strong>定理 5：</strong> 如果目标函数 <span class="math inline">\(f\)</span> 是非凸函数且 <span class="math inline">\(L\)</span>-smooth，则梯度下降法 <span class="math inline">\(\eqref{eq:gd-update}\)</span> 以 <span class="math inline">\(O(\frac{1}{\varepsilon^2})\)</span> 收敛。</p>
+          </div>
+<details>
+<p>由下降引理（同定理2）对一步更新： <span class="math display">\[\begin{align}
+f(x_{k+1}) \le f(x_k)-\frac{1}{2L}\|\nabla f(x_k)\|_2^2. \label{eq:t5-1}
+\end{align}\]</span></p>
+<p>对 <span class="math inline">\(k=0,\dots,K-1\)</span> 求和： <span class="math display">\[\begin{align}
+\sum_{k=0}^{K-1}\frac{1}{2L}\|\nabla f(x_k)\|_2^2
+&amp;\le f(x_0)-f(x_K). \label{eq:t5-2}
+\end{align}\]</span></p>
+<p>若进一步假设 <span class="math inline">\(f\)</span> 下界有界（常见于非凸分析）：存在 <span class="math inline">\(f_{\inf}\)</span> 使 <span class="math inline">\(f(x)\ge f_{\inf}\)</span>， 则 <span class="math display">\[\begin{align}
+\sum_{k=0}^{K-1}\|\nabla f(x_k)\|_2^2
+\le 2L\big(f(x_0)-f_{\inf}\big). \label{eq:t5-3}
+\end{align}\]</span></p>
+<p>因此最小梯度范数平方满足 <span class="math display">\[\begin{align}
+\min_{0\le k\le K-1}\|\nabla f(x_k)\|_2^2
+\le \frac{1}{K}\sum_{k=0}^{K-1}\|\nabla f(x_k)\|_2^2
+\le \frac{2L\big(f(x_0)-f_{\inf}\big)}{K}. \label{eq:t5-4}
+\end{align}\]</span></p>
+若要求存在某个迭代点满足 <span class="math inline">\(\|\nabla f(x_k)\|_2\le \varepsilon\)</span>， 只需令右端 <span class="math inline">\(\le \varepsilon^2\)</span>，即 <span class="math display">\[\begin{align}
+K \ge \frac{2L\big(f(x_0)-f_{\inf}\big)}{\varepsilon^2},
+\end{align}\]</span> 从而迭代复杂度为 <span class="math inline">\(O(1/\varepsilon^2)\)</span>，证毕。
+</details>
+<hr>
+<table style="width:100%;">
+
+<thead>
+<tr class="header">
+<th>性质 &amp; 条件</th>
+<th>定理一</th>
+<th>定理二</th>
+<th>定理三</th>
+<th>定理四</th>
+<th>定理五</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>收敛精度</td>
+<td><span class="math inline">\(O(\frac{1}{\varepsilon^2})\)</span></td>
+<td><span class="math inline">\(O(\frac{1}{\varepsilon})\)</span></td>
+<td><span class="math inline">\(O(\log \frac{1}{\varepsilon})\)</span></td>
+<td><span class="math inline">\(O(\log \frac{1}{\varepsilon})\)</span></td>
+<td><span class="math inline">\(O( \frac{1}{\varepsilon^2})\)</span></td>
+</tr>
+<tr class="even">
+<td>收敛速率</td>
+<td><span class="math inline">\(O(\frac{1}{\sqrt{k}})\)</span></td>
+<td><span class="math inline">\(O(\frac{1}{k})\)</span></td>
+<td><span class="math inline">\(O(\rho^k)\)</span></td>
+<td><span class="math inline">\(O(\rho^k)\)</span></td>
+<td><span class="math inline">\(O(\frac{1}{\sqrt{k}})\)</span></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>给定同一小精度 <span class="math inline">\(\varepsilon \to 0\)</span>，精度排序为：<span class="math inline">\(O(\log \frac{1}{\varepsilon}) &lt; O(\frac{1}{\varepsilon}) &lt; O(\frac{1}{\varepsilon^2})\)</span>。这也很容易理解：条件越强，收敛精度越高。</p>
+</blockquote>
+<h2 id="四梯度下降的更新步长">四、梯度下降的更新步长</h2>
+<p>步长 <span class="math inline">\(t\)</span> 决定每次更新幅度与稳定性。其核心作用可概括为：在局部线性化可信的范围内取尽可能大的步长，以加快收敛。</p>
+<p>用一个例子说明<strong>步长大了会发散、步长小了收敛慢</strong>，考虑如下二次标量函数： <span class="math display">\[\begin{align}
+\label{eq:quadratic-example}
+f(x)= \frac{a}{2}x^2,
+\end{align}\]</span> 则 <span class="math display">\[\begin{align}
+\nabla f(x)=ax,\quad
+x_{k+1}=x_k-tax_k=(1-ta)x_k.
+\end{align}\]</span> 收敛要求收缩因子 <span class="math inline">\(|1-ta|&lt;1\)</span> （因为 <span class="math inline">\(x_k = (1-ta)^k x_0\)</span>），等价于 <span class="math display">\[\begin{align}
+\label{eq:step-size-condition}
+0 &lt; t &lt;\frac{2}{a}.
+\end{align}\]</span></p>
 <ul>
-<li><strong>步长过大</strong>：沿最大曲率方向出现 <span class="math inline">\(|1-t\lambda_{\max}|&gt;1\)</span>，误差被放大，迭代发散（典型“过冲 + 放大”）。</li>
+<li><strong>步长过大</strong>：不满足步长条件 <span class="math inline">\(\eqref{eq:step-size-condition}\)</span>，导致迭代发散。</li>
 <li><strong>步长过小</strong>：收缩因子接近 1，每次只减少很小比例，导致达到精度需大量迭代，表现为收敛慢。</li>
 </ul>
-<h3 id="固定步长">2. 固定步长</h3>
-<p>若已知 <span class="math inline">\(L\)</span>（Lipschitz 梯度常数），常用选择为： <span class="math display">\[
-\begin{align}
-0&lt;t\le \frac{1}{L}.
-\end{align}
-\]</span> 优点是实现简单；缺点是 <span class="math inline">\(L\)</span> 往往未知，且过保守时会显著减慢收敛。</p>
-<h3 id="backtracking-line-search回溯线搜索">3. Backtracking line search（回溯线搜索）</h3>
-<p>当 <span class="math inline">\(L\)</span> 不可得时，backtracking 通过“充分下降条件”自适应选择步长。给定参数 <span class="math inline">\(0&lt;\beta&lt;1\)</span>、<span class="math inline">\(0&lt;\alpha&lt;\frac{1}{2}\)</span>，从初始步长 <span class="math inline">\(t=t_{\mathrm{init}}\)</span> 开始，检查 Armijo 条件： <span class="math display">\[
-\begin{align}
-f(x-t\nabla f(x)) \le f(x)-\alpha t\|\nabla f(x)\|_2^2.
-\end{align}
-\]</span> 若不满足，则缩小： <span class="math display">\[
-\begin{align}
+<blockquote>
+<p><strong>这也与 <span class="math inline">\(L\)</span>-smooth 的讨论一致：若步长 <span class="math inline">\(t\)</span> 过大（甚至超过 <span class="math inline">\(\frac{1}{L}\)</span>），则上界不可信，可能导致发散；若步长过小，则每步更新幅度受限，收敛变慢。</strong></p>
+</blockquote>
+<p><strong>下面讨论几种常见的步长选择策略。</strong></p>
+<h3 id="固定步长">1. 固定步长</h3>
+<p>若已知 <span class="math inline">\(L\)</span>（Lipschitz 梯度常数），常用选择为： <span class="math display">\[\begin{align}
+0 &lt; t \le \frac{1}{L} 
+\end{align}\]</span> 优点是实现简单；缺点是 <span class="math inline">\(L\)</span> 往往未知导致步长容易过大使得迭代发散，且过保守时收敛速度会显著减慢。</p>
+<h3 id="backtracking-line-search回溯线搜索">2. Backtracking line search（回溯线搜索）</h3>
+<p>当 <span class="math inline">\(L\)</span> 不可得时，backtracking 通过“充分下降条件”自适应选择步长。给定参数 <span class="math inline">\(0&lt;\beta&lt;1\)</span>、<span class="math inline">\(0&lt;\alpha&lt;\frac{1}{2}\)</span>，从初始步长 <span class="math inline">\(t=t_{\mathrm{init}}\)</span> 开始，每一次 <span class="math inline">\(x^+=x-t\nabla f(x)\)</span> 迭代前检查 Armijo 条件： <span class="math display">\[\begin{align}
+\label{eq:armijo-condition}
+f(x-t\nabla f(x)) &gt; f(x)-\alpha t\|\nabla f(x)\|_2^2.
+\end{align}\]</span> 若满足，则缩小： <span class="math display">\[\begin{align}
+\label{eq:backtracking-update}
 t \leftarrow \beta t,
-\end{align}
-\]</span> 重复直到条件满足，然后更新 <span class="math inline">\(x^+=x-t\nabla f(x)\)</span>。</p>
-<h4 id="该判断条件的物理意义">(1) 该判断条件的物理意义</h4>
-<p><span class="math inline">\(-\alpha t\|\nabla f(x)\|^2\)</span> 可视为一次近似预测下降量 <span class="math inline">\(-t\|\nabla f(x)\|^2\)</span> 的一个比例。该条件要求：<strong>真实函数值的下降至少达到线性模型所预测下降的一部分</strong>，即更新必须“足够有效”。</p>
-<h4 id="为什么不满足就缩步长为什么不直接更新">(2) 为什么不满足就缩步长？为什么不直接更新？</h4>
-<p>不满足 Armijo 条件说明步子太大导致线性化不可信，可能出现 <span class="math inline">\(f(x^+) \ge f(x)\)</span> 或下降不足，从而破坏单调下降及后续收敛分析。缩小步长使更新落入“线性化可信”的范围，保证可以得到足够下降，再执行更新。</p>
+\end{align}\]</span> 否则按照上一步的步长更新。</p>
+<h4 id="armijo-条件的逻辑和意义">(1) Armijo 条件的逻辑和意义</h4>
+<p><span class="math inline">\(-\alpha t\|\nabla f(x)\|^2\)</span> 可视为一次近似预测下降量 <span class="math inline">\(-t\|\nabla f(x)\|^2\)</span> 的一个比例：将 f(x-tf(x)) 在 <span class="math inline">\(x\)</span> 一阶泰勒展开可得 <span class="math display">\[\begin{align}
+f(x-t\nabla f(x)) \approx f(x) - t \nabla f(x)^\top \nabla f(x) = f(x) - t \|\nabla f(x)\|_2^2.
+\end{align}\]</span> 条件 <span class="math inline">\(\eqref{eq:armijo-condition}\)</span> 表明，当前步长 <span class="math inline">\(t\)</span> 导致的实际下降量 <span class="math inline">\(f(x) - f(x-t\nabla f(x))\)</span> 不足以达到预测下降量 <span class="math inline">\(t\|\nabla f(x)\|_2^2\)</span> 的 <span class="math inline">\(\alpha\)</span> 比例，说明步长过大，二次近似的上界不可信，需要减小步长（<strong>有点反直觉：只盯着单步大小，忽略了“能不能稳定下降”</strong>）。</p>
+<ul>
+<li>先试某个较大的步长</li>
+<li>只在失败时缩小（说明当前步长在当前点根本不合格）</li>
+<li>一旦合格就停止缩小并更新</li>
+</ul>
 <h4 id="为什么取-0beta1-与-0alpha12">(3) 为什么取 <span class="math inline">\(0&lt;\beta&lt;1\)</span> 与 <span class="math inline">\(0&lt;\alpha&lt;1/2\)</span>？</h4>
 <ul>
-<li><span class="math inline">\(0&lt;\beta&lt;1\)</span>：保证步长按几何级数缩小，有限次缩小即可进入可接受区间，从而保证线搜索终止。</li>
-<li><span class="math inline">\(0&lt;\alpha&lt;1/2\)</span>：在 <span class="math inline">\(L\)</span>-光滑条件下，可证明存在足够小的步长区间使 Armijo 条件成立；取 <span class="math inline">\(\alpha&lt;1/2\)</span> 使该区间不至于过窄，并避免过度保守（经验上也较稳健）。</li>
-</ul>
-<h4 id="为什么-backtracking-能保证收敛速度">(4) 为什么 backtracking 能保证收敛“速度”？</h4>
-<p>backtracking 不改变理论收敛阶（一般凸仍为 <span class="math inline">\(O(1/k)\)</span>），但它能避免两类灾难： - 步长过大导致发散； - 步长过小导致极慢。 在 <span class="math inline">\(L\)</span>-光滑条件下，可证明 backtracking 选出的步长最终与 <span class="math inline">\(1/L\)</span> 同量级，因此在常数因子意义上接近“合理固定步长”的效率。</p>
-<h3 id="exact-line-search精确线搜索">4. Exact line search（精确线搜索）</h3>
-<p><strong>Exact line search</strong> 沿负梯度方向求一维精确最小： <span class="math display">\[
-\begin{align}
-t=\arg\min_{s\ge 0} f(x-s\nabla f(x)).
-\end{align}
-\]</span> 区别与评价：</p>
+<li><span class="math inline">\(0&lt;\beta&lt;1\)</span>：保证步长缩小，有限次缩小即可进入可接受区间，从而线搜索终止。</li>
+<li><span class="math inline">\(0&lt;\alpha&lt;1/2\)</span>：
 <ul>
-<li>exact line search 需要解一维优化子问题，通常要多次函数评估甚至导数评估，单步代价大；</li>
-<li>backtracking 只需验证“充分下降”，通常少量试探即可得到可接受步长；</li>
-<li>在许多问题中，梯度法慢的主因是方向与条件数（几何结构导致“之字形”），而非步长是否最精确。因此 exact 的额外开销往往不能换来同等量级的迭代减少，整体效率可能不如 backtracking。</li>
+<li><p>在 <span class="math inline">\(L\)</span>-smooth条件下，可证明存在足够小的步长区间使 Armijo 条件成立；取 <span class="math inline">\(\alpha&lt;1/2\)</span> 能保证 <span class="math inline">\(t \le \frac{1}{L}\)</span> 使得二次近似的上界更可靠。证明过程如下：</p>
+<details>
+<p> 由 <span class="math inline">\(L\)</span>-smooth 的下降引理（Descent Lemma），对任意 <span class="math inline">\(t&gt;0\)</span>， <span class="math display">\[\begin{align*}
+f(x_k-tg_k)\le f(x_k)-t\|g_k\|^2+\frac{L}{2}t^2\|g_k\|^2.
+\end{align*}\]</span> 当 <span class="math inline">\(t\le \frac{1}{L}\)</span> 时，有 <span class="math inline">\(1-\frac{Lt}{2}\ge \frac12\)</span>，从而 <span class="math display">\[\begin{align*}
+f(x_k-tg_k)\le f(x_k)-\frac12 t\|g_k\|^2 \le f(x_k)-\alpha t\|g_k\|^2,
+\end{align*}\]</span> 其中使用了 <span class="math inline">\(\alpha\le \tfrac12\)</span>。因此任意 <span class="math inline">\(t\le 1/L\)</span> 都必满足 Armijo。 回溯从 <span class="math inline">\(t_{\rm init}\)</span> 开始按 <span class="math inline">\(t\leftarrow \beta t\)</span> 缩小，有限步后必得到 <span class="math inline">\(t\le 1/L\)</span>，故终止。 设终止时得到 <span class="math inline">\(t_k\)</span>，则若 <span class="math inline">\(t_{\rm init}\le 1/L\)</span>，显然 <span class="math inline">\(t_k\ge \beta t_{\rm init}\)</span>； 若 <span class="math inline">\(t_{\rm init}&gt;1/L\)</span>，令 <span class="math inline">\(m\)</span> 为最小整数使 <span class="math inline">\(t_{\rm init}\beta^m\le 1/L\)</span>， 则 <span class="math inline">\(t_k=t_{\rm init}\beta^m &gt; \beta(1/L)\)</span>。综上 <span class="math inline">\(t_k\ge \beta\min\{t_{\rm init},1/L\}=t_{\min}&gt;0\)</span>。</p>
+<p> Armijo 条件直接给出 <span class="math display">\[\begin{align*}
+f(x_{k+1})\le f(x_k)-\alpha t_k\|g_k\|^2 \le f(x_k)-\alpha t_{\min}\|g_k\|^2.
+\end{align*}\]</span> 两边从 <span class="math inline">\(k=0\)</span> 累加并利用 <span class="math inline">\(f(x_k)\ge f^\star\)</span> 得 <span class="math display">\[\begin{align*}
+\alpha t_{\min}\sum_{k=0}^{\infty}\|g_k\|^2 \le f(x_0)-f^\star&lt;\infty,
+\end{align*}\]</span> 故 <span class="math inline">\(\sum\|g_k\|^2&lt;\infty\)</span>，从而 <span class="math inline">\(\|g_k\|\to 0\)</span>。</p>
+<p> 由凸性， <span class="math display">\[\begin{align*}
+f(x_k)-f^\star \le \langle g_k,\,x_k-x^\star\rangle \le \|g_k\|\,\|x_k-x^\star\|\le R\|g_k\|.
+\end{align*}\]</span> 因此 <span class="math inline">\(\|g_k\|\ge \frac{f(x_k)-f^\star}{R}\)</span>。 代入下降不等式（用 <span class="math inline">\(t_k\ge t_{\min}\)</span>）： <span class="math display">\[\begin{align*}
+f(x_k)-f(x_{k+1}) \ge \alpha t_{\min}\|g_k\|^2
+\ge \alpha t_{\min}\frac{(f(x_k)-f^\star)^2}{R^2}.
+\end{align*}\]</span> 令 <span class="math inline">\(\Delta_k:=f(x_k)-f^\star&gt;0\)</span>，则 <span class="math display">\[\begin{align*}
+\Delta_k-\Delta_{k+1}\ge \frac{\alpha t_{\min}}{R^2}\Delta_k^2
+\quad\Longrightarrow\quad
+\frac{1}{\Delta_{k+1}}-\frac{1}{\Delta_k}\ge \frac{\alpha t_{\min}}{R^2}.
+\end{align*}\]</span> 累加得 <span class="math inline">\(\frac{1}{\Delta_k}\ge \frac{1}{\Delta_0}+k\frac{\alpha t_{\min}}{R^2}\)</span>， 从而 <span class="math display">\[\begin{align*}
+\Delta_k \le \frac{R^2}{\alpha t_{\min}}\cdot \frac{1}{k}.
+\end{align*}\]</span></p>
+<p> 若 <span class="math inline">\(f\)</span> 为 <span class="math inline">\(\mu\)</span>-强凸，则满足 Polyak–ojasiewicz 不等式 <span class="math display">\[\begin{align*}
+\|g_k\|^2 \ge 2\mu\,(f(x_k)-f^\star)=2\mu\,\Delta_k.
+\end{align*}\]</span> 由 Armijo 下降： <span class="math display">\[\begin{align*}
+\Delta_{k+1}\le \Delta_k-\alpha t_k\|g_k\|^2
+\le \Delta_k-2\alpha\mu t_{\min}\Delta_k
+=(1-2\alpha\mu t_{\min})\Delta_k,
+\end{align*}\]</span> 迭代即得线性收敛结论。</p>
+</details></li>
+<li><p>在 Lipshitz 条件下，取 <span class="math inline">\(\alpha&lt;1/2\)</span> 也能保证 <span class="math inline">\(t \ge \frac{1}{2}\)</span>，即存在足够小的步长区间使 Armijo 条件成立，证明如下：</p>
+<details>
+<p>XXX</p>
+</details></li>
+</ul></li>
 </ul>
-<hr>
-<h2 id="四收敛性分析">四、收敛性分析</h2>
-<h3 id="convergence-rate收敛速率-与-ocdot-的定义及意义">1. Convergence rate（收敛速率） 与 <span class="math inline">\(O(\cdot)\)</span> 的定义及意义</h3>
-<h4 id="收敛速率convergence-rate">(1) 收敛速率（convergence rate）</h4>
-<p>用误差序列刻画迭代的收敛速度。常见误差包括： <span class="math display">\[
-\begin{align}
-\text{函数值误差: }~ f(x^k)-f^\star, 
-\qquad
-\text{驻点误差: }~ \|\nabla f(x^k)\|.
-\end{align}
-\]</span></p>
-<p>例如，<span class="math inline">\(f(x_k) - f(x^\star) \le \frac{C}{k}\)</span> 表示函数值误差以 <span class="math inline">\(O(1/k)\)</span> 速率收敛。</p>
-<!-- 典型速率形式：
-
-- 亚线性：$f(x^{(k)})-f^\star = O(1/k)$；
-- 线性（几何）：$f(x^{(k)})-f^\star \le C\gamma^k$，$0<\gamma<1$；
-- 非凸驻点：$\min_{0\le i\le k}\|\nabla f(x^{(i)})\| = O(1/\sqrt{k})$。 -->
-<h4 id="大-o-记号">(2) 大 <span class="math inline">\(O\)</span> 记号</h4>
-<p>对序列 <span class="math inline">\(\{a_k\},\{b_k\}\)</span>，若存在常数 <span class="math inline">\(C&gt;0\)</span> 与 <span class="math inline">\(k_0\)</span>，使得对所有 <span class="math inline">\(k\ge k_0\)</span>： <span class="math display">\[
-\begin{align}
-a_k \le C\, b_k,
-\end{align}
-\]</span> 则记为 <span class="math inline">\(a_k = O(b_k)\)</span>。</p>
-<!-- - **物理意义**：忽略常数与低阶项后的“主导量级”，用于比较不同算法误差随 $k$ 的衰减阶。
-- **自变量理解**：在“速率”语境中，自变量为迭代次数 $k$；在“复杂度”语境中，常将结果反解为达到精度 $\varepsilon$ 所需迭代数 $k(\varepsilon)$。 -->
-<hr>
-<h3 id="四个定理凸强凸下界非凸及关键概念解读">2. 四个定理（凸/强凸/下界/非凸）及关键概念解读</h3>
-<h4 id="定理-1光滑凸convex-differentiable-lipschitz-gradient">定理 1：光滑凸（convex + differentiable + Lipschitz gradient）</h4>
-<p><strong>条件：</strong></p>
+<h4 id="为什么-backtracking-对初值要求不高且看起来更快">(4) 为什么 backtracking 对初值要求不高且看起来更快？</h4>
 <ul>
-<li><span class="math inline">\(f\)</span> 凸且可微；</li>
-<li><span class="math inline">\(\nabla f\)</span> 为 <span class="math inline">\(L\)</span>-Lipschitz： <span class="math display">\[
-\begin{align}
-\|\nabla f(x)-\nabla f(y)\|_2 \le L\|x-y\|_2,\quad \forall x,y.
-\end{align}
-\]</span></li>
-<li>若 <span class="math inline">\(f\)</span> 二阶可导，则上述条件等价于： <span class="math display">\[
-\begin{align}
-\nabla^2 f(x) \preceq LI,\quad \forall x,
-\end{align}
-\]</span> 即 Hessian 的最大特征值不超过 <span class="math inline">\(L\)</span>（曲率上界）。</li>
-</ul>
-<p><strong>结论（固定步长）：</strong> 当 <span class="math inline">\(0&lt;t\le 1/L\)</span>， <span class="math display">\[
-\begin{align}
-f(x^{(k)})-f^\star \le \frac{\|x^{(0)}-x^\star\|_2^2}{2tk}.
-\end{align}
-\]</span> 因此函数值误差为 <span class="math inline">\(O(1/k)\)</span>，达到精度 <span class="math inline">\(\varepsilon\)</span> 的迭代复杂度为 <span class="math inline">\(O(1/\varepsilon)\)</span>。</p>
-<p><strong>解释：</strong> 仅有曲率上界，没有曲率下界时，目标函数可在某些方向“非常平”，无法保证每步按固定比例压缩误差，故只能得到亚线性速率。</p>
-<hr>
-<h4 id="定理-2光滑强凸strongly-convex-differentiable-lipschitz-gradient">定理 2：光滑强凸（strongly convex + differentiable + Lipschitz gradient）</h4>
-<p><strong>条件：</strong></p>
+<li><p>固定步长梯度下降的初值敏感性体现在：若初值离最优解较远，且函数<strong>曲率</strong>变化较大（例如条件数大），则固定步长往往难以兼顾稳定性与收敛速度，容易出现发散或过慢的情况。</p></li>
+<li><p>需要明确的是：backtracking 不改变理论收敛性能，但它能避免两类灾难：</p>
 <ul>
-<li><span class="math inline">\(f\)</span> 为 <span class="math inline">\(m\)</span>-强凸且可微；</li>
-<li><span class="math inline">\(\nabla f\)</span> 为 <span class="math inline">\(L\)</span>-Lipschitz。</li>
-<li>若二阶可导，则强凸等价于： <span class="math display">\[
-\begin{align}
-\nabla^2 f(x) \succeq mI,\quad \forall x,
-\end{align}
-\]</span> 即 Hessian 的最小特征值不小于 <span class="math inline">\(m\)</span>（曲率下界）。</li>
-</ul>
-<p><strong>结论（固定步长）：</strong> 当 <span class="math display">\[
-\begin{align}
-0&lt;t\le \frac{2}{m+L},
-\end{align}
-\]</span> 存在 <span class="math inline">\(0&lt;\gamma&lt;1\)</span> 使得 <span class="math display">\[
-\begin{align}
-f(x^{(k)})-f^\star \le \gamma^k\cdot \frac{L}{2}\|x^{(0)}-x^\star\|_2^2.
-\end{align}
-\]</span> 因此为线性（几何）收敛；常写迭代复杂度为 <span class="math display">\[
-\begin{align}
-k = O\!\left(\frac{L}{m}\log\frac{1}{\varepsilon}\right).
-\end{align}
-\]</span></p>
-<p><strong>解释：</strong> 当 <span class="math inline">\(mI\preceq \nabla^2 f \preceq LI\)</span>，函数像“均匀碗形”，每一步都能保证按固定比例缩小误差；但比例由条件数 <span class="math inline">\(\kappa=L/m\)</span> 控制，<span class="math inline">\(\kappa\)</span> 越大，收敛越慢。</p>
-<hr>
-<h4 id="定理-3nesterov-最坏情形下界一阶方法不可能比-o1k2-更快">定理 3（Nesterov 最坏情形下界）：一阶方法不可能比 <span class="math inline">\(O(1/k^2)\)</span> 更快</h4>
-<p><strong>问题背景：</strong> 对 <span class="math inline">\(L\)</span>-光滑凸函数类，考虑“一阶方法”——每次迭代点 <span class="math inline">\(x^{(k)}\)</span> 仅能依赖于已访问的梯度信息，并位于由历史梯度张成的线性子空间中。</p>
-<p><strong>结论（下界形式）：</strong> 当 <span class="math inline">\(k\le (n-1)/2\)</span> 时，对任意一阶方法，存在某个 <span class="math inline">\(L\)</span>-光滑凸函数使得 <span class="math display">\[
-\begin{align}
-f(x^{(k)})-f^\star \ge \frac{3L\|x^{(0)}-x^\star\|_2^2}{32(k+1)^2}.
-\end{align}
-\]</span></p>
-<p><strong>理解：</strong> 该定理说明：在最坏情形下，任何一阶方法对光滑凸问题的可保证速率不可能优于 <span class="math inline">\(O(1/k^2)\)</span>。这同时解释了两点：</p>
-<ul>
-<li>普通梯度下降的 <span class="math inline">\(O(1/k)\)</span> 在最坏情形下不是最优阶；</li>
-<li>但存在加速一阶法能达到 <span class="math inline">\(O(1/k^2)\)</span>，且该阶在该函数类上已经是最优（不能再提高阶数）。</li>
+<li>步长过大导致发散；</li>
+<li>步长过小导致极慢。</li>
+</ul></li>
 </ul>
 <hr>
-<h4 id="定理-4非凸光滑全局最优通常不可求转向近似驻点varepsilon-substationary">定理 4：非凸光滑——全局最优通常不可求，转向近似驻点（<span class="math inline">\(\varepsilon\)</span>-substationary）</h4>
-<p><strong>为什么“asking for optimality is too much”？</strong> 非凸优化可能具有大量局部极小、鞍点与复杂地形；寻找全局最优在一般情形下往往是计算上极其困难的问题（常需全局搜索/组合爆炸），因此“要求全局最优”在算法保证层面通常不现实。</p>
-<p><strong>非凸问题是否存在最优解？</strong> 可能存在也可能不存在：若 <span class="math inline">\(f\)</span> 只有下确界 <span class="math inline">\(\inf f\)</span> 但不取到该值，则不存在全局最小点。即使存在，全局最小点的个数与结构一般也难以仅凭局部信息确定。</p>
-<p><strong>梯度下降在非凸情形收敛到什么？</strong> 典型保证是收敛到“驻点”意义的解（梯度接近 0），而非全局最优或必然局部最小。可能停在： - 局部最小点； - 鞍点附近； - 或其他满足一阶必要条件的点。</p>
-<p><strong><span class="math inline">\(\varepsilon\)</span>-substationary point 的定义：</strong> 点 <span class="math inline">\(x\)</span> 若满足 <span class="math display">\[
-\begin{align}
-\|\nabla f(x)\|_2 \le \varepsilon,
-\end{align}
-\]</span> 则称为 <span class="math inline">\(\varepsilon\)</span>-substationary（近似驻点）。</p>
-<p><strong>关键结论（非凸收敛指标）：</strong> 在 <span class="math inline">\(L\)</span>-光滑下，取 <span class="math inline">\(0&lt;t\le 1/L\)</span>，可得到 <span class="math display">\[
-\begin{align}
-\min_{0\le i\le k}\|\nabla f(x^{(i)})\|_2
-\le
-\sqrt{\frac{2\left(f(x^{(0)})-f^\star\right)}{t(k+1)}}.
-\end{align}
-\]</span> 因此要获得 <span class="math inline">\(\|\nabla f\|\le \varepsilon\)</span>，需要 <span class="math display">\[
-\begin{align}
-k = O(1/\varepsilon^2).
-\end{align}
-\]</span></p>
-<hr>
-<h2 id="五梯度下降求解凸优化">五、梯度下降求解凸优化</h2>
-<h3 id="伪代码">5.1 伪代码</h3>
+<h2 id="四实操梯度下降求解凸优化的方法实现">四、实操：梯度下降求解凸优化的方法实现</h2>
+<h3 id="伪代码">4.1 伪代码</h3>
 <blockquote>
 <p>算法1：固定步长梯度下降</p>
 </blockquote>
@@ -624,7 +764,7 @@ k = O(1/\varepsilon^2).
 <li>backtracking line search 不改变梯度法在一般光滑凸上的收敛阶（仍为 <span class="math inline">\(O(1/k)\)</span>），但能通过自适应步长避免发散与过慢；</li>
 <li>在强凸光滑场景下，与合理步长同量级的 backtracking 可保留线性收敛结构（常数因子层面差异）；</li>
 </ul>
-<h3 id="示例与演示">5.2 示例与演示</h3>
+<h3 id="示例与演示">4.2 示例与演示</h3>
 <p><a href="/app/gd_demo/">梯度下降对比演示（GD Demo）</a></p>
 
                 
@@ -722,9 +862,9 @@ k = O(1/\varepsilon^2).
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/01/26/03=Convex_Optimization/CVX-7/" title="凸优化学习系列 - 7. 随机梯度下降法">
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-1/" title="凸优化学习系列 - 1. 基本概念">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">凸优化学习系列 - 7. 随机梯度下降法</span>
+                        <span class="hidden-mobile">凸优化学习系列 - 1. 基本概念</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -732,8 +872,8 @@ k = O(1/\varepsilon^2).
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/12/12/02=SOS_Programming/SOS_0/" title="SOS Programming 系列 - 0 预备知识和底层逻辑">
-                        <span class="hidden-mobile">SOS Programming 系列 - 0 预备知识和底层逻辑</span>
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-5/" title="凸优化学习系列 - 5. 次梯度法">
+                        <span class="hidden-mobile">凸优化学习系列 - 5. 次梯度法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -994,9 +1134,11 @@ k = O(1/\varepsilon^2).
         if (!window.MathJax) {
           window.MathJax = {
             tex    : {
-              inlineMath: { '[+]': [['$', '$']] }
+              inlineMath: { '[+]': [['$', '$']] },
+              displayMath: { '[+]': [['$$', '$$'], ['\[', '\]']] },
+              tags: 'ams',
+              packages: { '[+]': ['ams'] }
             },
-            tags: 'ams',
             loader : {
               load: ['ui/lazy']
             },

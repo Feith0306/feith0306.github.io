@@ -673,9 +673,11 @@
         if (!window.MathJax) {
           window.MathJax = {
             tex    : {
-              inlineMath: { '[+]': [['$', '$']] }
+              inlineMath: { '[+]': [['$', '$']] },
+              displayMath: { '[+]': [['$$', '$$'], ['\[', '\]']] },
+              tags: 'ams',
+              packages: { '[+]': ['ams'] }
             },
-            tags: 'ams',
             loader : {
               load: ['ui/lazy']
             },

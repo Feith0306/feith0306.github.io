@@ -922,9 +922,11 @@ u(x) = -\frac{1}{2} R^{-1} g(x)^\top \nabla V(x)
         if (!window.MathJax) {
           window.MathJax = {
             tex    : {
-              inlineMath: { '[+]': [['$', '$']] }
+              inlineMath: { '[+]': [['$', '$']] },
+              displayMath: { '[+]': [['$$', '$$'], ['\[', '\]']] },
+              tags: 'ams',
+              packages: { '[+]': ['ams'] }
             },
-            tags: 'ams',
             loader : {
               load: ['ui/lazy']
             },
