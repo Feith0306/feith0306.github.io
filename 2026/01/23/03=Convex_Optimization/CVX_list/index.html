@@ -19,26 +19,21 @@
   <meta name="author" content="Tianhao Fei">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这个文档简要介绍了 proximal 算子的定义及意义。">
+    <meta name="description" content="Convex Optimization MIT  Gabriele Farina, MIT-6.7220, Nonlinear Optimization, Spring 2025  Princeton  Amir Ali Ahmadi, Princeton, ORF523, Convex and Conic Optimization, Spring 2025 Amir Ali Ahmadi, Pr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="优化进阶系列 - 1. proximal 初步">
-<meta property="og:url" content="https://feith0306.github.io/2026/01/20/01=Optimal_yyl/opt_advance_1/index.html">
+<meta property="og:title" content="Feith&#39;s Blog">
+<meta property="og:url" content="https://feith0306.github.io/2026/01/23/03=Convex_Optimization/CVX_list/index.html">
 <meta property="og:site_name" content="Feith&#39;s Blog">
-<meta property="og:description" content="这个文档简要介绍了 proximal 算子的定义及意义。">
+<meta property="og:description" content="Convex Optimization MIT  Gabriele Farina, MIT-6.7220, Nonlinear Optimization, Spring 2025  Princeton  Amir Ali Ahmadi, Princeton, ORF523, Convex and Conic Optimization, Spring 2025 Amir Ali Ahmadi, Pr">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
-<meta property="article:published_time" content="2026-01-20T08:32:00.000Z">
-<meta property="article:modified_time" content="2026-02-01T14:49:03.657Z">
+<meta property="article:published_time" content="2026-01-23T11:58:44.065Z">
+<meta property="article:modified_time" content="2026-02-26T08:16:30.742Z">
 <meta property="article:author" content="Tianhao Fei">
-<meta property="article:tag" content="gradient descent">
-<meta property="article:tag" content="optimization">
-<meta property="article:tag" content="proximal">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
   
   
   
-  <title>优化进阶系列 - 1. proximal 初步 - Feith&#39;s Blog</title>
+  <title>Feith&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +210,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="优化进阶系列 - 1. proximal 初步"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -226,8 +221,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-01-20 16:32" pubdate>
-          2026年1月20日 下午
+        <time datetime="2026-01-23 19:58" pubdate>
+          2026年1月23日 晚上
         </time>
       </span>
     
@@ -238,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          95 字
         
       </span>
     
@@ -249,7 +244,7 @@
         
         
         
-          12 分钟
+          1 分钟
         
       </span>
     
@@ -286,179 +281,80 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">优化进阶系列 - 1. proximal 初步</h1>
+            <h1 id="seo-header"></h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="重新审视-gradient-descent-算法原问题的逐次逼近求解">1. 重新审视 Gradient Descent 算法：原问题的逐次逼近求解</h1>
-<p>考虑优化问题 <span class="math display">\[
-\min_x f(x) 
-\]</span></p>
-<p>针对优化目标函数 <span class="math inline">\(f(x)\)</span>，如果将 <span class="math inline">\(\frac{1}{t}I\)</span> 替代<span class="math inline">\(\nabla^2f(x)\)</span>，则 <span class="math inline">\(f(\cdot)\)</span> 在给定点 <span class="math inline">\(x\)</span> 处的二阶近似可以表示为 <span class="math display">\[
-\hat{f}(z;x,t) = f(x) + \nabla f(x)^\top (z - x) + \frac{1}{2t} ||z - x||^2
-\]</span> 所以，当迭代至 <span class="math inline">\(x_k\)</span> 时，可以通过优化 <span class="math inline">\(\hat{f}(\cdot;x_k,t)\)</span> 来得到 <span class="math inline">\(x_{k+1}\)</span>： <span class="math display">\[
-\begin{align}
-    x_{k+1} =&amp; \arg\min_{z} \hat{f}(z;x_k,t)
-    \nonumber\\
-    =&amp; \arg\min_{z} \left[f(x_k) + \nabla f(x_k)^\top (z - x_k) + \frac{1}{2t} ||z - x_k||^2\right]
-\end{align}
-\]</span> 该优化问题的解析解为 <span class="math display">\[
-\begin{align}
-\label{eq:GD_f}
-x_{k+1} = x_k - t \nabla f(x_k)
-\end{align}
-\]</span></p>
-<p>所以可以得出结论： </p><div class="note note-primary">
-            <p>梯度下降算法是一种 <strong>逐次逼近</strong> 的方法</p>
+                <p>Convex Optimization</p>
+<h1 id="mit">MIT</h1>
 <ul>
-<li>逐次怎么逼近：
-<ul>
-<li>先找目标函数 <span class="math inline">\(f\)</span> 的上界 <span class="math inline">\(\hat{f}\)</span></li>
-<li>目标函数 <span class="math inline">\(f\)</span> 虽然凸但是直接优化困难，取而代之去优化上界 <span class="math inline">\(\hat{f}\)</span></li>
-<li>上界 <span class="math inline">\(\hat{f}\)</span> 具有良好的解析性质，可以直接得到最小值的显示表达式</li>
-<li>总结一句话：针对上界，找上界的最小值</li>
-</ul></li>
-<li>每次迭代都在求解近似目标函数 <span class="math inline">\(\hat{f}(z;x,t)\)</span> 而不是原目标函数 <span class="math inline">\(f(z)\)</span></li>
-<li>在 <span class="math inline">\(x_k\)</span> 处的近似目标函数 <span class="math inline">\(\hat{f}(z;x,t)\)</span> 最小值点就是 <span class="math inline">\(x_{k+1}\)</span>，并且 <span class="math inline">\(x_{k+1}\)</span> 具有解析表达式 </li>
+<li><a target="_blank" rel="noopener" href="https://www.mit.edu/~gfarina/67220/">Gabriele Farina, MIT-6.7220, Nonlinear Optimization, Spring 2025</a></li>
 </ul>
-          </div><p></p>
-<h1 id="不光滑目标函数">2. 不光滑目标函数</h1>
-<p>假设优化目标函数 <span class="math inline">\(f(x)\)</span> 可以分解为两部分：<span class="math inline">\(f(x) = g(x) + h(x)\)</span>，其中</p>
+<h1 id="princeton">Princeton</h1>
 <ul>
-<li><span class="math inline">\(g(x)\)</span> 是一个光滑函数</li>
-<li><span class="math inline">\(h(x)\)</span> 是一个不光滑函数</li>
-<li>两者均为凸函数</li>
+<li><a target="_blank" rel="noopener" href="https://aaa.princeton.edu/orf523">Amir Ali Ahmadi, Princeton, ORF523, Convex and Conic Optimization, Spring 2025</a></li>
+<li><a target="_blank" rel="noopener" href="https://aaa.princeton.edu/orf363">Amir Ali Ahmadi, Princeton, ORF363, Computing and Optimization, Fall 2025</a></li>
 </ul>
-<p>此时，由于 <span class="math inline">\(f(x)\)</span> 有不光滑成分 <span class="math inline">\(h(x)\)</span>，所以不能直接使用梯度下降算法来求解。这个时候又该怎么办呢？</p>
+<h1 id="cmu">CMU</h1>
 <ul>
-<li>先不处理不光滑部分 <span class="math inline">\(h(x)\)</span>，只针对光滑部分 <span class="math inline">\(g(x)\)</span>，使用梯度下降算法来求解：
-<ul>
-<li>在 <span class="math inline">\(x_k\)</span> 处针对光滑部分 <span class="math inline">\(\hat{g}(z;x_k,t)\)</span> 进行二阶近似: <span class="math display">\[
-\hat{g}(z;x_k,t) \approx g(x_k) + \nabla g(x_k)^\top (z - x_k) + \frac{1}{2t} ||z - x_k||^2
-\]</span></li>
-<li>求解 <span class="math inline">\(\hat{f}(z;x_k,t) = \hat{g}(z;x_k,t) + h(z)\)</span> 的最小值: <span class="math display">\[
-\begin{eqnarray}
-    x_{k+1} 
-    &amp;=&amp; \arg\min_{z} \hat{g}(z;x_k,t) + h(z)
-    \nonumber\\
-    &amp;=&amp; \arg\min_{z} \left[g(x_k) + \nabla g(x_k)^\top (z - x_k) + \frac{1}{2t} ||z - x_k||^2 + h(z)\right]
-    \nonumber\\
-    &amp;=&amp; \arg\min_{z} \frac{1}{2t} ||z - \underbrace{[x_k - t \nabla g(x_k)]}_{w}||^2 + h(z)
-    \label{eq:GD_gh}
-\end{eqnarray}
-\]</span></li>
-</ul></li>
+<li><a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~siva/teaching/725/">Sivaraman Balakrishnan, CMU, 10-725, Convex Optimization, Spring 2023</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/">Ryan Tibshirani, CMU, 10-725, Convex Optimization, Fall 2019</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cs.cmu.edu/~ggordon/10725-F12/schedule.html">Geoff Gordon, CMU, 10-725, Convex Optimization, Fall 2012</a></li>
 </ul>
-<p>观察  可知</p>
-<div class="note note-primary">
-            <ul>
-<li>目标函数中的 <span class="math inline">\(\frac{1}{2t} ||z - \underbrace{[x_k - t \nabla g(x_k)]}_{w}||^2\)</span>：
+<h1 id="cornell">Cornell</h1>
 <ul>
-<li>希望 <span class="math inline">\(z\)</span> 尽可能接近 <span class="math inline">\(w = x_k - t \nabla g(x_k)\)</span></li>
-<li>希望 <span class="math inline">\(z=x_{k+1}\)</span> 尽可能按照这个规律求解：在 <span class="math inline">\(x_k\)</span> 处沿着 <span class="math inline">\(\nabla g(x_k)\)</span> 方向移动</li>
-</ul></li>
-<li>目标函数中的 <span class="math inline">\(h(z)\)</span>：
-<ul>
-<li><span class="math inline">\(z=x_{k+1}\)</span> 的计算同时考虑到最小化 <span class="math inline">\(h(z)\)</span></li>
-<li>把 <code>不好直接处理</code> 的 <span class="math inline">\(h(z)\)</span>（比如不可导、带约束、非光滑）附加一个 <code>二次正则</code>，变成一个 <code>更容易解、且强凸</code> 的子问题。</li>
-</ul></li>
+<li><a target="_blank" rel="noopener" href="https://www.cs.cornell.edu/courses/cs6787/2024sp/">Christopher De Sa, Cornell, CS6787 Advanced Machine Learning Systems Spring 2024</a></li>
 </ul>
-          </div>
-<p>对不光滑部分 <span class="math inline">\(h(z)\)</span>，又该如何继续处理呢？这就需要引入 proximal 算子。</p>
-<h1 id="proximal-算子的定义">3. proximal 算子的定义</h1>
-<div class="note note-info">
-            <p>定义 prox-1. (<strong>proximal 算子</strong>) 给定以下元素</p>
+<h1 id="paris">Paris</h1>
 <ul>
-<li>一个适当（proper）、下半连续（l.s.c.）的凸函数 <span class="math inline">\(h:\mathbb{R}^n\to(-\infty,+\infty]\)</span></li>
-<li>参数 <span class="math inline">\(t&gt;0\)</span></li>
+<li><a target="_blank" rel="noopener" href="https://www.di.ens.fr/~aspremon/OptConvexeM2.html">Alexandre d’Aspremont, ENS, Convex Optimization, Algorithms and Applications, Fall 2025</a></li>
 </ul>
-<p>则函数 <code>h 的 proximal 算子</code> 定义为 <span class="math display">\[
-\begin{eqnarray}
-\mathrm{prox}_{h,t}(w) = \arg\min_{z} \left[\underbrace{h(z) + \frac{1}{2t} ||z - w||^2}_{\hat{f}(z;w)}\right]
-\label{eq:prox_def}
-\end{eqnarray}
-\]</span></p>
-          </div>
-<p>解读： </p><div class="note note-primary">
-            <ul>
-<li>关于 <span style="font-family: monospace; background:#f6f8fa; padding:2px 4px; border-radius:4px;"> <strong>目标函数 <span class="math inline">\(\hat{f}(z;w) = h(z) + \frac{1}{2t} ||z - w||^2\)</span></strong> </span>：
+<h1 id="upenn">UPenn</h1>
 <ul>
-<li>自变量是 <span class="math inline">\(z\)</span>，而 <span class="math inline">\(w\)</span> 是给定的参数</li>
-<li>最小值表达式与自变量 <span class="math inline">\(z\)</span> 无关，只与参数 <span class="math inline">\(w\)</span> 有关</li>
-</ul></li>
-<li>proximal 算子的作用：
-<ul>
-<li>将 <code>参数 w</code> （函数逼近的位置） 映射到该位置处近似目标<span style="font-family: monospace; background:#f6f8fa; padding:2px 4px; border-radius:4px;"> <span class="math inline">\(\hat{f}(z;w)\)</span> 的最优解 <span class="math inline">\(z\)</span> </span></li>
-<li><span style="font-family: monospace; background:#f6f8fa; padding:2px 4px; border-radius:4px;"><span class="math inline">\(\hat{f}(z;w)\)</span> 的最优解 <span class="math inline">\(z\)</span> </span> 尽可能接近 <code>参数 w</code>，同时满足 <code>h(z) 最小化</code></li>
-</ul></li>
-<li>proximal 算子 <span class="math inline">\(\mathrm{prox}_{h,t}(w)\)</span> 的参数 <span class="math inline">\(t\)</span> ：
-<ul>
-<li>当 <span class="math inline">\(t\)</span> 越大时，映射越接近 <code>参数 w</code>；</li>
-<li>当 <span class="math inline">\(t\)</span> 越小时，映射越接近 <code>h(z) 最小化解</code></li>
-</ul></li>
-<li>proximal 算子 <span class="math inline">\(\mathrm{prox}_{h,t}(w)\)</span> 的光滑部分 <span class="math inline">\(\frac{1}{2t} ||z - w||^2\)</span> ：
-<ul>
-<li>给更新（<span class="math inline">\(w \to z\)</span> / <span class="math inline">\(x_k\to x_{k+1}\)</span>）加了“刹车”</li>
-<li>对于 <code>病态问题（条件数大）</code> / <code>非光滑点（ℓ1 的尖点）</code> / <code>保持可行性（约束集）</code> 尤其重要</li>
-</ul></li>
-<li>prox 可以看成 <code>次微分算子 ∂𝑓</code> 的 <code>resolvent</code>
-<ul>
-<li>这带来非常有用的稳定性与收敛分析工具（非扩张、平均算子、单调算子理论）</li>
-<li>这也解释了为什么很多“prox-化”的迭代更容易证明收敛、更不容易炸。</li>
-</ul></li>
-<li>proximal 算子 <span class="math inline">\(\mathrm{prox}_{h,t}(w)\)</span> 与 <span class="math inline">\(g\)</span> 无关，仅与 <span class="math inline">\(h\)</span> 有关</li>
+<li><a target="_blank" rel="noopener" href="https://nikolaimatni.github.io/courses/ese605-spring2023/index.html">Nikolai Matni, UPenn, ESE 6050, Modern Convex Optimization, Spring 2023</a></li>
 </ul>
-          </div><p></p>
-<h1 id="proximal-gradient-descent">4. proximal gradient descent</h1>
-<p>回顾  <span class="math display">\[
-\begin{eqnarray}
-    x_{k+1} &amp;=&amp; \arg\min_{z} \frac{1}{2t} ||z - \underbrace{[x_k - t \nabla g(x_k)]}_{w}||^2 + h(z)
-    \nonumber\\
-    &amp;=&amp; \mathrm{prox}_{h,t}(x_k - t \nabla g(x_k))
-    \label{eq:GD_gh-1}
-\end{eqnarray}
-\]</span> 上式进一步等价于 <span class="math display">\[
-\begin{eqnarray}
-    x_{k+1} &amp;=&amp; x_{k} - t G_t(x_{k})
-    \label{eq:GD_gh-2}
-\end{eqnarray}
-\]</span> 其中 <span class="math inline">\(G_t(x)\)</span> 是 <span class="math inline">\(f=g+h\)</span> 的 <code>prox-化广义梯度算子</code>，定义为 <span class="math display">\[
-\begin{eqnarray}
-    G_t(x) &amp;=&amp; \frac{x-\mathrm{prox}_{h,t}(x-t\nabla g(x))}{t}
-    \label{eq:GD_gh-3}
-\end{eqnarray}
-\]</span></p>
-<h1 id="proximal-gradient-descent-收敛性分析">5. proximal gradient descent 收敛性分析</h1>
-<div class="note note-success">
-            <p>如果</p>
+<h1 id="uw-madison">UW-Madison</h1>
 <ul>
-<li><span class="math inline">\(g\)</span> 是 <code>凸函数</code> 且 <span class="math inline">\(\nabla g\)</span> 是 <code>L-Lipschitz 连续函数</code></li>
-<li><span class="math inline">\(h\)</span> 是 <code>凸函数</code> 且 <code>强凸函数</code></li>
-<li>固定步长 <span class="math inline">\(t\)</span> 满足 <span class="math inline">\(0 &lt; t &lt; \frac{1}{L}\)</span></li>
+<li><a target="_blank" rel="noopener" href="https://pages.cs.wisc.edu/~yudongchen/cs726_sp25/">Yudong Chen, UW-Madison, Stat 726, Nonlinear Optimization I, Spring 2025</a></li>
 </ul>
-<p>则</p>
+<h1 id="dtu">DTU</h1>
 <ul>
-<li>proximal gradient descent 收敛速度 <span class="math inline">\(\mathcal{O}(1/k)\)</span>： <span class="math display">\[
-\begin{eqnarray}
-  f(x_{k})-f^\star &amp;\leq&amp; \frac{1}{2tk} \|x_{0} - x^\star\|^2
-  \label{eq:PGD_convergence}
-\end{eqnarray}
-\]</span></li>
+<li><a target="_blank" rel="noopener" href="https://people.compute.dtu.dk/mskan/convexopt.html">Martin S. Andersen, DTU, Convex Optimization, 2023</a></li>
 </ul>
-          </div>
-<h1 id="reference">Reference</h1>
-<ol type="1">
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/tardis/zm/art/82622940?source_id=1005">机器学习 | 近端梯度下降法 (proximal gradient descent)</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103161094">【凸优化笔记4】-近端梯度下降（Proximal gradient descent）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chaolei3/article/details/81320940">对近端梯度算法（Proximal Gradient Method）的理解</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XL2COWARD/p/MyNorm_3.html">深入分析：近端梯度下降法/交替乘子法</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/153542295">凸优化—近端梯度 (proximal gradient)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cs.cmu.edu/~ggordon/10725-F12/schedule.html">Convex Optimization 10-725: Fall 2012</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/">Ryan Tibshirani. Convex Optimization 10-725: Fall 2019</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~siva/teaching/725/">Siva Balakrishnan. Convex Optimization 10-725: Spring 2023</a></li>
-<li><a target="_blank" rel="noopener" href="https://web.stanford.edu/~boyd/papers/pdf/prox_algs.pdf">Stephen Boyd. Proximal Algorithms. Foundations and trends® in Optimization, 2014.</a></li>
-</ol>
+<h1 id="johns-hopkins">Johns Hopkins</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mateodd25.github.io/nonlinear/">Mateo Díaz, Johns Hopkins, 553.761, Nonlinear Optimization I, Fall 2024</a></li>
+<li><a target="_blank" rel="noopener" href="https://mateodd25.github.io/nonlinear2/">Mateo Díaz, Johns Hopkins, 553.763, Nonlinear Optimization II, Spring 2025</a></li>
+</ul>
+<h1 id="epfl">EPFL</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/epfml/OptML_course">Bernd Gärtner &amp; Martin Jaggi, EPFL,Lecture notes</a></li>
+</ul>
+<h1 id="eth">ETH</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ti.inf.ethz.ch/ew/courses/CG13/index.html">Computational Geometry, ETH, 2013</a></li>
+</ul>
+<h1 id="harvard">Harvard</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hankyang.seas.harvard.edu/Semidefinite/">Heng Yang, Havard, Semidefinite Optimization and Relaxation</a></li>
+</ul>
+<h1 id="univ-of-graz">Univ of Graz</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://imsc.uni-graz.at/clason/skripte/OptimDataScience25.pdf">Christian Clason, Univ of Graz, Optimization for Data Science, SS 2025</a></li>
+</ul>
+<h1 id="rochester">Rochester</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://jiaming-liang.github.io/OPTML.html">Jiaming Liang, Rochester, Optimization for Machine Learning, Fall 2025</a></li>
+<li><a target="_blank" rel="noopener" href="https://jiaming-liang.github.io/CONTALG.html">Jiaming Liang, Rochester, CSC574/DSCC574-1 Continuous Algorithms for Optimization and Sampling, Spring 2024</a></li>
+<li><a target="_blank" rel="noopener" href="https://jiaming-liang.github.io/NLOPT.html">Jiaming Liang, Rochester, MATH294 Nonlinear Optimization, Spring 2025</a></li>
+</ul>
+<h1 id="pku">PKU</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://kunyuan827.github.io/llmopt2026/">Kun Yuan, PKU, Optimization for Large Language Models, 2026</a></li>
+<li><a target="_blank" rel="noopener" href="https://kunyuan827.github.io/dlopt2025/">Kun Yuan, PKU, Optimization for Deep Learning, 2025 Fall</a></li>
+<li><a target="_blank" rel="noopener" href="https://kunyuan827.github.io/dlopt2025/">Kun Yuan, PKU, Introduction to Foundation Models, 2025 Spring</a></li>
+</ul>
 
                 
               </div>
@@ -467,38 +363,6 @@ x_{k+1} = x_k - t \nabla f(x_k)
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/optimization/" class="category-chain-item">optimization</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/optimization/" class="print-no-link">#optimization</a>
-      
-        <a href="/tags/proximal/" class="print-no-link">#proximal</a>
-      
-        <a href="/tags/gradient-descent/" class="print-no-link">#gradient descent</a>
-      
-    </div>
   
 </div>
 
@@ -508,8 +372,8 @@ x_{k+1} = x_k - t \nabla f(x_k)
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>优化进阶系列 - 1. proximal 初步</div>
-      <div>https://feith0306.github.io/2026/01/20/01=Optimal_yyl/opt_advance_1/</div>
+      <div></div>
+      <div>https://feith0306.github.io/2026/01/23/03=Convex_Optimization/CVX_list/</div>
     </div>
     <div class="license-meta">
       
@@ -521,7 +385,7 @@ x_{k+1} = x_k - t \nabla f(x_k)
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年1月20日</div>
+          <div>2026年1月23日</div>
         </div>
       
       
@@ -553,9 +417,9 @@ x_{k+1} = x_k - t \nabla f(x_k)
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/01/20/01=Optimal_yyl/opt_advance_2/" title="优化进阶系列 - 2. proximal 应用">
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-3/" title="凸优化学习系列 - 3. 一阶方法">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">优化进阶系列 - 2. proximal 应用</span>
+                        <span class="hidden-mobile">凸优化学习系列 - 3. 一阶方法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -563,8 +427,8 @@ x_{k+1} = x_k - t \nabla f(x_k)
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/12/12/02=SOS_Programming/SOS_0/" title="SOS Programming 系列 - 0 预备知识和底层逻辑">
-                        <span class="hidden-mobile">SOS Programming 系列 - 0 预备知识和底层逻辑</span>
+                      <a href="/2026/01/23/SDP_list/" title="">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
