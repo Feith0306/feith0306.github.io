@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
 <meta property="article:published_time" content="2026-01-26T08:32:00.000Z">
-<meta property="article:modified_time" content="2026-01-31T14:16:57.342Z">
+<meta property="article:modified_time" content="2026-02-01T08:10:47.204Z">
 <meta property="article:author" content="Tianhao Fei">
 <meta property="article:tag" content="affine">
 <meta property="article:tag" content="convex function">
@@ -337,7 +337,7 @@
 <p><strong>这个文档简要介绍凸优化问题的重要概念。</strong></p>
 <h1 id="基础预备知识">1、基础预备知识</h1>
 <h2 id="凸集compact-set">1.1 凸集（Compact set）</h2>
-<div class="note note-info">
+<div class="note note-success">
             <p><strong>定义 1</strong>：对任意 <span class="math inline">\(x, y \in C \subseteq \mathbb{R}^n\)</span> 和任意 <span class="math inline">\(\lambda \in [0,1]\)</span>，有 <span class="math display">\[
 \begin{align}
 \lambda x + (1-\lambda) y \in C
@@ -346,7 +346,7 @@
           </div>
 <p>从几何角度来看，凸集的定义可以理解为：对于集合 <span class="math inline">\(C\)</span> 中的任意两点 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span>，连接 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 的<strong>线段</strong>也完全包含在集合 <span class="math inline">\(C\)</span> 中。</p>
 <h2 id="仿射集affine-set">1.2 仿射集（Affine set）</h2>
-<div class="note note-info">
+<div class="note note-success">
             <p><strong>定义 2</strong>：对任意 <span class="math inline">\(x, y \in A \subseteq \mathbb{R}^n\)</span> 和任意 <span class="math inline">\(\theta \in \mathbb{R}\)</span>，有 <span class="math display">\[
 \begin{align}
 \theta x + (1-\theta) y \in A
@@ -355,7 +355,7 @@
           </div>
 <p>从几何角度来看，仿射集的定义可以理解为：对于集合 <span class="math inline">\(A\)</span> 中的任意两点 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span>，连接 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 的<strong>直线</strong>也完全包含在集合 <span class="math inline">\(A\)</span> 中。</p>
 <h2 id="凸函数convex-function">1.3 凸函数（Convex function）</h2>
-<div class="note note-info">
+<div class="note note-success">
             <p><strong>定义 3</strong>：设 <span class="math inline">\(C \subseteq \mathbb{R}^n\)</span> 是一个凸集，函数 <span class="math inline">\(f: C \to \mathbb{R}\)</span> 称为凸函数，如果对任意 <span class="math inline">\(x, y \in C\)</span> 和任意 <span class="math inline">\(\lambda \in [0,1]\)</span>，有 <span class="math display">\[
 \begin{align}
 f(\lambda x + (1-\lambda) y) \leq \lambda f(x) + (1-\lambda) f(y)
@@ -371,7 +371,7 @@ f(\lambda x + (1-\lambda) y) \leq \lambda f(x) + (1-\lambda) f(y)
 <p>强凸 <span class="math inline">\(\Rightarrow\)</span> 严格凸 <span class="math inline">\(\Rightarrow\)</span> 凸。</p>
 </blockquote>
 <h2 id="仿射函数affine-function">1.4 仿射函数（Affine function）</h2>
-<div class="note note-info">
+<div class="note note-success">
             <p><strong>定义 4</strong>：函数 <span class="math inline">\(f: \mathbb{R}^n \to \mathbb{R}\)</span> 称为仿射函数，如果存在向量 <span class="math inline">\(a \in \mathbb{R}^n\)</span> 和标量 <span class="math inline">\(b \in \mathbb{R}\)</span>，使得对任意 <span class="math inline">\(x \in \mathbb{R}^n\)</span> 和 <span class="math inline">\(\theta \in \mathbb{R}\)</span>，有 <span class="math display">\[
 \begin{align}
 f\bigl(\theta x + (1-\theta)y\bigr) = \theta f(x) + (1-\theta)f(y)
@@ -383,7 +383,7 @@ f\bigl(\theta x + (1-\theta)y\bigr) = \theta f(x) + (1-\theta)f(y)
 <h1 id="为什么要做凸优化why">2.1、为什么要做凸优化（Why）</h1>
 <p>为什么不能做非凸优化？ 最小化问题为什么不能用其他理论结构？</p>
 <h1 id="凸优化问题的标准形式what">2.2、凸优化问题的标准形式（What）</h1>
-<div class="note note-success">
+<div class="note note-info">
             <p>典型的凸优化问题可以表示为以下标准形式： <span class="math display">\[\begin{align}
     \min_{x \in D} \quad &amp; f(x) \\
     \text{subject to} \quad &amp; 
@@ -698,12 +698,18 @@ f(x_\theta)\ge f^\star.
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-2/" title="凸优化学习系列 - 2. 凸优化问题分类">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">凸优化学习系列 - 2. 凸优化问题分类</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/01/26/03=Convex_Optimization/CVX-2/" title="凸优化学习系列 - 2. 凸优化问题分类">
-                        <span class="hidden-mobile">凸优化学习系列 - 2. 凸优化问题分类</span>
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-5-WIN-RQUJF9GGU40/" title="凸优化学习系列 - 5. 次梯度法">
+                        <span class="hidden-mobile">凸优化学习系列 - 5. 次梯度法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

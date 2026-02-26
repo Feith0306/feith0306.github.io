@@ -19,27 +19,27 @@
   <meta name="author" content="Tianhao Fei">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这个文档简要介绍凸优化问题的几种一阶求解方法。">
+    <meta name="description" content="这个文档介绍凸优化问题的随机梯度下降法。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="凸优化学习系列 - 3. 一阶方法">
-<meta property="og:url" content="https://feith0306.github.io/2026/01/26/03=Convex_Optimization/CVX-3/index.html">
+<meta property="og:title" content="凸优化学习系列 - 7. 随机梯度下降法">
+<meta property="og:url" content="https://feith0306.github.io/2026/01/26/03=Convex_Optimization/CVX-7/index.html">
 <meta property="og:site_name" content="Feith&#39;s Blog">
-<meta property="og:description" content="这个文档简要介绍凸优化问题的几种一阶求解方法。">
+<meta property="og:description" content="这个文档介绍凸优化问题的随机梯度下降法。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
 <meta property="article:published_time" content="2026-01-26T08:32:00.000Z">
-<meta property="article:modified_time" content="2026-02-09T10:04:42.000Z">
+<meta property="article:modified_time" content="2026-02-02T15:32:20.347Z">
 <meta property="article:author" content="Tianhao Fei">
 <meta property="article:tag" content="affine">
 <meta property="article:tag" content="convex function">
 <meta property="article:tag" content="convex set">
-<meta property="article:tag" content="gradient descent">
+<meta property="article:tag" content="stochastic gradient descent">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://feith0306.github.io/img/cover/optimization.jpg">
   
   
   
-  <title>凸优化学习系列 - 3. 一阶方法 - Feith&#39;s Blog</title>
+  <title>凸优化学习系列 - 7. 随机梯度下降法 - Feith&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="凸优化学习系列 - 3. 一阶方法"></span>
+            <span id="subtitle" data-typed-text="凸优化学习系列 - 7. 随机梯度下降法"></span>
           
         </div>
 
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.5k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          12 分钟
+          13 分钟
         
       </span>
     
@@ -287,171 +287,243 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">凸优化学习系列 - 3. 一阶方法</h1>
+            <h1 id="seo-header">凸优化学习系列 - 7. 随机梯度下降法</h1>
             
             
               <div class="markdown-body">
                 
-                <p><a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/">CMU 课程10-725-2019</a>的 <a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/scribes/convex-opt-scribed.pdf">Lecture 3</a> 和 <a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/scribes/canonical-probs-scribed.pdf">Lecture 4</a> 分别介绍了 <code>问题怎么写才是凸的（如何构造凸问题）</code> 以及 <code>某些变换后的问题为什么还是凸的（凸性保持）</code>，作为<strong>背景/预备知识</strong>，暂时不作深入讨论，遇到时再补充。 这个文档基于 <a target="_blank" rel="noopener" href="https://www.stat.cmu.edu/~ryantibs/convexopt/">CMU 课程10-725-2019</a> 的 Lecture 5-9，整理和总结凸优化问题的一阶求解方法，求解原理、收敛性与复杂度，并给出对比分析。</p>
-<h1 id="一阶方法总结">一阶方法总结</h1>
-<blockquote>
-<p><strong><code>一阶</code>是指求解过程中只用到目标函数的一阶信息，即 <span class="math inline">\(\nabla f\)</span>，而不适用二阶信息（如 Hessian 矩阵 <span class="math inline">\(\nabla^2 f\)</span>）。一阶方法通常每步计算开销较低，适合大规模问题，但收敛速度相对较慢。</strong></p>
+                <blockquote>
+<p>目标：读完这篇博客，应当能</p>
 </blockquote>
-<h2 id="梯度下降gradient-descent-gd">1. 梯度下降（Gradient Descent, GD）</h2>
-<p><strong>问题设定</strong>： 最小化光滑凸函数 <span class="math inline">\(f(x)\)</span>，假设 <span class="math inline">\(\nabla f\)</span> 为 <span class="math inline">\(L\)</span>-Lipschitz。</p>
-<p><strong>迭代格式</strong>： <span class="math display">\[\begin{align}
- x^{(k)} = x^{(k-1)} - t_k \nabla f(x^{(k-1)}), \quad k=1,2,\dots
-\end{align}\]</span></p>
-<p><strong>收敛性与速度</strong>：</p>
 <ul>
-<li>若 <span class="math inline">\(\nabla f\)</span> 为 <span class="math inline">\(L\)</span>-Lipschitz，则函数值收敛率为 <span class="math inline">\(O(1/k)\)</span>，达到 <span class="math inline">\(\varepsilon\)</span> 精度需 <span class="math inline">\(O(1/\varepsilon)\)</span> 次迭代。</li>
-<li>若 <span class="math inline">\(f\)</span> 进一步 <span class="math inline">\(m\)</span>-强凸，则线性收敛： <span class="math display">\[\begin{align}
-f(x^{(k)}) - f^* = O(\gamma^k), \quad 0&lt;\gamma&lt;1
-\end{align}\]</span> 因而迭代复杂度为 <span class="math inline">\(O(\log(1/\varepsilon))\)</span>。</li>
-<li>条件数 <span class="math inline">\(L/m\)</span> 越大，收敛越慢。</li>
-</ul>
-<p><strong>复杂度</strong>：每步一次梯度计算（成本依赖问题规模）。</p>
-<p><strong>优缺点</strong>：</p>
-<ul>
-<li>优：简单、每步便宜；对良好条件数的强凸问题很快。</li>
-<li>缺：要求可微；对病态问题慢。</li>
+<li>理解随机梯度的必要性及基本机制；</li>
+<li>学会如何用随机梯度下降法求解凸优化问题；</li>
+<li>知道随机梯度下降法（Stochastic Gradient Descent, SGD）的收敛速率及其与全梯度下降的区别；</li>
+<li>理解 mini-batch 与 early stopping 的作用及实现；</li>
 </ul>
 <hr>
-<h2 id="次梯度法subgradient-method">2. 次梯度法（Subgradient Method）</h2>
-<p><strong>次梯度定义</strong>（用于非光滑凸函数）： <span class="math display">\[\begin{align}
- f(y) \ge f(x) + g^T (y-x), \quad g \in \partial f(x)
+<h2 id="问题描述">1. 问题描述</h2>
+<h3 id="目标函数">1.1 目标函数</h3>
+<p>SGD 的出发点是<strong>有限和（finite-sum）</strong>目标： <span class="math display">\[\begin{align}
+\label{eq:finite_sum}
+\min_{x\in\mathbb{R}^n} f(x)\;\triangleq\;\frac{1}{m}\sum_{i=1}^{m} f_i(x),
+\end{align}\]</span> 其中每个 <span class="math inline">\(f_i\)</span> 通常对应一条数据样本的损失（或一个子目标）。</p>
+<h3 id="batch-gradient-descent全梯度下降">1.2 Batch Gradient Descent（全梯度下降）</h3>
+<p>对于 <span class="math inline">\(\eqref{eq:finite_sum}\)</span>，如果每个 <span class="math inline">\(f_i\)</span> 可微，则整体梯度为： <span class="math display">\[\begin{align}
+\nabla f(x)=\frac{1}{m}\sum_{i=1}^m \nabla f_i(x),
+\end{align}\]</span> 全梯度下降迭代为： <span class="math display">\[\begin{align}
+x_{k+1} = x_k - t_k \cdot \frac{1}{m}\sum_{i=1}^m \nabla f_i\!\left(x_k\right).
 \end{align}\]</span></p>
-<p><strong>迭代格式</strong>： <span class="math display">\[\begin{align}
- x^{(k)} = x^{(k-1)} - t_k g^{(k-1)}, \quad g^{(k-1)} \in \partial f(x^{(k-1)})
-\end{align}\]</span> 并用当前最优函数值的迭代点 <span class="math inline">\(x_{\text{best}}^{(k)}\)</span> 作为输出。</p>
-<p><strong>收敛性与速度</strong>（<span class="math inline">\(f\)</span> 为 <span class="math inline">\(G\)</span>-Lipschitz）： - 固定步长 <span class="math inline">\(t\)</span>： <span class="math display">\[\begin{align}
-  \lim_{k\to\infty} f(x_{\text{best}}^{(k)}) \le f^* + \frac{G^2 t}{2}
-  \end{align}\]</span> - 递减步长（平方可和但不可和）：<span class="math inline">\(f(x_{\text{best}}^{(k)}) \to f^*\)</span>。 - 收敛率：<span class="math inline">\(O(1/\varepsilon^2)\)</span>（明显慢于 GD 的 <span class="math inline">\(O(1/\varepsilon)\)</span>）。</p>
-<p><strong>复杂度</strong>：每步一次次梯度计算；不保证单调下降。</p>
-<p><strong>优缺点</strong>：</p>
-<ul>
-<li>优：可处理不可微凸问题，适用面广。</li>
-<li>缺：收敛慢；对步长较敏感。</li>
-</ul>
-<hr>
-<h2 id="近端梯度下降proximal-gradient-descent-pgd">3. 近端梯度下降（Proximal Gradient Descent, PGD）</h2>
-<p><strong>问题设定</strong>：复合目标 <span class="math inline">\(f(x)=g(x)+h(x)\)</span>，其中 <span class="math inline">\(g\)</span> 光滑凸、<span class="math inline">\(h\)</span> 凸且可计算近端算子。</p>
-<p><strong>近端映射</strong>： <span class="math display">\[\begin{align}
- \mathrm{prox}_{h,t}(x)=\arg\min_z \; \frac{1}{2t}\|x-z\|_2^2 + h(z)
+<p>在机器学习/统计中，<span class="math inline">\(m\)</span> 往往极大（百万、亿级），每一步都要把 <span class="math inline">\(m\)</span> 项梯度算一遍；当 <span class="math inline">\(m\)</span> 巨大时，一步就非常贵。因此，我们希望<strong>每一步只算部分样本的梯度</strong>，同时兼顾迭代的收敛性，这就是 SGD 的核心思想。</p>
+<h2 id="随机梯度下降">2. 随机梯度下降</h2>
+<p>SGD 每次更新时，只抽目标函数样本的一个索引 <span class="math inline">\(i_k\in\{1,\dots,m\}\)</span>： <span class="math display">\[\begin{align}
+x_{k+1} = x_k - t_k \cdot \nabla f_{i_k}\!\left(x_k\right).
 \end{align}\]</span></p>
-<p><strong>迭代格式</strong>： <span class="math display">\[\begin{align}
- x^{(k)} = \mathrm{prox}_{h,t_k}\big(x^{(k-1)}-t_k \nabla g(x^{(k-1)})\big)
+<p><strong>关键优势</strong>：</p>
+<ul>
+<li><strong>单步计算成本与 <span class="math inline">\(m\)</span> 无关</strong>（只算一个样本的梯度）</li>
+<li><strong>内存压力更小</strong>（不需要把所有样本都载入内存）</li>
+</ul>
+<h3 id="索引-i_k-选择规则">2.1 索引 <span class="math inline">\(i_k\)</span> 选择规则</h3>
+<p>两条常见规则：</p>
+<ol type="1">
+<li><strong>随机规则</strong>：<span class="math inline">\(i_k\)</span> 每次在 <span class="math inline">\(\{1,\dots,m\}\)</span> 上<strong>均匀随机</strong>抽取<br>
+</li>
+<li><strong>循环规则</strong>：<span class="math inline">\(i_k=1,2,\dots,m；1,2,\dots,m,\dots\)</span></li>
+</ol>
+<div class="note note-warning">
+            <p><strong>问题一：</strong></p>
+<ul>
+<li>两个规则的收敛性质是否一样？</li>
+<li>哪个规则更好？好在哪？为什么？</li>
+<li>两条规则是否有特定的适用场景？</li>
+</ul>
+          </div>
+<!-- ### 2.2 为什么随机规则“更顺”？——无偏梯度估计
+
+若 $i_k$ 均匀随机，则对任意 $x$：
+$$\begin{align}
+\mathbb{E}\big[\nabla f_{i_k}(x)\big] 
+= \frac{1}{m}\sum_{i=1}^m \nabla f_i(x)
+= \nabla f(x).
+\end{align}$$
+
+这句话非常重要：  
+**SGD 每一步用的是“全梯度的无偏估计（unbiased estimate）”。**
+
+> 无偏 **不等于** 低噪声。SGD 的问题不在“偏”，而在“方差”。 -->
+<hr>
+<!-- ## 4. 典型例子：逻辑回归（Logistic Regression）为什么需要 SGD？
+
+给定数据 $(x_i,y_i)\in\mathbb{R}^p\times\{0,1\}$，logistic 回归（经验风险最小化）：
+$$\begin{align}
+\min_{\beta\in\mathbb{R}^p}\;\frac{1}{n}\sum_{i=1}^n 
+\left(-y_i x_i^\top\beta + \log(1+\exp(x_i^\top\beta))\right)
+\;\triangleq\;\frac{1}{n}\sum_{i=1}^n f_i(\beta).
+\end{align}$$
+
+- 全梯度（batch）一步：要累加 $n$ 个样本梯度，复杂度 $\mathcal{O}(np)$  
+- SGD 一步：只算一个样本梯度，复杂度 $\mathcal{O}(p)$  
+
+当 $n$ 很大（10^6 级别），batch 一步可能比做很多次 SGD 还贵：
+
+> **SGD 往往在远离最优解时进展很快；接近最优解时会抖动、变慢。**
+
+这不是玄学，而是噪声方差导致的“无法精确贴近最优点”。 -->
+<h3 id="步长选择">2.2 步长选择</h3>
+<h4 id="固定步长">2.2.1 固定步长</h4>
+<p>为直观起见，考虑循环索引规则，如果固定 <span class="math inline">\(t_k=t\)</span>，做 <span class="math inline">\(1\)</span> 次更新： <span class="math display">\[\begin{align}
+\label{eq:sgd_m_steps}
+\begin{split}
+x_{k+1} &amp; = x_k- t \cdot \nabla f_{i_k}\!\left(x_k\right) \\
+&amp; = x_k - t \cdot \nabla f\!\left(x_k\right) - t \big[ \nabla f_{i_k}\!\left(x_k\right) - \nabla f\!\left(x_k\right) \big]
+\end{split}
+\end{align}\]</span> 其中 <span class="math inline">\(- t_k\big[ \nabla f_{i_k}\!\left(x_k\right) - \nabla f\!\left(x_k\right) \big]\)</span> 可以视为采用全梯度下降的“噪声项”。</p>
+<p>基于 <span class="math inline">\(\eqref{eq:sgd_m_steps}\)</span> 做 <span class="math inline">\(m\)</span> 次更新（一个 epoch）： <span class="math display">\[\begin{align}
+\label{eq:gd_m_steps}
+\begin{split}
+x_{k+m} &amp; = x_k - t \cdot \sum_{j=1}^{m} \nabla f_{i_{k+j-1}}\!\left(x_{k+j-1}\right) \\
+&amp; = x_k - t \cdot \sum_{i=1}^{m} \nabla f\!\left(x_{k+j-1}\right) - t \sum_{i=1}^{m} \big[ \nabla f_{i_{k+j-1}}(x_{k+j-1}) -\nabla f(x_{k+j-1}) \big] \\
+\end{split}
 \end{align}\]</span></p>
-<p><strong>收敛性与速度</strong>： - 若 <span class="math inline">\(\nabla g\)</span> 为 <span class="math inline">\(L\)</span>-Lipschitz，则 <span class="math display">\[\begin{align}
-  f(x^{(k)})-f^* = O(1/k)
-  \end{align}\]</span> 迭代复杂度 <span class="math inline">\(O(1/\varepsilon)\)</span>。</p>
-<p><strong>复杂度</strong>：每步一次梯度 + 一次 prox 计算（若 prox 便宜则总体高效）。</p>
-<p><strong>优缺点</strong>：</p>
-<ul>
-<li>优：可处理常见非光滑正则（如 <span class="math inline">\(\ell_1\)</span>、核范数），保留 GD 的速率。</li>
-<li>缺：prox 若代价高会成为瓶颈；误差近端会影响速率。</li>
-</ul>
-<hr>
-<h2 id="加速近端梯度accelerated-pgd-nesterov-加速">4. 加速近端梯度（Accelerated PGD / Nesterov 加速）</h2>
-<p><strong>核心思想</strong>：在 PGD 上加入动量外推；当 <span class="math inline">\(h=0\)</span> 时退化为加速梯度法。</p>
-<p><strong>典型迭代</strong>（讲义中的形式）： <span class="math display">\[\begin{align}
- v^{(k)} &amp;= x^{(k-1)} + \frac{k-2}{k+1}\big(x^{(k-1)}-x^{(k-2)}\big) \\
- x^{(k)} &amp;= \mathrm{prox}_{h,t_k}\big(v^{(k)}-t_k \nabla g(v^{(k)})\big)
+<p>随着 <span class="math inline">\(k\to\infty\)</span>，如果 <span class="math inline">\(x_k\)</span> 收敛到某个点 <span class="math inline">\(x^\star\)</span>，则 <span class="math inline">\(\nabla f(x_k)\to 0\)</span>。但由于噪声项 <span class="math display">\[\begin{align}
+t \sum_{i=1}^{m} \big[ \nabla f_{i_{k+j-1}}(x_{k+j-1}) -\nabla f(x_{k+j-1}) \big],
+\end{align}\]</span> 不会自动趋于 0，因此固定步长下的 SGD 往往<strong>无法精确收敛到最优点</strong>，而是围绕最优点附近抖动。</p>
+<blockquote>
+<p>因此，我们希望步长随着迭代逐渐减小，以降低噪声影响。</p>
+</blockquote>
+<h4 id="递减步长">2.2.2 递减步长</h4>
+<p>SGD 的“标准做法”是<strong>递减步长</strong>，满足 Robbins-Monro 条件： <span class="math display">\[\begin{align}
+\sum_{k=1}^\infty t_k = \infty, \quad \sum_{k=1}^\infty t_k^2 &lt; \infty.
 \end{align}\]</span></p>
-<p><strong>收敛性与速度</strong>： - 函数值收敛率达到 <span class="math inline">\(O(1/k^2)\)</span>（一阶方法最优）。 - 相应的精度复杂度为 <span class="math inline">\(O(1/\sqrt{\varepsilon})\)</span>。</p>
-<p><strong>复杂度</strong>：每步一次梯度 + 一次 prox；但并非单调下降。</p>
-<p><strong>优缺点</strong>：</p>
+<p>常用选择是 <span class="math display">\[\begin{align}
+t_k = \frac{c}{k}, \quad c &gt; 0.
+\end{align}\]</span></p>
+<div class="note note-warning">
+            <p><strong>问题二：</strong> 为什么 Robbins-Monro 条件就能保证 SGD 收敛？它们分别起什么作用？</p>
+<p><strong>问题三</strong> 递减步长下的收敛与固定步长相比是否一致？是否加速？</p>
+          </div>
+<!-- > **SGD 的步长策略不是装饰，而是理论与稳定性的一部分。** -->
+<h3 id="mini-batch-sgd">2.3 Mini-batch SGD</h3>
+<p>每一次只抽一个样本计算梯度，随机性太高，噪声较大。为降低噪声，可以用 <strong>mini-batch</strong>：每次抽一小批量样本计算梯度均值，在第 <span class="math inline">\(k\)</span> 次迭代随机抽一个小批量 <span class="math inline">\(I_k\subset\{1,\dots,m\}\)</span>，<span class="math inline">\(|I_k|=b\ll m\)</span>： <span class="math display">\[\begin{align}
+x_{k+1} = x_k - t_k \cdot \frac{1}{b}\sum_{i\in I_k}\nabla f_i(x_k).
+\end{align}\]</span></p>
+<p>它仍是<strong>无偏</strong>的： <span class="math display">\[\begin{align}
+\mathbb{E}\left[\frac{1}{b}\sum_{i\in I_k}\nabla f_i(x)\right]=\nabla f(x).
+\end{align}\]</span></p>
+<p>对比单样本 SGD，mini-batch SGD 有如下特点：</p>
 <ul>
-<li>优：显著加速，理论最优速率。</li>
-<li>缺：对步长/动量更敏感；不一定单调下降。</li>
+<li>方差大约缩小为原来的 <span class="math inline">\(1/b\)</span></li>
+<li>但一次迭代计算量也增大为 <span class="math inline">\(b\)</span> 倍</li>
 </ul>
+<div class="note note-warning">
+            <p><strong>问题三：</strong> mini-batch SGD 比单样本 SGD 的优点体现在哪？为什么有这些优点？它的缺点又体现在哪？在实际应用中，如何选择 mini-batch 大小 <span class="math inline">\(b\)</span>？</p>
+          </div>
+<!-- 理论上在 Lipschitz 梯度下，速率从 $\mathcal{O}(1/\sqrt{k})$ 改为
+$$\begin{align}
+\mathcal{O}\!\left(\frac{1}{\sqrt{bk}}+\frac{1}{k}\right),
+\end{align}$$
+**纯从 flops 角度，mini-batch 未必占优**；它在实践中仍有意义（例如并行、GPU、吞吐）。
+
+> 别把 mini-batch 当成“SGD 的加速器”。它首先是“方差-并行-吞吐”的工程折中。 -->
+<!-- ### 2.4 Early Stopping
+
+考虑高维 $p$ 很大时拟合 logistic 回归。可以显式做 ridge（$\ell_2$）正则：
+\begin{align}
+\min_\beta\;\frac{1}{n}\sum_{i=1}^n\Big(-y_i x_i^\top\beta+\log(1+e^{x_i^\top\beta})\Big)+\frac{\lambda}{2}\|\beta\|_2^2.
+\end{align}
+
+也可以解“无正则”问题，但**用 GD/SGD 跑几步就停**（early stopping）：
+\begin{align}
+\beta^{(k)}=\beta^{(k-1)}-\varepsilon\cdot \frac{1}{n}\sum_{i=1}^n (y_i-p_i(\beta^{(k-1)}))x_i,
+\end{align}
+并把 $\beta^{(k)}$ 视作某个正则强度下的近似解。
+
+直觉（“steepest descent”视角）：
+
+- GD 每一步都在“降低损失”与“控制参数范数增长”之间做隐式平衡  
+- 因此“跑到第 $k$ 步”往往对应某种隐式的正则化强度
+
+> 如果在大规模学习里纠结“要不要把目标解到极致”，大概率是在浪费算力：统计精度常常不需要最优到 $10^{-10}$。 -->
 <hr>
-<h2 id="随机梯度下降stochastic-gradient-descent-sgd">5. 随机梯度下降（Stochastic Gradient Descent, SGD）</h2>
-<p><strong>问题设定</strong>：最小化均值型目标 <span class="math inline">\(f(x)=\frac{1}{m}\sum_{i=1}^m f_i(x)\)</span>。</p>
-<p><strong>迭代格式</strong>： <span class="math display">\[\begin{align}
- x^{(k)} = x^{(k-1)} - t_k \nabla f_{i_k}(x^{(k-1)})
-\end{align}\]</span> 其中 <span class="math inline">\(i_k\)</span> 为随机抽样索引，<span class="math inline">\(\mathbb{E}[\nabla f_{i_k}(x)] = \nabla f(x)\)</span>。</p>
-<p><strong>收敛性与速度</strong>：</p>
-<ul>
-<li>对凸函数、递减步长： <span class="math display">\[\begin{align}
-\mathbb{E}[f(x^{(k)})]-f^* = O(1/k)
-\end{align}\]</span></li>
-<li>即使强凸+Lipschitz 梯度，SGD 仍只有 <span class="math inline">\(O(1/k)\)</span> 的期望收敛，不具备 GD 的线性收敛。</li>
-</ul>
-<p><strong>复杂度</strong>：</p>
-<ul>
-<li>一次 batch 梯度：<span class="math inline">\(O(np)\)</span>；</li>
-<li>一次随机梯度：<span class="math inline">\(O(p)\)</span>；</li>
-<li>mini-batch 大小 <span class="math inline">\(b\)</span>：<span class="math inline">\(O(bp)\)</span>。</li>
-</ul>
-<p><strong>优缺点</strong>：</p>
-<ul>
-<li>优：单步开销小，适合大规模数据。</li>
-<li>缺：噪声导致收敛慢；需谨慎设置步长/停止策略。</li>
-</ul>
-<hr>
-<h2 id="方法性质对比">6. 方法性质对比</h2>
+<h2 id="sgd-的收敛性质">4. SGD 的收敛性质</h2>
+<div class="note note-info">
+            <p><strong>定理一</strong>：对一般凸的 <span class="math inline">\(f\)</span>，递减步长下的 SGD 满足： <span class="math display">\[\begin{align}
+\mathbb{E}\big[f(x^{(k)})\big]-f^\star = \mathcal{O}\!\left(\frac{1}{\sqrt{k}}\right).
+\end{align}\]</span></p>
+          </div>
+<blockquote>
+<p>即使进一步假设 <span class="math inline">\(f\)</span> 为 <span class="math inline">\(L\)</span>-smooth，这个速率<strong>通常也不会提升到 <span class="math inline">\(\mathcal{O}(1/k)\)</span></strong>。</p>
+</blockquote>
+<div class="note note-info">
+            <p><strong>定理二</strong>：对强凸且 <span class="math inline">\(L\)</span>-smooth 的 <span class="math inline">\(f\)</span>，递减步长下的 SGD 满足： <span class="math display">\[\begin{align}
+  \mathbb{E}\big[f(x^{(k)})\big]-f^\star = \mathcal{O}\!\left(\frac{1}{k}\right)
+  \end{align}\]</span></p>
+          </div>
+<p><strong>结论</strong>： 经典 SGD <strong>享受不到</strong> GD 在强凸情形下的线性收敛。</p>
+<p><strong>对比总结</strong></p>
 <table>
+
 <thead>
 <tr class="header">
-<th style="text-align: center;">方法</th>
-<th style="text-align: center;">目标函数<span class="math inline">\(f\)</span></th>
-<th style="text-align: center;">每步计算</th>
-<th style="text-align: center;">典型收敛率（<span class="math inline">\(f\)</span>一般凸）</th>
-<th style="text-align: center;">主要优点</th>
-<th style="text-align: center;">主要缺点</th>
+<th style="text-align: center;">维度</th>
+<th style="text-align: center;">Full GD</th>
+<th style="text-align: center;">SGD</th>
+<th style="text-align: center;">Mini-batch SGD</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">GD</td>
-<td style="text-align: center;">光滑凸</td>
-<td style="text-align: center;">1 次全梯度</td>
-<td style="text-align: center;"><span class="math inline">\(O(1/k)\)</span></td>
-<td style="text-align: center;">简单、稳定</td>
-<td style="text-align: center;">需可微</td>
+<td style="text-align: center;">每步梯度</td>
+<td style="text-align: center;">全量 <span class="math inline">\(\frac{1}{m}\sum\nabla f_i\)</span></td>
+<td style="text-align: center;">单样本 <span class="math inline">\(\nabla f_{i_k}\)</span></td>
+<td style="text-align: center;">小批量均值</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Subgradient</td>
-<td style="text-align: center;">非光滑凸</td>
-<td style="text-align: center;">1 次次梯度</td>
-<td style="text-align: center;"><span class="math inline">\(O(1/\sqrt{k})\)</span></td>
-<td style="text-align: center;">目标函数无需可微</td>
-<td style="text-align: center;">收敛慢</td>
+<td style="text-align: center;">单步成本</td>
+<td style="text-align: center;">高，随 <span class="math inline">\(m\)</span> 线性增长</td>
+<td style="text-align: center;">低，与 <span class="math inline">\(m\)</span> 无关</td>
+<td style="text-align: center;">中，随 <span class="math inline">\(b\)</span> 增长</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">PGD</td>
-<td style="text-align: center;">复合凸</td>
-<td style="text-align: center;">1 梯度 + 1 prox</td>
-<td style="text-align: center;"><span class="math inline">\(O(1/k)\)</span></td>
-<td style="text-align: center;">目标函数无需可微</td>
-<td style="text-align: center;">prox 可能昂贵</td>
+<td style="text-align: center;">梯度噪声</td>
+<td style="text-align: center;">无</td>
+<td style="text-align: center;">高</td>
+<td style="text-align: center;">较低（约降到 <span class="math inline">\(1/b\)</span>）</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Acc-PGD</td>
-<td style="text-align: center;">复合凸</td>
-<td style="text-align: center;">1 梯度 + 1 prox</td>
-<td style="text-align: center;"><span class="math inline">\(O(1/k^2)\)</span></td>
-<td style="text-align: center;">理论最优速率</td>
-<td style="text-align: center;">参数敏感、非单调</td>
+<td style="text-align: center;">理论速率（凸）</td>
+<td style="text-align: center;"><span class="math inline">\(\mathcal{O}(1/k)\)</span>（<span class="math inline">\(L\)</span>-smooth）</td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb{E}[f(x^{(k)})]-f^\star=\mathcal{O}(1/\sqrt{k})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathcal{O}(1/\sqrt{bk}+1/k)\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">SGD</td>
-<td style="text-align: center;">均值目标</td>
-<td style="text-align: center;">1 次随机梯度</td>
-<td style="text-align: center;"><span class="math inline">\(O(1/\sqrt{k})\)</span></td>
-<td style="text-align: center;">适合大数据</td>
-<td style="text-align: center;">噪声、收敛慢</td>
+<td style="text-align: center;">强凸情形</td>
+<td style="text-align: center;"><span class="math inline">\(\mathcal{O}(\gamma^k)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb{E}\big[f(x^{(k)})\big]-f^\star = \mathcal{O}\!\left(\frac{1}{k}\right)\)</span></td>
+<td style="text-align: center;">取决于 <span class="math inline">\(b\)</span> 与实现 (<strong>需说明</strong>)</td>
 </tr>
 </tbody>
 </table>
 <hr>
-<h2 id="总结">7. 总结</h2>
-<ul>
-<li>小中规模、光滑凸：优先 GD；若强凸且条件数好，GD 收敛很快。</li>
-<li>非光滑凸：若有可计算的 prox，优先 PGD/Acc-PGD；否则用次梯度法。</li>
-<li>大规模数据：SGD 是首选，尤其当全梯度代价高时。</li>
-</ul>
+<hr>
+<h2 id="实操随机梯度下降求解凸优化的方法实现">5. 实操：随机梯度下降求解凸优化的方法实现</h2>
+<h3 id="sgd-伪代码i_k-随机索引">5.1 SGD 伪代码（<span class="math inline">\(i_k\)</span> 随机索引）</h3>
+<p><span class="math display">\[
+\begin{array}{l}
+\textbf{Algorithm 1: Stochastic Gradient Descent}\\
+\textbf{Input:} \ x_0 \in\mathbb{R}^n; \ \text{Step-size schedule } \{t_k\}_{k=1}^{K}; \ K; \ \text{indices } i_k\in\{1,\dots,m\}.\\[2mm]
+1.\  \textbf{for } k=1,2,\dots,K\ \textbf{do}\\
+2.\quad \text{Sample index } i_k \sim \mathrm{Unif}\{1,\dots,m\}\\
+3.\quad \quad g_k \leftarrow \nabla f_{i_k}\!\left(x_{k-1}\right) \qquad \text{(stochastic gradient)}\\
+4.\quad \quad x_k \leftarrow x_{k-1} - t_k\, g_k \qquad \text{(update)}\\
+5.\  \textbf{end for}\\
+\textbf{Output:}
+\;\;x_{K}\ \text{, optionally } \bar{x}_{K}=\frac{1}{K}\sum_{k=1}^{K} x_{k}\ \text{(averaged iterate)}\\[2mm]
+\end{array}
+\]</span></p>
+<h3 id="示例与演示">5.2 示例与演示</h3>
+<hr>
 
                 
               </div>
@@ -485,13 +557,13 @@ f(x^{(k)}) - f^* = O(\gamma^k), \quad 0&lt;\gamma&lt;1
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/gradient-descent/" class="print-no-link">#gradient descent</a>
-      
         <a href="/tags/convex-set/" class="print-no-link">#convex set</a>
       
         <a href="/tags/convex-function/" class="print-no-link">#convex function</a>
       
         <a href="/tags/affine/" class="print-no-link">#affine</a>
+      
+        <a href="/tags/stochastic-gradient-descent/" class="print-no-link">#stochastic gradient descent</a>
       
     </div>
   
@@ -503,8 +575,8 @@ f(x^{(k)}) - f^* = O(\gamma^k), \quad 0&lt;\gamma&lt;1
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>凸优化学习系列 - 3. 一阶方法</div>
-      <div>https://feith0306.github.io/2026/01/26/03=Convex_Optimization/CVX-3/</div>
+      <div>凸优化学习系列 - 7. 随机梯度下降法</div>
+      <div>https://feith0306.github.io/2026/01/26/03=Convex_Optimization/CVX-7/</div>
     </div>
     <div class="license-meta">
       
@@ -548,9 +620,9 @@ f(x^{(k)}) - f^* = O(\gamma^k), \quad 0&lt;\gamma&lt;1
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/01/26/03=Convex_Optimization/CVX-5/" title="凸优化学习系列 - 5. 次梯度法">
+                      <a href="/2026/01/26/03=Convex_Optimization/CVX-4/" title="凸优化学习系列 - 4. 梯度下降法">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">凸优化学习系列 - 5. 次梯度法</span>
+                        <span class="hidden-mobile">凸优化学习系列 - 4. 梯度下降法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -558,8 +630,8 @@ f(x^{(k)}) - f^* = O(\gamma^k), \quad 0&lt;\gamma&lt;1
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/01/26/03=Convex_Optimization/CVX-4/" title="凸优化学习系列 - 4. 梯度下降法">
-                        <span class="hidden-mobile">凸优化学习系列 - 4. 梯度下降法</span>
+                      <a href="/2026/01/20/01=Optimal_yyl/opt_advance_2/" title="优化进阶系列 - 2. proximal 应用">
+                        <span class="hidden-mobile">优化进阶系列 - 2. proximal 应用</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
