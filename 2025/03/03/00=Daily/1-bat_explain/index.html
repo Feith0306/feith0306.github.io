@@ -27,8 +27,8 @@
 <meta property="og:description" content="这个文档简要介绍了 .bat 文件的作用，以及如何通过 .bat 文件右击文件夹在 VS code 中打开。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://feith0306.github.io/img/cover/batch.jpg">
-<meta property="article:published_time" content="2025-03-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-01-23T06:15:59.461Z">
+<meta property="article:published_time" content="2025-03-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-23T06:15:59.000Z">
 <meta property="article:author" content="Tianhao Fei">
 <meta property="article:tag" content="VS code">
 <meta property="article:tag" content="bat">
@@ -78,6 +78,7 @@
 <link rel="stylesheet" href="/css/banner-title.css">
 <link rel="stylesheet" href="/css/banner-effect.css">
 <link rel="stylesheet" href="/css/content_fold.css">
+<link rel="stylesheet" href="/css/academic-profile.css">
 
 
 
@@ -185,6 +186,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About Me</span>
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -225,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-03 00:00" pubdate>
-          2025年3月3日 凌晨
+        <time datetime="2025-03-03 08:00" pubdate>
+          2025年3月3日 早上
         </time>
       </span>
     
@@ -290,40 +303,63 @@
             
               <div class="markdown-body">
                 
-                <h2 id="monocle_face-what-is-the-file-with-the-suffix-.bat"><span class="github-emoji"><span>🧐</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f9d0.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> What is the file with the suffix “.bat” ?</h2>
+                <h2 id="monocle_face-what-is-the-file-with-the-suffix-.bat"><span class="github-emoji"><span>🧐</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f9d0.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+What is the file with the suffix “.bat” ?</h2>
 <ul>
 <li>后缀为“.bat”的文档是一个批处理文件。它是一种<strong>可执行</strong>文件，其中包含由操作系统执行的一系列命令。批处理文件通常用于自动化涉及多个命令的任务。它们通常用于<strong>安装</strong>软件、<strong>配置</strong>系统设置或<strong>执行</strong>其他需要多个步骤的任务。</li>
 </ul>
 <h2 id="rocket-example"><span class="github-emoji"><span>🚀</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f680.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> Example</h2>
-<p><strong>这是一个批处理文件的示例，它将“open with VS code”选项添加到Windows右键菜单中，允许用户直接右键单击文件夹或其背景（空白），并在 VS code 中打开文件夹。</strong></p>
+<p><strong>这是一个批处理文件的示例，它将“open with VS
+code”选项添加到Windows右键菜单中，允许用户直接右键单击文件夹或其背景（空白），并在
+VS code 中打开文件夹。</strong></p>
 <figure class="highlight nix"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nix">@echo off<br>REG ADD <span class="hljs-string">"HKEY_CLASSES_ROOT<span class="hljs-char escape_">\D</span>irectory<span class="hljs-char escape_">\B</span>ackground<span class="hljs-char escape_">\s</span>hell<span class="hljs-char escape_">\O</span>pen with VS Code"</span> <span class="hljs-symbol">/ve</span> <span class="hljs-symbol">/t</span> REG_SZ <span class="hljs-symbol">/d</span> <span class="hljs-string">"open here with VS Code"</span> <span class="hljs-symbol">/f</span><br>REG ADD <span class="hljs-string">"HKEY_CLASSES_ROOT<span class="hljs-char escape_">\D</span>irectory<span class="hljs-char escape_">\B</span>ackground<span class="hljs-char escape_">\s</span>hell<span class="hljs-char escape_">\O</span>pen with VS Code<span class="hljs-char escape_">\c</span>ommand"</span> <span class="hljs-symbol">/ve</span> <span class="hljs-symbol">/t</span> REG_SZ <span class="hljs-symbol">/d</span> <span class="hljs-string">"<span class="hljs-char escape_">\"</span>E:<span class="hljs-char escape_">\V</span>S code<span class="hljs-char escape_">\M</span>icrosoft VS Code<span class="hljs-char escape_">\C</span>ode.exe<span class="hljs-char escape_">\"</span> <span class="hljs-char escape_">\"</span>%%V<span class="hljs-char escape_">\"</span>"</span> <span class="hljs-symbol">/f</span><br>echo VS Code Successful！<br>pause<br></code></pre></td></tr></tbody></table></figure>
 <ul>
-<li><span class="github-emoji"><span>📞</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4de.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>@echo off</code></strong> 上述代码的第一行<strong>关闭</strong>命令行窗口的响应，以防止每次<strong>执行命令</strong>时它出现在屏幕上，使界面更清晰。
+<li><span class="github-emoji"><span>📞</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4de.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>@echo off</code></strong>
+上述代码的第一行<strong>关闭</strong>命令行窗口的响应，以防止每次<strong>执行命令</strong>时它出现在屏幕上，使界面更清晰。
 <p style="margin-bottom:40px;"></p></li>
-<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>REG ADD "HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code" /ve /t REG_SZ /d "open here with VS Code" /f</code></strong> 将键或值添加到Windows注册表。
+<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>REG ADD "HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code" /ve /t REG_SZ /d "open here with VS Code" /f</code></strong>
+将键或值添加到Windows注册表。
 <ul>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>KEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code</code></strong> : 在Windows资源管理器的右键菜单中创建一个新选项“open with VS code”。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/ve</code></strong> : 创建一个默认值（未命名键值）。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/t REG_SZ</code></strong> : 将值的数据类型设置为<strong>REG_SZ</strong>（<em>字符串</em>）。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/d "open here with VS Code"</code></strong> : 设置注册表的值，即右键菜单中显示的文本（<strong>open here with VS code</strong>）。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/f</code></strong> : 强制操作<strong>覆盖</strong>任何现有键或值。
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>KEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code</code></strong>
+: 在Windows资源管理器的右键菜单中创建一个新选项“open with VS
+code”。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/ve</code></strong> :
+创建一个默认值（未命名键值）。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/t REG_SZ</code></strong> :
+将值的数据类型设置为<strong>REG_SZ</strong>（<em>字符串</em>）。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/d "open here with VS Code"</code></strong> :
+设置注册表的值，即右键菜单中显示的文本（<strong>open here with VS
+code</strong>）。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>/f</code></strong> :
+强制操作<strong>覆盖</strong>任何现有键或值。
 <p style="margin-bottom:40px;"></p></li>
 </ul></li>
-<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>REG ADD "HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code\command" /ve /t REG_SZ /d "\"E:\VS code\Microsoft VS Code\Code.exe\" \"%%V\"" /f</code></strong>
+<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>REG ADD "HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code\command" /ve /t REG_SZ /d "\"E:\VS code\Microsoft VS Code\Code.exe\" \"%%V\"" /f</code></strong>
 <ul>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code\command</code></strong>: 定义单击菜单项后要执行的命令。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>"E:\VS code\Microsoft VS Code\Code.exe"</code></strong>: VS code 的可执行文件路径。</li>
-<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>"%%V"</code></strong>: <strong>当前</strong>文件夹路径，即用户右键单击的文件夹。
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>HKEY_CLASSES_ROOT\Directory\Background\shell\Open with VS Code\command</code></strong>:
+定义单击菜单项后要执行的命令。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>"E:\VS code\Microsoft VS Code\Code.exe"</code></strong>:
+VS code 的可执行文件路径。</li>
+<li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>"%%V"</code></strong>:
+<strong>当前</strong>文件夹路径，即用户右键单击的文件夹。
 <p style="margin-bottom:40px;"></p></li>
 </ul></li>
-<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> <strong><code>echo VS Code Successful！</code></strong>
+<li><span class="github-emoji"><span>🖥</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f5a5.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>
+<strong><code>echo VS Code Successful！</code></strong>
 <ul>
 <li><span class="github-emoji"><span>🔍</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f50d.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> 在命令行窗口中显示提示，表明注册表已成功修改。</li>
 </ul></li>
 </ul>
-<h2 id="file_folder-operation-effect"><span class="github-emoji"><span>📁</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4c1.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> Operation effect</h2>
+<h2 id="file_folder-operation-effect"><span class="github-emoji"><span>📁</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4c1.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> Operation
+effect</h2>
 <ul>
-<li><span class="github-emoji"><span>👆</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f446.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> Right-click the folder or blank space inside the folder, select “Open with VS Code”. <img src="/img/BatExplain/operation1.jpg" srcset="/img/loading.gif" lazyload alt="right-click1"> <img src="/img/BatExplain/operation2.jpg" srcset="/img/loading.gif" lazyload alt="right-click2"></li>
+<li><span class="github-emoji"><span>👆</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f446.png?v8" srcset="/img/loading.gif" lazyload aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> Right-click the folder or blank space inside the
+folder, select “Open with VS Code”. <img src="/img/BatExplain/operation1.jpg" srcset="/img/loading.gif" lazyload alt="right-click1"> <img src="/img/BatExplain/operation2.jpg" srcset="/img/loading.gif" lazyload alt="right-click2"></li>
 </ul>
 
                 
@@ -426,6 +462,12 @@
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/1970/01/01/STAT_list/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

@@ -27,8 +27,8 @@
 <meta property="og:description" content="这个文档用于介绍 SOS 工具箱的基本知识和调用 SOS 工具箱求解优化问题的底层逻辑。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://feith0306.github.io/img/cover/SOS.png">
-<meta property="article:published_time" content="2025-12-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-01-23T09:43:20.663Z">
+<meta property="article:published_time" content="2025-12-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-23T09:43:20.000Z">
 <meta property="article:author" content="Tianhao Fei">
 <meta property="article:tag" content="SDP">
 <meta property="article:tag" content="SOS Tools">
@@ -81,6 +81,7 @@
 <link rel="stylesheet" href="/css/banner-title.css">
 <link rel="stylesheet" href="/css/banner-effect.css">
 <link rel="stylesheet" href="/css/content_fold.css">
+<link rel="stylesheet" href="/css/academic-profile.css">
 
 
 
@@ -188,6 +189,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About Me</span>
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -228,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-12-12 00:00" pubdate>
-          2025年12月12日 凌晨
+        <time datetime="2025-12-12 08:00" pubdate>
+          2025年12月12日 早上
         </time>
       </span>
     
@@ -295,44 +308,68 @@
                 
                 <h1 id="sos-programming">SOS Programming</h1>
 <hr>
-<h2 id="what什么是-sossum-of-squares">1. What：什么是 SOS（Sum-of-Squares）</h2>
-<h3 id="多项式非负性的一个可计算的充分条件">1.1 多项式非负性的一个“可计算的充分条件”</h3>
-<p>在连续系统分析、鲁棒控制、非线性稳定性、优化中，经常需要证明一个多项式在某个集合上<strong>非负</strong>，例如 - Lyapunov 函数条件：<span class="math inline">\(V(x)\ge 0\)</span>、<span class="math inline">\(\dot V(x)\le 0\)</span> - 障碍函数（CBF）条件：<span class="math inline">\(h(x)\ge 0\)</span> 集合不变 - 多项式不等式约束：<span class="math inline">\(p(x)\ge 0\)</span></p>
-<p>难点是：<strong>判定一个一般多项式在全空间（或半代数集合）非负，是很难的（一般是 NP-hard 级别）</strong>。SOS 的思想是：把“非负”替换成一个<strong>更强但可求解</strong>的条件。</p>
+<h2 id="what什么是-sossum-of-squares">1. What：什么是
+SOS（Sum-of-Squares）</h2>
+<h3 id="多项式非负性的一个可计算的充分条件">1.1
+多项式非负性的一个“可计算的充分条件”</h3>
+<p>在连续系统分析、鲁棒控制、非线性稳定性、优化中，经常需要证明一个多项式在某个集合上<strong>非负</strong>，例如
+- Lyapunov 函数条件：<span class="math inline">\(V(x)\ge
+0\)</span>、<span class="math inline">\(\dot V(x)\le 0\)</span> -
+障碍函数（CBF）条件：<span class="math inline">\(h(x)\ge 0\)</span>
+集合不变 - 多项式不等式约束：<span class="math inline">\(p(x)\ge
+0\)</span></p>
+<p>难点是：<strong>判定一个一般多项式在全空间（或半代数集合）非负，是很难的（一般是
+NP-hard 级别）</strong>。SOS
+的思想是：把“非负”替换成一个<strong>更强但可求解</strong>的条件。</p>
 <hr>
 <h3 id="sos-的定义">1.2 SOS 的定义</h3>
-<p>给定一个实系数多项式 <span class="math inline">\(p(x)\)</span>（<span class="math inline">\(x\in\mathbb{R}^n\)</span>），如果存在一些多项式 <span class="math inline">\(f_i(x)\)</span> 使得</p>
+<p>给定一个实系数多项式 <span class="math inline">\(p(x)\)</span>（<span class="math inline">\(x\in\mathbb{R}^n\)</span>），如果存在一些多项式
+<span class="math inline">\(f_i(x)\)</span> 使得</p>
 <p><span class="math display">\[
 p(x)=\sum_{i=1}^m f_i(x)^2,
 \]</span></p>
-<p>则称 <span class="math inline">\(p(x)\)</span> 是 <strong>Sum-of-Squares（SOS）多项式</strong>，记作 <span class="math inline">\(p(x)\in \Sigma[x]\)</span>。</p>
-<p>显然： - 若 <span class="math inline">\(p(x)\)</span> 是 SOS，则 <span class="math inline">\(p(x)\ge 0\)</span> 对所有 <span class="math inline">\(x\)</span> 成立； - 反过来不一定（存在非负但不是 SOS 的多项式，维度/次数上去后会出现）。</p>
+<p>则称 <span class="math inline">\(p(x)\)</span> 是
+<strong>Sum-of-Squares（SOS）多项式</strong>，记作 <span class="math inline">\(p(x)\in \Sigma[x]\)</span>。</p>
+<p>显然： - 若 <span class="math inline">\(p(x)\)</span> 是 SOS，则
+<span class="math inline">\(p(x)\ge 0\)</span> 对所有 <span class="math inline">\(x\)</span> 成立； - 反过来不一定（存在非负但不是
+SOS 的多项式，维度/次数上去后会出现）。</p>
 <p>因此 SOS 是“非负”的一个<strong>可计算的充分条件</strong>。</p>
 <hr>
-<h3 id="sos-与-gram-矩阵关键桥梁把多项式问题变成-psd-矩阵问题">1.3 SOS 与 Gram 矩阵（关键桥梁：把多项式问题变成 PSD 矩阵问题）</h3>
-<p>设 <span class="math inline">\(p(x)\)</span> 的次数为 <span class="math inline">\(2d\)</span>（偶数，若是奇数也可通过引入松弛处理），取单项式向量 <span class="math inline">\(z(x)\)</span> 为所有次数 <span class="math inline">\(\le d\)</span> 的单项式（按某种顺序排列）：</p>
+<h3 id="sos-与-gram-矩阵关键桥梁把多项式问题变成-psd-矩阵问题">1.3 SOS
+与 Gram 矩阵（关键桥梁：把多项式问题变成 PSD 矩阵问题）</h3>
+<p>设 <span class="math inline">\(p(x)\)</span> 的次数为 <span class="math inline">\(2d\)</span>（偶数，若是奇数也可通过引入松弛处理），取单项式向量
+<span class="math inline">\(z(x)\)</span> 为所有次数 <span class="math inline">\(\le d\)</span> 的单项式（按某种顺序排列）：</p>
 <p><span class="math display">\[
 z(x)=\big[1,\ x_1,\dots,\ x_n,\ x_1^2,\ x_1x_2,\dots,\ x_n^d\big]^\top.
 \]</span></p>
 <p>核心定理（Gram 表示）： <span class="math display">\[
-p(x)\ \text{是 SOS} \quad \Longleftrightarrow \quad \exists\, Q\succeq 0\ \text{使得}\ p(x)=z(x)^\top Q z(x).
+p(x)\ \text{是 SOS} \quad \Longleftrightarrow \quad \exists\, Q\succeq
+0\ \text{使得}\ p(x)=z(x)^\top Q z(x).
 \]</span></p>
 <p>这里 <span class="math inline">\(Q\succeq 0\)</span> 表示 <span class="math inline">\(Q\)</span> 是<strong>半正定矩阵</strong>。</p>
-<p>直观理解： - <span class="math inline">\(z^\top Q z\)</span> 展开后是一个多项式； - 约束 <span class="math inline">\(Q\succeq 0\)</span> 保证它可以写成若干平方和（因为 <span class="math inline">\(Q=R^\top R\)</span> 时 <span class="math inline">\(z^\top Q z=\|Rz\|^2\)</span>）。</p>
-<p>这一步是 SOS programming 的“发动机”： - 多项式非负性（难） - 变成 PSD 矩阵可行性（SDP，可数值求解）</p>
+<p>直观理解： - <span class="math inline">\(z^\top Q z\)</span>
+展开后是一个多项式； - 约束 <span class="math inline">\(Q\succeq
+0\)</span> 保证它可以写成若干平方和（因为 <span class="math inline">\(Q=R^\top R\)</span> 时 <span class="math inline">\(z^\top Q z=\|Rz\|^2\)</span>）。</p>
+<p>这一步是 SOS programming 的“发动机”： - 多项式非负性（难） - 变成 PSD
+矩阵可行性（SDP，可数值求解）</p>
 <hr>
 <h2 id="why为什么要用-sos">2. Why：为什么要用 SOS</h2>
-<h3 id="真正想做的是验证合成sos-把它变成可求解的凸优化很多时候">2.1 真正想做的是“验证/合成”，SOS 把它变成可求解的凸优化（很多时候）</h3>
+<h3 id="真正想做的是验证合成sos-把它变成可求解的凸优化很多时候">2.1
+真正想做的是“验证/合成”，SOS 把它变成可求解的凸优化（很多时候）</h3>
 <p>控制里常见两类任务：</p>
 <p><strong>(A) 验证（analysis）</strong><br>
 给定候选 <span class="math inline">\(V(x)\)</span>，验证： <span class="math display">\[
 V(x)-\epsilon\|x\|^{2d}\in \Sigma[x],\qquad -\dot V(x)\in \Sigma[x]
 \]</span> 用来证明稳定性、吸引域等。</p>
 <p><strong>(B) 合成（synthesis）</strong><br>
-同时“找”一个多项式 <span class="math inline">\(V(x)\)</span>（甚至还要找控制律 <span class="math inline">\(u(x)\)</span>），使得上述条件成立。此时变量是 <span class="math inline">\(V\)</span> 的系数、控制律系数、以及 Gram 矩阵 <span class="math inline">\(Q\)</span> 等。</p>
-<p>为什么 SOS 特别有价值： - 它把“解析证明”变成“可计算证明”； - 把很多原本非凸/不可判定的问题，替换为 SDP（或分层的 SDP 序列）。</p>
+同时“找”一个多项式 <span class="math inline">\(V(x)\)</span>（甚至还要找控制律 <span class="math inline">\(u(x)\)</span>），使得上述条件成立。此时变量是
+<span class="math inline">\(V\)</span> 的系数、控制律系数、以及 Gram
+矩阵 <span class="math inline">\(Q\)</span> 等。</p>
+<p>为什么 SOS 特别有价值： - 它把“解析证明”变成“可计算证明”； -
+把很多原本非凸/不可判定的问题，替换为 SDP（或分层的 SDP 序列）。</p>
 <hr>
-<h3 id="sos-与半代数集合上的非负性putinar-证书在实际约束里会碰到">2.2 SOS 与半代数集合上的非负性：Putinar 证书（在实际约束里会碰到）</h3>
+<h3 id="sos-与半代数集合上的非负性putinar-证书在实际约束里会碰到">2.2
+SOS 与半代数集合上的非负性：Putinar 证书（在实际约束里会碰到）</h3>
 <p>很多时候不需要在全空间非负，而是在集合</p>
 <p><span class="math display">\[
 \mathcal{K}=\{x:\ g_1(x)\ge 0,\dots,g_r(x)\ge 0\}
@@ -340,41 +377,54 @@ V(x)-\epsilon\|x\|^{2d}\in \Sigma[x],\qquad -\dot V(x)\in \Sigma[x]
 <p>上非负（例如状态约束、吸引域估计的子水平集、CBF 安全集）。</p>
 <p>常用的 SOS 证书形式（典型为 Putinar 型）是：</p>
 <p><span class="math display">\[
-p(x)\ge 0\ \text{on}\ \mathcal{K}\ \Leftarrow\ p(x)=\sigma_0(x)+\sum_{i=1}^r \sigma_i(x)\,g_i(x),\quad \sigma_i(x)\in \Sigma[x].
+p(x)\ge 0\ \text{on}\ \mathcal{K}\ \Leftarrow\
+p(x)=\sigma_0(x)+\sum_{i=1}^r \sigma_i(x)\,g_i(x),\quad \sigma_i(x)\in
+\Sigma[x].
 \]</span></p>
-<p>解释： - <span class="math inline">\(\sigma_i(x)\ge 0\)</span>，<span class="math inline">\(g_i(x)\ge 0\)</span> 在集合内成立； - 因而右侧在集合内必然非负； - 通过“找 <span class="math inline">\(\sigma_i\)</span>”来构造一个<strong>可验证的非负证书</strong>。</p>
-<p>这就是在 SOS Lyapunov、ROA、CBF、鲁棒性里反复看到的乘子（multiplier）逻辑。</p>
+<p>解释： - <span class="math inline">\(\sigma_i(x)\ge 0\)</span>，<span class="math inline">\(g_i(x)\ge 0\)</span> 在集合内成立； -
+因而右侧在集合内必然非负； - 通过“找 <span class="math inline">\(\sigma_i\)</span>”来构造一个<strong>可验证的非负证书</strong>。</p>
+<p>这就是在 SOS
+Lyapunov、ROA、CBF、鲁棒性里反复看到的乘子（multiplier）逻辑。</p>
 <hr>
 <h3 id="现实代价sos-不是免费午餐">2.3 现实代价：SOS 不是“免费午餐”</h3>
 <p>要清楚 SOS 的边界，否则很容易“跑通例子但不理解本质”：</p>
 <ol type="1">
-<li><strong>保守性</strong>：非负不一定是 SOS；集合约束证书也需要一定条件（如 archimedean 条件）才有收敛保证。<br>
+<li><strong>保守性</strong>：非负不一定是
+SOS；集合约束证书也需要一定条件（如 archimedean
+条件）才有收敛保证。<br>
 </li>
-<li><strong>规模爆炸</strong>：<span class="math inline">\(z(x)\)</span> 的维度是组合数级别，SDP 变量 <span class="math inline">\(Q\)</span> 尺寸随 <span class="math inline">\(n,d\)</span> 急速增长。<br>
+<li><strong>规模爆炸</strong>：<span class="math inline">\(z(x)\)</span>
+的维度是组合数级别，SDP 变量 <span class="math inline">\(Q\)</span>
+尺寸随 <span class="math inline">\(n,d\)</span> 急速增长。<br>
 </li>
 <li><strong>数值问题</strong>：SDP 的条件数、松弛项 <span class="math inline">\(\epsilon\)</span>、尺度缩放都会影响可解性与可信度。</li>
 </ol>
-<p>SOS programming，不是为了“把一切都扔进工具箱”，而是为了理解：<strong>它在什么结构下能高效地产生可信证书</strong>。</p>
+<p>SOS
+programming，不是为了“把一切都扔进工具箱”，而是为了理解：<strong>它在什么结构下能高效地产生可信证书</strong>。</p>
 <hr>
 <h2 id="how怎么用-sos">3. How：怎么用 SOS</h2>
 <h3 id="标准工作流">3.1 标准工作流</h3>
 <ol type="1">
 <li><strong>把问题写成多项式不等式</strong>：稳定性、约束不变性、性能界等。<br>
 </li>
-<li><strong>选定证书结构</strong>：全局 SOS 或 半代数集合上的 SOS 乘子证书。<br>
+<li><strong>选定证书结构</strong>：全局 SOS 或 半代数集合上的 SOS
+乘子证书。<br>
 </li>
 <li><strong>选择次数（degree）</strong>：决定 <span class="math inline">\(V\)</span>、乘子 <span class="math inline">\(\sigma_i\)</span>、以及 <span class="math inline">\(z(x)\)</span> 的单项式上界。<br>
 </li>
 <li><strong>把“多项式等式”转为“系数匹配线性约束”</strong>：这是从符号到数值的关键一步。<br>
 </li>
-<li><strong>得到 SDP</strong>：变量是 Gram 矩阵（PSD）+ 多项式系数（线性）。<br>
+<li><strong>得到 SDP</strong>：变量是 Gram 矩阵（PSD）+
+多项式系数（线性）。<br>
 </li>
 <li><strong>调用 SDP 求解器</strong>：SeDuMi / SDPT3 / MOSEK 等。<br>
 </li>
-<li><strong>读回证书</strong>：得到 <span class="math inline">\(V(x)\)</span>、<span class="math inline">\(\sigma_i(x)\)</span> 或控制律系数，并做数值验证（采样检验、残差检验、尺度敏感性检验）。</li>
+<li><strong>读回证书</strong>：得到 <span class="math inline">\(V(x)\)</span>、<span class="math inline">\(\sigma_i(x)\)</span>
+或控制律系数，并做数值验证（采样检验、残差检验、尺度敏感性检验）。</li>
 </ol>
 <hr>
-<h3 id="例-1lyapunov-稳定性验证最基础的-sos-用法">3.2 例 1：Lyapunov 稳定性验证（最基础的 SOS 用法）</h3>
+<h3 id="例-1lyapunov-稳定性验证最基础的-sos-用法">3.2 例 1：Lyapunov
+稳定性验证（最基础的 SOS 用法）</h3>
 <p>考虑多项式系统 <span class="math display">\[
 \dot x=f(x)
 \]</span> 给一个候选 <span class="math inline">\(V(x)\)</span>（多项式），希望证明原点渐近稳定。</p>
@@ -382,31 +432,47 @@ p(x)\ge 0\ \text{on}\ \mathcal{K}\ \Leftarrow\ p(x)=\sigma_0(x)+\sum_{i=1}^r \si
 V(x)-\epsilon \|x\|^{2d} \in \Sigma[x],\qquad
 -\nabla V(x)^\top f(x) - \epsilon \|x\|^{2d} \in \Sigma[x].
 \]</span></p>
-<p>含义： - 第一条：<span class="math inline">\(V\)</span> 正定（至少强制为 SOS 正定）； - 第二条：<span class="math inline">\(\dot V\le -\epsilon\|x\|^{2d}\)</span>，保证严格下降。</p>
-<p>工具层面做的事情是：选择 <span class="math inline">\(V\)</span> 的形式/次数，然后把两个“属于 <span class="math inline">\(\Sigma[x]\)</span>”转成两个 PSD 约束。</p>
+<p>含义： - 第一条：<span class="math inline">\(V\)</span>
+正定（至少强制为 SOS 正定）； - 第二条：<span class="math inline">\(\dot
+V\le -\epsilon\|x\|^{2d}\)</span>，保证严格下降。</p>
+<p>工具层面做的事情是：选择 <span class="math inline">\(V\)</span>
+的形式/次数，然后把两个“属于 <span class="math inline">\(\Sigma[x]\)</span>”转成两个 PSD 约束。</p>
 <hr>
-<h3 id="例-2吸引域roa估计子水平集不变性">3.3 例 2：吸引域（ROA）估计：子水平集不变性</h3>
-<p>想找到一个最大的 <span class="math inline">\(\rho\)</span>，使得集合 <span class="math display">\[
+<h3 id="例-2吸引域roa估计子水平集不变性">3.3 例
+2：吸引域（ROA）估计：子水平集不变性</h3>
+<p>想找到一个最大的 <span class="math inline">\(\rho\)</span>，使得集合
+<span class="math display">\[
 \Omega_\rho=\{x:\ V(x)\le \rho\}
 \]</span> 在动力学下正不变，并且在集合内 <span class="math inline">\(\dot V&lt;0\)</span>。</p>
 <p>经典 SOS 形式（S-procedure / 乘子）： <span class="math display">\[
--(\nabla V^\top f)(x) - \sigma(x)\,(\rho - V(x)) \in \Sigma[x],\qquad \sigma(x)\in \Sigma[x].
+-(\nabla V^\top f)(x) - \sigma(x)\,(\rho - V(x)) \in \Sigma[x],\qquad
+\sigma(x)\in \Sigma[x].
 \]</span></p>
-<p>解释： - 当 <span class="math inline">\(V(x)\le \rho\)</span> 时，<span class="math inline">\(\rho - V(x)\ge 0\)</span>； - 若 <span class="math inline">\(\sigma\ge 0\)</span>，则 <span class="math inline">\(\sigma(\rho-V)\)</span> 是非负项； - 上式保证在 <span class="math inline">\(V\le \rho\)</span> 内，<span class="math inline">\(-\dot V\)</span> 仍然非负，从而 <span class="math inline">\(\dot V\le 0\)</span>。</p>
-<p>合成任务通常是最大化 <span class="math inline">\(\rho\)</span>（或相关体积近似指标），这会引入非凸性；实际常用交替迭代（fix <span class="math inline">\(V\)</span> solve <span class="math inline">\(\sigma,\rho\)</span>，再 fix <span class="math inline">\(\sigma\)</span> solve <span class="math inline">\(V\)</span> 等）。</p>
+<p>解释： - 当 <span class="math inline">\(V(x)\le \rho\)</span>
+时，<span class="math inline">\(\rho - V(x)\ge 0\)</span>； - 若 <span class="math inline">\(\sigma\ge 0\)</span>，则 <span class="math inline">\(\sigma(\rho-V)\)</span> 是非负项； - 上式保证在
+<span class="math inline">\(V\le \rho\)</span> 内，<span class="math inline">\(-\dot V\)</span> 仍然非负，从而 <span class="math inline">\(\dot V\le 0\)</span>。</p>
+<p>合成任务通常是最大化 <span class="math inline">\(\rho\)</span>（或相关体积近似指标），这会引入非凸性；实际常用交替迭代（fix
+<span class="math inline">\(V\)</span> solve <span class="math inline">\(\sigma,\rho\)</span>，再 fix <span class="math inline">\(\sigma\)</span> solve <span class="math inline">\(V\)</span> 等）。</p>
 <hr>
-<h3 id="例-3带约束的非负性把只在集合内成立转为-sos-证书">3.4 例 3：带约束的非负性：把“只在集合内成立”转为 SOS 证书</h3>
+<h3 id="例-3带约束的非负性把只在集合内成立转为-sos-证书">3.4 例
+3：带约束的非负性：把“只在集合内成立”转为 SOS 证书</h3>
 <p>若要保证 <span class="math display">\[
 p(x)\ge 0\quad \text{for all } x\in\mathcal{K}=\{x:g_i(x)\ge 0\},
 \]</span> 用乘子证书： <span class="math display">\[
 p(x)=\sigma_0(x)+\sum_i \sigma_i(x)g_i(x),\quad \sigma_i\in\Sigma[x].
 \]</span></p>
-<p>应该把它理解为：<strong>在 <span class="math inline">\(\mathcal{K}\)</span> 上的非负性，被“解释”为全空间上的一个结构化分解。</strong> 工具不理解“集合上的逻辑”，它只理解“全空间的等式 + SOS/PSD 约束”。集合语义由通过乘子结构编码进去。</p>
+<p>应该把它理解为：<strong>在 <span class="math inline">\(\mathcal{K}\)</span>
+上的非负性，被“解释”为全空间上的一个结构化分解。</strong>
+工具不理解“集合上的逻辑”，它只理解“全空间的等式 + SOS/PSD
+约束”。集合语义由通过乘子结构编码进去。</p>
 <hr>
-<h2 id="sos-tools-的底层求解逻辑与细节重点">4. SOS Tools 的“底层求解逻辑与细节”（重点）</h2>
-<p>用 SOSTOOLS / YALMIP / Spotless / SumOfSquares.jl 时，看起来像“写几行就出结果”。但底层发生的事情基本都可以归结为下面这套机制。</p>
+<h2 id="sos-tools-的底层求解逻辑与细节重点">4. SOS Tools
+的“底层求解逻辑与细节”（重点）</h2>
+<p>用 SOSTOOLS / YALMIP / Spotless / SumOfSquares.jl
+时，看起来像“写几行就出结果”。但底层发生的事情基本都可以归结为下面这套机制。</p>
 <hr>
-<h3 id="关键抽象sos-约束-存在-psd-gram-矩阵-系数匹配">4.1 关键抽象：SOS 约束 = “存在 PSD Gram 矩阵 + 系数匹配”</h3>
+<h3 id="关键抽象sos-约束-存在-psd-gram-矩阵-系数匹配">4.1 关键抽象：SOS
+约束 = “存在 PSD Gram 矩阵 + 系数匹配”</h3>
 <p>假设写了一个约束 <span class="math display">\[
 p(x)\in \Sigma[x].
 \]</span> 工具会做：</p>
@@ -425,7 +491,8 @@ p(x)=z(x)^\top Q z(x)
 <li>将两边展开为单项式线性组合；</li>
 <li>对每个单项式 <span class="math inline">\(x^\alpha\)</span>，匹配系数： <span class="math display">\[
 \text{coeff}_{x^\alpha}(p) = \text{coeff}_{x^\alpha}(z^\top Q z),
-\]</span> 得到一堆对 <span class="math inline">\(Q\)</span> 元素的<strong>线性等式约束</strong>。<br>
+\]</span> 得到一堆对 <span class="math inline">\(Q\)</span>
+元素的<strong>线性等式约束</strong>。<br>
 </li>
 </ul>
 <ol start="5" type="1">
@@ -438,25 +505,35 @@ Q\succeq 0.
 <h3 id="为什么系数匹配是线性的">4.2 为什么“系数匹配”是线性的</h3>
 <p><span class="math inline">\(z^\top Q z\)</span> 对 <span class="math inline">\(Q\)</span> 是线性的，因为 <span class="math display">\[
 z^\top Q z = \sum_{i,j} Q_{ij}\,z_i(x)\,z_j(x),
-\]</span> 其中 <span class="math inline">\(z_i z_j\)</span> 是已知的单项式（或多项式），未知量只有 <span class="math inline">\(Q_{ij}\)</span>，且是一阶出现，所以系数匹配给出线性方程组。</p>
-<p>这也是为什么 SOS programming 大多落在 <strong>凸优化（SDP）</strong> 的范畴内：未知量只以线性方式进入，外加一个凸锥约束（PSD 锥）。</p>
+\]</span> 其中 <span class="math inline">\(z_i z_j\)</span>
+是已知的单项式（或多项式），未知量只有 <span class="math inline">\(Q_{ij}\)</span>，且是一阶出现，所以系数匹配给出线性方程组。</p>
+<p>这也是为什么 SOS programming 大多落在 <strong>凸优化（SDP）</strong>
+的范畴内：未知量只以线性方式进入，外加一个凸锥约束（PSD 锥）。</p>
 <hr>
-<h3 id="乘子multipliersos-的底层更多-gram-矩阵-更多线性约束">4.3 乘子（multiplier）SOS 的底层：更多 Gram 矩阵 + 更多线性约束</h3>
+<h3 id="乘子multipliersos-的底层更多-gram-矩阵-更多线性约束">4.3
+乘子（multiplier）SOS 的底层：更多 Gram 矩阵 + 更多线性约束</h3>
 <p>当写 <span class="math display">\[
 p=\sigma_0+\sum_i \sigma_i g_i,\quad \sigma_i\in\Sigma[x],
-\]</span> 工具会： - 为每个 <span class="math inline">\(\sigma_i\)</span> 建一个 Gram 矩阵 <span class="math inline">\(Q_i\succeq 0\)</span>； - 将 <span class="math inline">\(\sigma_i(x)=z_i(x)^\top Q_i z_i(x)\)</span>； - 把 <span class="math inline">\(p - \sum_i \sigma_i g_i\)</span> 展开； - 对每个单项式做系数匹配，得到线性等式； - 合起来依然是 SDP。</p>
-<p>因此应当把“复杂 SOS 证书”理解为： - PSD 变量（可能很多块） - 线性耦合约束（系数匹配把块耦合起来）</p>
+\]</span> 工具会： - 为每个 <span class="math inline">\(\sigma_i\)</span> 建一个 Gram 矩阵 <span class="math inline">\(Q_i\succeq 0\)</span>； - 将 <span class="math inline">\(\sigma_i(x)=z_i(x)^\top Q_i z_i(x)\)</span>； - 把
+<span class="math inline">\(p - \sum_i \sigma_i g_i\)</span> 展开； -
+对每个单项式做系数匹配，得到线性等式； - 合起来依然是 SDP。</p>
+<p>因此应当把“复杂 SOS 证书”理解为： - PSD 变量（可能很多块） -
+线性耦合约束（系数匹配把块耦合起来）</p>
 <hr>
-<h3 id="工具如何选择单项式基细节决定规模">4.4 工具如何“选择单项式基”——细节决定规模</h3>
-<p>单项式向量 <span class="math inline">\(z(x)\)</span> 的长度决定 Gram 矩阵大小。</p>
-<p>若 <span class="math inline">\(n\)</span> 变量、最高次数 <span class="math inline">\(d\)</span>，<span class="math inline">\(z\)</span> 的长度是组合数： <span class="math display">\[
+<h3 id="工具如何选择单项式基细节决定规模">4.4
+工具如何“选择单项式基”——细节决定规模</h3>
+<p>单项式向量 <span class="math inline">\(z(x)\)</span> 的长度决定 Gram
+矩阵大小。</p>
+<p>若 <span class="math inline">\(n\)</span> 变量、最高次数 <span class="math inline">\(d\)</span>，<span class="math inline">\(z\)</span>
+的长度是组合数： <span class="math display">\[
 |z| = \binom{n+d}{d}.
 \]</span></p>
 <p>Gram 矩阵 <span class="math inline">\(Q\)</span> 维度是 <span class="math inline">\(|z|\times |z|\)</span>，独立变量数量约为 <span class="math inline">\(|z|(|z|+1)/2\)</span>（对称）。</p>
 <p>必须具备这种数量级直觉，否则会在“n=6, d=6”这类设置上直接爆炸。</p>
 <hr>
 <h3 id="sdp-求解器实际在做什么">4.5 SDP 求解器实际在做什么</h3>
-<p>SOS 工具本身通常不“求解”，它只是把模型<strong>编译</strong>成标准 SDP 形式，然后交给 SDP 求解器。</p>
+<p>SOS 工具本身通常不“求解”，它只是把模型<strong>编译</strong>成标准 SDP
+形式，然后交给 SDP 求解器。</p>
 <p>标准 SDP（原始-对偶）形式可写成： <span class="math display">\[
 \begin{align}
 \min_x\ &amp; c^\top x\\
@@ -464,44 +541,73 @@ p=\sigma_0+\sum_i \sigma_i g_i,\quad \sigma_i\in\Sigma[x],
 &amp; Ax=b.
 \end{align}
 \]</span></p>
-<p>对应到 SOS： - <span class="math inline">\(x\)</span> 包括：Lyapunov/控制律/乘子多项式系数、以及 Gram 矩阵自由元素； - <span class="math inline">\(F(x)\succeq 0\)</span> 包括所有 Gram PSD 约束（可能是块对角）； - <span class="math inline">\(Ax=b\)</span> 就是系数匹配产生的线性等式。</p>
-<p>大多数 SDP 求解器用<strong>内点法（primal-dual interior-point）</strong>，本质是不断求解一系列线性化的 KKT 系统，直到残差足够小。</p>
-<p>需要知道的现实影响： 1) 规模越大，KKT 系统越大，时间/内存迅速上升；<br>
+<p>对应到 SOS： - <span class="math inline">\(x\)</span>
+包括：Lyapunov/控制律/乘子多项式系数、以及 Gram 矩阵自由元素； - <span class="math inline">\(F(x)\succeq 0\)</span> 包括所有 Gram PSD
+约束（可能是块对角）； - <span class="math inline">\(Ax=b\)</span>
+就是系数匹配产生的线性等式。</p>
+<p>大多数 SDP 求解器用<strong>内点法（primal-dual
+interior-point）</strong>，本质是不断求解一系列线性化的 KKT
+系统，直到残差足够小。</p>
+<p>需要知道的现实影响： 1) 规模越大，KKT
+系统越大，时间/内存迅速上升；<br>
 2) 病态（尺度差、次数高、系数跨度大）会导致数值不稳定；<br>
-3) 很多“不可行”其实是数值不可行（tolerance 问题），不是数学上不可行。</p>
+3) 很多“不可行”其实是数值不可行（tolerance
+问题），不是数学上不可行。</p>
 <hr>
-<h3 id="求出来的-sos如何读回到平方和分解">4.6 “求出来的 SOS”如何读回到“平方和分解”</h3>
-<p>如果得到 <span class="math inline">\(Q\succeq 0\)</span>，理论上可分解 <span class="math inline">\(Q=R^\top R\)</span>，于是 <span class="math display">\[
+<h3 id="求出来的-sos如何读回到平方和分解">4.6 “求出来的
+SOS”如何读回到“平方和分解”</h3>
+<p>如果得到 <span class="math inline">\(Q\succeq
+0\)</span>，理论上可分解 <span class="math inline">\(Q=R^\top
+R\)</span>，于是 <span class="math display">\[
 p(x)=z^\top Q z = \|R z(x)\|^2 = \sum_i f_i(x)^2,
 \]</span> 其中 <span class="math inline">\(f_i\)</span> 是 <span class="math inline">\(Rz\)</span> 的各分量。</p>
-<p>但实际工具常不显式给 <span class="math inline">\(f_i\)</span>，而只给 <span class="math inline">\(Q\)</span> 或多项式系数。 如果要“证书可展示”，可以： - 数值上做 Cholesky/特征分解拿到一个近似的平方和； - 或者只展示 SOS 约束满足与残差（更常见、更稳健）。</p>
+<p>但实际工具常不显式给 <span class="math inline">\(f_i\)</span>，而只给
+<span class="math inline">\(Q\)</span> 或多项式系数。
+如果要“证书可展示”，可以： - 数值上做
+Cholesky/特征分解拿到一个近似的平方和； - 或者只展示 SOS
+约束满足与残差（更常见、更稳健）。</p>
 <hr>
-<h3 id="次数选择与双线性bilinearity">4.7 次数选择与双线性（Bilinearity）</h3>
-<p>很多“合成”问题一旦同时优化多个多项式，会出现双线性项，典型如： - 同时求 <span class="math inline">\(V\)</span> 和 乘子 <span class="math inline">\(\sigma\)</span>：<span class="math inline">\(\sigma(\rho-V)\)</span> 中 <span class="math inline">\(\sigma\)</span> 与 <span class="math inline">\(V\)</span> 相乘； - 同时求 <span class="math inline">\(V\)</span> 和 控制律 <span class="math inline">\(u(x)\)</span>：<span class="math inline">\(\nabla V^\top g(x)u(x)\)</span> 中 <span class="math inline">\(V\)</span> 与 <span class="math inline">\(u\)</span> 相乘。</p>
-<p>这会把 SDP 变成非凸问题（BMI 或 polynomial bilinear constraints）。 工具可能还能“跑”，但若不理解这一点，就会误以为“SOS 一定是凸的”。</p>
-<p>工程上常见处理： - 固定一部分变量，解另一个 SDP； - 交替迭代（coordinate descent 风格）； - 或引入结构化参数化降低耦合。</p>
+<h3 id="次数选择与双线性bilinearity">4.7
+次数选择与双线性（Bilinearity）</h3>
+<p>很多“合成”问题一旦同时优化多个多项式，会出现双线性项，典型如： -
+同时求 <span class="math inline">\(V\)</span> 和 乘子 <span class="math inline">\(\sigma\)</span>：<span class="math inline">\(\sigma(\rho-V)\)</span> 中 <span class="math inline">\(\sigma\)</span> 与 <span class="math inline">\(V\)</span> 相乘； - 同时求 <span class="math inline">\(V\)</span> 和 控制律 <span class="math inline">\(u(x)\)</span>：<span class="math inline">\(\nabla
+V^\top g(x)u(x)\)</span> 中 <span class="math inline">\(V\)</span> 与
+<span class="math inline">\(u\)</span> 相乘。</p>
+<p>这会把 SDP 变成非凸问题（BMI 或 polynomial bilinear constraints）。
+工具可能还能“跑”，但若不理解这一点，就会误以为“SOS 一定是凸的”。</p>
+<p>工程上常见处理： - 固定一部分变量，解另一个 SDP； -
+交替迭代（coordinate descent 风格）； - 或引入结构化参数化降低耦合。</p>
 <hr>
-<h2 id="如何让-sos-结果更可信更可扩展">5. 如何让 SOS 结果更可信、更可扩展</h2>
+<h2 id="如何让-sos-结果更可信更可扩展">5. 如何让 SOS
+结果更可信、更可扩展</h2>
 <ol type="1">
-<li><strong>先做验证再做合成</strong>：先给一个结构合理的 <span class="math inline">\(V\)</span> 验证稳定性，确认系统与尺度没问题，再谈合成。<br>
+<li><strong>先做验证再做合成</strong>：先给一个结构合理的 <span class="math inline">\(V\)</span>
+验证稳定性，确认系统与尺度没问题，再谈合成。<br>
 </li>
-<li><strong>控制尺度</strong>：变量归一化，避免系数跨越过大；必要时加入 <span class="math inline">\(\epsilon\)</span> 松弛。<br>
+<li><strong>控制尺度</strong>：变量归一化，避免系数跨越过大；必要时加入
+<span class="math inline">\(\epsilon\)</span> 松弛。<br>
 </li>
-<li><strong>从低次数开始</strong>：<span class="math inline">\(d=2\)</span>、<span class="math inline">\(d=3\)</span> 起步，逐步加；不要一开始就追求“更强证书”。<br>
+<li><strong>从低次数开始</strong>：<span class="math inline">\(d=2\)</span>、<span class="math inline">\(d=3\)</span>
+起步，逐步加；不要一开始就追求“更强证书”。<br>
 </li>
-<li><strong>残差检查</strong>：将求解后的 <span class="math inline">\(p(x)-z^\top Q z\)</span> 展开检查最大系数残差；对关键不等式做采样验证。<br>
+<li><strong>残差检查</strong>：将求解后的 <span class="math inline">\(p(x)-z^\top Q z\)</span>
+展开检查最大系数残差；对关键不等式做采样验证。<br>
 </li>
-<li><strong>明确保守性来源</strong>：是 SOS 放松导致，还是次数限制导致，还是集合证书结构限制导致。<br>
+<li><strong>明确保守性来源</strong>：是 SOS
+放松导致，还是次数限制导致，还是集合证书结构限制导致。<br>
 </li>
-<li><strong>识别是否非凸</strong>：一旦同时优化多个多项式并出现乘积，别再把它当 SDP；要用迭代/固定策略。</li>
+<li><strong>识别是否非凸</strong>：一旦同时优化多个多项式并出现乘积，别再把它当
+SDP；要用迭代/固定策略。</li>
 </ol>
 <hr>
 <h2 id="总结">6. 总结</h2>
 <p>SOS programming 的核心不是“平方和”本身，而是这条链：</p>
 <p><span class="math display">\[
 \begin{align*}
-\text{多项式非负性（难）} &amp;\Rightarrow \text{SOS 证书（充分条件）} \Rightarrow \\
-\text{Gram 矩阵 PSD + 系数匹配（SDP）}  &amp;\Rightarrow \text{数值求解 + 证书回读/验证}.
+\text{多项式非负性（难）} &amp;\Rightarrow \text{SOS 证书（充分条件）}
+\Rightarrow \\
+\text{Gram 矩阵 PSD + 系数匹配（SDP）}  &amp;\Rightarrow \text{数值求解
++ 证书回读/验证}.
 \end{align*}
 \]</span></p>
 
@@ -537,9 +643,9 @@ p(x)=z^\top Q z = \|R z(x)\|^2 = \sum_i f_i(x)^2,
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/SOS-Tools/" class="print-no-link">#SOS Tools</a>
-      
         <a href="/tags/optimization/" class="print-no-link">#optimization</a>
+      
+        <a href="/tags/SOS-Tools/" class="print-no-link">#SOS Tools</a>
       
         <a href="/tags/matlab/" class="print-no-link">#matlab</a>
       
@@ -602,9 +708,9 @@ p(x)=z^\top Q z = \|R z(x)\|^2 = \sum_i f_i(x)^2,
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/01/23/STAT_list/" title="">
+                      <a href="/2026/01/20/01=Optimal_yyl/opt_basics_0/" title="优化基础系列 - 0. 基本问题和底层逻辑">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
+                        <span class="hidden-mobile">优化基础系列 - 0. 基本问题和底层逻辑</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
