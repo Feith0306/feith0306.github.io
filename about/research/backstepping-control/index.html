@@ -4,65 +4,225 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Adaptive Backstepping Control | Tianhao Fei / Feith</title>
-  <meta name="description" content="Tianhao Fei / Feith academic profile">
+  <meta name="description" content="Research profile of Tianhao Fei / Feith">
   <link rel="icon" href="/img/fluid.ico">
   <link rel="stylesheet" href="/about/assets/css/academic-pages.css">
+  <style>
+    .research-figure-block { margin-top: 1.2rem; }
+    .method-figure { margin: 1rem 0 0; }
+    .method-figure img, .method-figure svg { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 18px; background: #f7fafc; box-shadow: 0 10px 28px rgba(15, 35, 55, 0.12); }
+    .method-figure figcaption { margin-top: 0.7rem; color: #5b6573; font-size: 0.95rem; line-height: 1.65; }
+  </style>
 </head>
 <body class="academic-body">
 <header class="academic-topbar">
-  <div class="academic-topbar-inner">
-    <a class="site-title " href="/about/">Tianhao Fei / Feith</a>
-    <nav class="academic-menu" aria-label="Academic navigation">
-      <a class="" href="/about/cv/">CV</a>
+<div class="academic-topbar-inner">
+<a class="site-title" href="/">Tianhao Fei / Feith</a>
+<nav aria-label="Academic navigation" class="academic-menu">
+<a class="" href="/about/cv/">CV</a>
 <a class="" href="/about/publications/">Publications</a>
 <a class="active" href="/about/research/">Research</a>
-    </nav>
-  </div>
+</nav>
+</div>
 </header>
 <div class="academic-wrapper">
 <aside class="profile-sidebar">
-  <div class="avatar-wrap"><img src="/img/fth.jpg" alt="Tianhao Fei / Feith"></div>
-  <div class="profile-text">
-    <h2 class="profile-name">Tianhao Fei / Feith</h2>
-    <p class="profile-note">A brief self-introduction will be added here.</p>
-    <p class="profile-bio">This profile sidebar can be updated with a concise academic bio.</p>
-  </div>
-  <ul class="profile-list">
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/></svg><span>Beijing, China</span></li>
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3 2 8l10 5 10-5-10-5Zm-7 8v6h3v-4h2v4h4v-4h2v4h3v-6l-7 3.5L5 11Zm-2 8v2h18v-2H3Z"/></svg><span>University of Science and Technology Beijing</span></li>
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 8 8-6H4l8 6Zm0 2.4L4 9.4V17h16V9.4l-8 6Z"/></svg><a href="mailto:feith@ieee.org">Email</a></li>
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3 1.5 8.5 12 14l10.5-5.5L12 3Zm-6 8.1V16c2.6 2 9.4 2 12 0v-4.9L12 14.2 6 11.1ZM4 18.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Z"/></svg><a href="#" rel="noopener">Google Scholar</a></li>
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3.1a15.9 15.9 0 0 0-1.2-3.1A8.1 8.1 0 0 1 18.9 8ZM12 4.1c.8 1.1 1.4 2.4 1.8 3.9h-3.6c.4-1.5 1-2.8 1.8-3.9ZM4.3 14a8.4 8.4 0 0 1 0-4h3.5a16 16 0 0 0 0 4H4.3Zm.8 2h3.1c.3 1.2.7 2.3 1.2 3.1A8.1 8.1 0 0 1 5.1 16Zm3.1-8H5.1a8.1 8.1 0 0 1 4.3-3.1A15.9 15.9 0 0 0 8.2 8ZM12 19.9c-.8-1.1-1.4-2.4-1.8-3.9h3.6c-.4 1.5-1 2.8-1.8 3.9ZM14.2 14H9.8a13.8 13.8 0 0 1 0-4h4.4a13.8 13.8 0 0 1 0 4Zm.4 5.1c.5-.9.9-1.9 1.2-3.1h3.1a8.1 8.1 0 0 1-4.3 3.1ZM16.2 14a16 16 0 0 0 0-4h3.5a8.4 8.4 0 0 1 0 4h-3.5Z"/></svg><a href="https://feith0306.github.io/" rel="noopener">Personal Website</a></li>
-    <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h8l5 5v15H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm7 1.8V8h4.2L13 3.8ZM8 12h8v-2H8v2Zm0 4h8v-2H8v2Zm0 4h5v-2H8v2Z"/></svg><a href="/files/Tianhao_Fei_CV.pdf">CV PDF</a></li>
-  </ul>
+<div class="avatar-wrap"><img alt="Tianhao Fei / Feith" src="/img/fth.jpg"/></div>
+<div class="profile-text">
+<h2 class="profile-name">Tianhao Fei / Feith</h2>
+<p class="profile-note">🌞 <strong>Welcome to my space !</strong></p>
+<p class="profile-bio">🎓 <strong>I'm looking for a PhD position !</strong></p>
+</div>
+<ul class="profile-list">
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z" fill="currentColor"></path>
+</svg>
+<span>Beijing, China</span>
+</li>
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<path d="M12 3 2 8l10 5 10-5-10-5Zm-7 8v6h3v-4h2v4h4v-4h2v4h3v-6l-7 3.5L5 11Zm-2 8v2h18v-2H3Z" fill="currentColor"></path>
+</svg>
+<a href="https://www.ustb.edu.cn/" rel="noopener" target="_blank">
+    University of Science and Technology Beijing
+  </a>
+</li>
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 8 8-6H4l8 6Zm0 2.4L4 9.4V17h16V9.4l-8 6Z" fill="currentColor"></path>
+</svg>
+<a href="mailto:feith@ieee.org">feith@ieee.org</a>
+</li>
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<path d="M12 3 1.5 8.5 12 14l10.5-5.5L12 3Zm-6 8.1V16c2.6 2 9.4 2 12 0v-4.9L12 14.2 6 11.1ZM4 18.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Z" fill="currentColor"></path>
+</svg>
+<a href="https://scholar.google.com/citations?hl=en&amp;tzom=-480&amp;user=-kMGVUAAAAAJ" rel="noopener" target="_blank">
+    Google Scholar
+  </a>
+</li>
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="currentColor" r="10"></circle>
+<text fill="#fff" font-family="Arial, sans-serif" font-size="8.5" font-weight="700" text-anchor="middle" x="12" y="15.5">iD</text>
+</svg>
+<a href="https://orcid.org/my-orcid?orcid=0009-0000-0169-1294" rel="noopener" target="_blank">
+    ORCID
+  </a>
+</li>
+<li>
+<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
+<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm6.3 8h-3.1a14.4 14.4 0 0 0-1.1-4.2A7.1 7.1 0 0 1 18.3 11ZM12 5.1c.7 1 1.3 2.9 1.5 5.9h-3c.2-3 .8-4.9 1.5-5.9ZM5.7 13h3.1c.1 1.6.4 3.1.9 4.2A7.1 7.1 0 0 1 5.7 13Zm3.1-2H5.7a7.1 7.1 0 0 1 4-4.2A14.4 14.4 0 0 0 8.8 11Zm3.2 7.9c-.7-1-1.3-2.9-1.5-5.9h3c-.2 3-.8 4.9-1.5 5.9Zm1.9-1.7c.5-1.1.8-2.6.9-4.2h3.1a7.1 7.1 0 0 1-4 4.2Z" fill="currentColor"></path>
+</svg>
+<a href="/blog/">My Blog</a>
+</li>
+</ul>
 </aside>
 <main class="content">
-<nav class="content-nav" aria-label="Section navigation">
-  <a href="/about/">Tianhao Fei / Feith</a>
-  <a href="/about/cv/">CV</a>
-  <a href="/about/publications/">Publications</a>
-  <a class="active" href="/about/research/">Research</a>
+<nav aria-label="Section navigation" class="content-nav">
+<a href="/">Tianhao Fei / Feith</a>
+<a href="/about/cv/">CV</a>
+<a href="/about/publications/">Publications</a>
+<a class="active" href="/about/research/">Research</a>
 </nav>
 <h1>Adaptive Backstepping Control for Constrained Uncertain Nonlinear Systems</h1>
-<section class="detail-block"><h2>Overview</h2><p>This research investigates adaptive neural backstepping control for nonlinear systems subject to constraints, uncertainties, disturbances, state delays, unknown control directions, and input nonlinearities.</p></section>
-<section class="detail-block"><h2>Key Problems</h2><ul><li>Handling multiple uncertainties in nonlinear strict-feedback systems.</li>
-<li>Guaranteeing state or output constraints during transient and steady-state operation.</li>
-<li>Achieving synchronization and robust tracking under complex multi-agent dynamics.</li></ul></section>
-<section class="detail-block"><h2>Methodology</h2><ul><li>Adaptive neural approximation.</li>
-<li>Backstepping design.</li>
-<li>Command-filtered control.</li>
-<li>Compensation-based control.</li>
-<li>Lyapunov stability analysis.</li>
-<li>Zero-sum game-based robust control formulation.</li></ul></section>
-<section class="detail-block"><h2>Representative Outcomes</h2><ul><li>Bounded closed-loop signals.</li>
-<li>Constraint satisfaction.</li>
-<li>Bipartite synchronization.</li>
-<li>Robust H-infinity tracking performance.</li></ul></section>
-<section class="detail-block"><h2>Related Publications</h2><ul class="related-list"><li>T. Fei, et al., “Adaptive Neural Design for Permanent Magnet Synchronous Motor with Asymmetric Constraints and Input Dead-Zone,” <em>Neurocomputing</em>, vol. 640, p. 130294.</li>
-<li>T. Fei, et al., “Command Filtered Adaptive Bipartite Synchronization for Heterogeneous Switched Multi-Agent Systems with State Delays and Input Nonlinearity,” <em>Journal of the Franklin Institute</em>, vol. 363, no. 2, p. 108395.</li>
-<li>T. Fei, et al., “Robust Adaptive H∞ Tracking Control for Nonlinear Strict-Feedback System via Actor-Critic-Disturbance Learning: A Zero-Sum Game-Based Approach,” <em>International Journal of Robust and Nonlinear Control</em>, vol. 36, no. 8, pp. 4517-4536.</li></ul></section>
+<section class="detail-block research-figure-block">
+  <h2>Methodological Framework</h2>
+  <figure class="method-figure">
+    <svg class="method-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" role="img" aria-labelledby="backstepping_control_title backstepping_control_desc">
+  <title id="backstepping_control_title">Adaptive backstepping control framework</title>
+  <desc id="backstepping_control_desc">A flow diagram showing constrained nonlinear plants, error transformation, recursive backstepping design, neural approximation, command filtering, robust control, and Lyapunov-certified outcomes.</desc>
+  <defs>
+    <marker id="backstepping_control_arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#3b5b7e"/>
+    </marker>
+    <filter id="backstepping_control_shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#1f2d3d" flood-opacity="0.16"/>
+    </filter>
+    <style>
+      .bg{fill:#f7fafc}.title{font:700 30px Arial,Helvetica,sans-serif;fill:#152536}.subtitle{font:400 16px Arial,Helvetica,sans-serif;fill:#526273}.box{fill:#fff;stroke:#8aa4bf;stroke-width:1.5;rx:18;filter:url(#backstepping_control_shadow)}.box-blue{fill:#eef6ff;stroke:#6e9bc8}.box-green{fill:#edf8f2;stroke:#6ca984}.box-orange{fill:#fff6ea;stroke:#d69a4d}.box-purple{fill:#f4efff;stroke:#9279c7}.label{font:700 17px Arial,Helvetica,sans-serif;fill:#172635}.small{font:400 13.5px Arial,Helvetica,sans-serif;fill:#405160}.tiny{font:400 12px Arial,Helvetica,sans-serif;fill:#5b6876}.arrow{stroke:#3b5b7e;stroke-width:2.2;fill:none;marker-end:url(#backstepping_control_arrow)}.dashed{stroke-dasharray:7 6}.pill{fill:#ffffff;stroke:#9eb3c8;stroke-width:1.2;rx:18}.outcome{fill:#12324d}.outtxt{font:700 14px Arial,Helvetica,sans-serif;fill:white}.math{font:italic 14px Georgia,serif;fill:#314355}
+    </style>
+  </defs>
+  <rect width="1100" height="620" class="bg" rx="24"/>
+  <text x="550" y="48" text-anchor="middle" class="title">Adaptive Backstepping Control: Logic and Technical Structure</text>
+  <text x="550" y="76" text-anchor="middle" class="subtitle">constraints, uncertainty, recursive stabilization, neural approximation, and Lyapunov guarantees</text>
+
+  <rect x="55" y="145" width="190" height="120" class="box box-blue"/>
+  <text x="150" y="178" text-anchor="middle" class="label">Constrained</text>
+  <text x="150" y="201" text-anchor="middle" class="label">Nonlinear Plant</text>
+  <text x="150" y="229" text-anchor="middle" class="small">unknown dynamics</text>
+  <text x="150" y="249" text-anchor="middle" class="small">dead-zone, delays, disturbances</text>
+
+  <rect x="310" y="125" width="210" height="110" class="box box-green"/>
+  <text x="415" y="158" text-anchor="middle" class="label">Constraint-Aware</text>
+  <text x="415" y="181" text-anchor="middle" class="label">Error Transformation</text>
+  <text x="415" y="209" text-anchor="middle" class="small">barrier / transformed variables</text>
+
+  <rect x="310" y="285" width="210" height="110" class="box"/>
+  <text x="415" y="318" text-anchor="middle" class="label">Recursive</text>
+  <text x="415" y="341" text-anchor="middle" class="label">Backstepping Design</text>
+  <text x="415" y="369" text-anchor="middle" class="small">virtual controls and stabilizers</text>
+
+  <rect x="585" y="105" width="215" height="110" class="box box-orange"/>
+  <text x="692.5" y="138" text-anchor="middle" class="label">Adaptive Neural</text>
+  <text x="692.5" y="161" text-anchor="middle" class="label">Approximation</text>
+  <text x="692.5" y="189" text-anchor="middle" class="small">unknown nonlinearities learned online</text>
+
+  <rect x="585" y="265" width="215" height="110" class="box box-purple"/>
+  <text x="692.5" y="298" text-anchor="middle" class="label">Command Filter</text>
+  <text x="692.5" y="321" text-anchor="middle" class="label">and Compensation</text>
+  <text x="692.5" y="349" text-anchor="middle" class="small">reduces repeated differentiation</text>
+
+  <rect x="858" y="184" width="190" height="118" class="box box-blue"/>
+  <text x="953" y="218" text-anchor="middle" class="label">Robust Adaptive</text>
+  <text x="953" y="241" text-anchor="middle" class="label">Controller</text>
+  <text x="953" y="269" text-anchor="middle" class="small">tracking, synchronization, H∞</text>
+
+  <path class="arrow" d="M245 205 C270 205 282 181 307 181"/>
+  <path class="arrow" d="M245 221 C275 238 278 340 307 340"/>
+  <path class="arrow" d="M520 180 C548 174 556 164 582 160"/>
+  <path class="arrow" d="M520 340 C548 335 556 326 582 320"/>
+  <path class="arrow" d="M800 160 C830 164 836 205 855 220"/>
+  <path class="arrow" d="M800 320 C830 315 836 275 855 260"/>
+
+  <path class="arrow dashed" d="M953 302 C945 455 212 455 150 266"/>
+  <text x="548" y="438" text-anchor="middle" class="math">closed-loop feedback: y, x, tracking error, synchronization error</text>
+
+  <rect x="155" y="500" width="790" height="70" class="pill"/>
+  <text x="550" y="525" text-anchor="middle" class="label">Lyapunov-Based Certification</text>
+  <text x="550" y="550" text-anchor="middle" class="small">bounded closed-loop signals · constraint satisfaction · tracking / synchronization · disturbance attenuation</text>
+
+  <path class="arrow" d="M415 395 C423 455 480 475 520 499"/>
+  <path class="arrow" d="M692 375 C680 430 635 470 585 499"/>
+  <path class="arrow" d="M953 302 C927 412 820 472 735 500"/>
+
+  <rect x="88" y="320" width="120" height="36" class="outcome" rx="18"/>
+  <text x="148" y="343" text-anchor="middle" class="outtxt">safe operation</text>
+  <rect x="88" y="368" width="120" height="36" class="outcome" rx="18"/>
+  <text x="148" y="391" text-anchor="middle" class="outtxt">uncertainty</text>
+  <rect x="88" y="416" width="120" height="36" class="outcome" rx="18"/>
+  <text x="148" y="439" text-anchor="middle" class="outtxt">robustness</text>
+</svg>
+
+    <figcaption>Figure 1. Constraint-aware adaptive backstepping framework. The diagram shows how constrained nonlinear dynamics are transformed into stabilizable error variables, handled through recursive backstepping, supported by neural approximation and command filtering, and finally certified through Lyapunov analysis.</figcaption>
+  </figure>
+</section>
+<section class="detail-block">
+  <h2>Overview</h2>
+  <p>This research line investigates adaptive control for nonlinear systems whose dynamics are uncertain, constrained, or affected by disturbances and input nonlinearities. Instead of treating neural approximation, backstepping, and robustness as separate tools, the work integrates them into closed-loop designs with explicit stability guarantees.</p>
+  <p>The studies are motivated by control problems in servo systems, switched multi-agent systems, and strict-feedback nonlinear plants. These systems are practically important because they combine nonlinear dynamics, limited actuation, transient constraints, communication or switching effects, and external disturbances.</p>
+</section>
+<section class="detail-block">
+  <h2>Research Questions</h2>
+  <ul>
+    <li><strong>How can constraints be enforced during learning and adaptation?</strong> Servo drives and robotic systems often operate under asymmetric state or output constraints. The controller must regulate tracking errors without allowing transient violations.</li>
+    <li><strong>How can backstepping be made implementable for complex systems?</strong> Repeated differentiation in traditional backstepping increases analytical and computational burden. Command-filtered and compensation-based designs are used to reduce this difficulty.</li>
+    <li><strong>How can synchronization be guaranteed under switching, delays, and input nonlinearities?</strong> Heterogeneous multi-agent systems require controllers that handle mode changes, state delays, signed interactions, and nonlinear actuator behavior.</li>
+    <li><strong>How can robust tracking be formulated against worst-case disturbances?</strong> Zero-sum game theory and H<sub>∞</sub> analysis are introduced to learn control and disturbance policies under an adversarial interpretation.</li>
+  </ul>
+</section>
+<section class="detail-block">
+  <h2>Technical Core</h2>
+  <ul>
+    <li><strong>Adaptive neural approximation:</strong> neural networks approximate unknown nonlinear functions so that exact plant dynamics are not required in controller construction.</li>
+    <li><strong>Backstepping-based recursive design:</strong> virtual controls and stabilizing functions are constructed step by step for strict-feedback structures and related nonlinear systems.</li>
+    <li><strong>Constraint-aware error transformation:</strong> constrained tracking or regulation errors are converted into stabilizable variables, allowing Lyapunov analysis to enforce admissible operation regions.</li>
+    <li><strong>Command filtering and compensation:</strong> command filters reduce the explosion of complexity, while compensation terms attenuate filtering errors and input nonlinearities.</li>
+    <li><strong>Game-theoretic robust learning:</strong> the control input and disturbance input are treated as opposing decision variables, leading to Actor–Critic–Disturbance learning for H<sub>∞</sub> tracking.</li>
+  </ul>
+</section>
+<section class="detail-block">
+  <h2>Paper-Based Contributions</h2>
+  <ul>
+    <li><strong>PMSM servo control:</strong> adaptive neural design is used to address permanent magnet synchronous motors with asymmetric constraints and input dead-zone effects, targeting accurate tracking without violating operating constraints.</li>
+    <li><strong>Switched multi-agent synchronization:</strong> command-filtered adaptive bipartite synchronization is developed for heterogeneous switched multi-agent systems with state delays and input nonlinearities.</li>
+    <li><strong>Robust nonlinear tracking:</strong> Actor–Critic–Disturbance learning is combined with zero-sum game formulation to solve H<sub>∞</sub> tracking for nonlinear strict-feedback systems under disturbances.</li>
+  </ul>
+</section>
+<section class="detail-block">
+  <h2>Representative Outcomes</h2>
+  <ul>
+    <li>All closed-loop signals are kept bounded under the proposed adaptive laws.</li>
+    <li>State or output constraints are respected throughout the control process.</li>
+    <li>Bipartite synchronization is achieved for heterogeneous agents under switching and delayed dynamics.</li>
+    <li>Robust H<sub>∞</sub> tracking performance is obtained by learning disturbance-aware control policies.</li>
+  </ul>
+</section>
+<section class="detail-block">
+  <h2>Application Relevance</h2>
+  <p>This direction provides a theoretical basis for control of servo drives, robotic actuators, networked agents, and disturbed nonlinear systems. It is especially relevant to scenarios where learning-based control must remain safe under constraints and reliable under uncertainty.</p>
+</section>
+<section class="detail-block">
+  <h2>Related Publications</h2>
+  <ul class="related-list">
+    <li>T. Fei, et al., “Adaptive Neural Design for Permanent Magnet Synchronous Motor with Asymmetric Constraints and Input Dead-Zone,” <em>Neurocomputing</em>, vol. 640, p. 130294.</li>
+    <li>T. Fei, Y. Yang, and X. Zhao, “Command Filtered Adaptive Bipartite Synchronization for Heterogeneous Switched Multi-Agent Systems with State Delays and Input Nonlinearity,” <em>Journal of the Franklin Institute</em>, vol. 363, no. 2, p. 108395.</li>
+    <li>T. Fei, et al., “Robust Adaptive H<sub>∞</sub> Tracking Control for Nonlinear Strict-Feedback System via Actor-Critic-Disturbance Learning: A Zero-Sum Game-Based Approach,” <em>International Journal of Robust and Nonlinear Control</em>, vol. 36, no. 8, pp. 4517–4536.</li>
+  </ul>
+</section>
 <a class="back-link" href="/about/research/">← Back to Research</a>
-  <p class="footer-note">Last updated manually. Replace placeholder links and texts as needed.</p>
+  <p class="footer-note">Research contents are summarized from representative publications and ongoing research themes.</p>
 </main>
 </div>
 </body>
