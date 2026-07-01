@@ -3,225 +3,250 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Composite Actor-Critic Learning | Tianhao Fei / Feith</title>
+  <title>Composite Actor-Critic Learning for Nonzero-Sum Games | Tianhao Fei / Feith</title>
   <meta name="description" content="Research profile of Tianhao Fei / Feith">
   <link rel="icon" href="/img/fluid.ico">
   <link rel="stylesheet" href="/about/assets/css/academic-pages.css">
+
   <style>
-    .research-figure-block { margin-top: 1.2rem; }
-    .method-figure { margin: 1rem 0 0; }
-    .method-figure img, .method-figure svg { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 18px; background: #f7fafc; box-shadow: 0 10px 28px rgba(15, 35, 55, 0.12); }
-    .method-figure figcaption { margin-top: 0.7rem; color: #5b6573; font-size: 0.95rem; line-height: 1.65; }
+    .text-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.35em;
+      min-width: 1.35em;
+      height: 1.35em;
+      margin-right: 0.55rem;
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+    .research-page-title {
+      margin-bottom: 0.85rem;
+    }
+    .research-lead {
+      color: #445066;
+      line-height: 1.85;
+      margin-bottom: 1.35rem;
+    }
+    .paper-section {
+      margin: 2.1rem 0 2.4rem;
+      padding: 1.7rem 1.8rem;
+      border: 1px solid rgba(30, 55, 90, 0.10);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 14px 34px rgba(15, 35, 55, 0.08);
+    }
+    .paper-section h2 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+    .paper-ref {
+      margin: 0 0 1.35rem;
+      color: #657083;
+      font-size: 0.96rem;
+      line-height: 1.65;
+    }
+    .subsection {
+      margin-top: 1.25rem;
+    }
+    .subsection h3 {
+      margin: 0 0 0.55rem;
+      font-size: 1.12rem;
+      color: #20314a;
+    }
+    .subsection p {
+      line-height: 1.8;
+      margin: 0.55rem 0;
+    }
+    .research-figure {
+      margin: 1.0rem 0 1.15rem;
+    }
+    .research-figure img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 220px;
+      object-fit: contain;
+      border-radius: 18px;
+      background: #f7fafc;
+      border: 1px solid rgba(60, 80, 110, 0.12);
+      box-shadow: 0 10px 28px rgba(15, 35, 55, 0.10);
+    }
+    .image-placeholder {
+      display: none;
+      min-height: 220px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.4rem;
+      border-radius: 18px;
+      border: 1px dashed rgba(60, 80, 110, 0.35);
+      background: linear-gradient(135deg, #f7fafc, #eef4fa);
+      color: #657083;
+      line-height: 1.7;
+    }
+    .research-figure figcaption {
+      margin-top: 0.72rem;
+      color: #5b6573;
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+    .topic-summary {
+      margin: 2.2rem 0 1.4rem;
+      padding: 1.65rem 1.8rem;
+      border-left: 5px solid #5b7cfa;
+      border-radius: 18px;
+      background: #f7f9ff;
+    }
+    .topic-summary h2 {
+      margin-top: 0;
+    }
+    .topic-summary p {
+      line-height: 1.85;
+    }
+    .research-list .research-card p {
+      line-height: 1.75;
+    }
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1.0rem 0 1.4rem;
+    }
+    .quick-links a {
+      display: inline-block;
+      padding: 0.42rem 0.78rem;
+      border-radius: 999px;
+      background: #f1f5fb;
+      color: #2b405f;
+      text-decoration: none;
+      font-size: 0.94rem;
+    }
   </style>
+
 </head>
 <body class="academic-body">
 <header class="academic-topbar">
-<div class="academic-topbar-inner">
-<a class="site-title" href="/">Tianhao Fei / Feith</a>
-<nav aria-label="Academic navigation" class="academic-menu">
-<a class="" href="/about/cv/">CV</a>
-<a class="" href="/about/publications/">Publications</a>
-<a class="active" href="/about/research/">Research</a>
-</nav>
-</div>
+  <div class="academic-topbar-inner">
+    <a class="site-title" href="/">Tianhao Fei / Feith</a>
+    <nav aria-label="Academic navigation" class="academic-menu">
+      <a href="/about/cv/">CV</a>
+      <a href="/about/publications/">Publications</a>
+      <a class="active" href="/about/research/">Research</a>
+    </nav>
+  </div>
 </header>
 <div class="academic-wrapper">
 <aside class="profile-sidebar">
-<div class="avatar-wrap"><img alt="Tianhao Fei / Feith" src="/img/fth.jpg"/></div>
-<div class="profile-text">
-<h2 class="profile-name">Tianhao Fei / Feith</h2>
-<p class="profile-note">🌞 <strong>Welcome to my space !</strong></p>
-<p class="profile-bio">🎓 <strong>I'm looking for a PhD position !</strong></p>
-</div>
-<ul class="profile-list">
-<li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z" fill="currentColor"></path>
-</svg>
-<span>Beijing, China</span>
+  <div class="avatar-wrap"><img src="/img/fth.jpg" alt="Tianhao Fei / Feith"></div>
+  <div class="profile-text">
+    <h2 class="profile-name">Tianhao Fei / Feith</h2>
+    <p class="profile-note">&#127774; <strong>Welcome to my space !</strong></p>
+    <p class="profile-bio">&#x1F393; <strong>I'm looking for a PhD position !</strong></p>
+  </div>
+  <ul class="profile-list">
+    <li>
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/>
+  </svg>
+  <span>Beijing, China</span>
 </li>
+
 <li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<path d="M12 3 2 8l10 5 10-5-10-5Zm-7 8v6h3v-4h2v4h4v-4h2v4h3v-6l-7 3.5L5 11Zm-2 8v2h18v-2H3Z" fill="currentColor"></path>
-</svg>
-<a href="https://www.ustb.edu.cn/" rel="noopener" target="_blank">
-    University of Science and Technology Beijing
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M12 3 2 8l10 5 10-5-10-5Zm-7 8v6h3v-4h2v4h4v-4h2v4h3v-6l-7 3.5L5 11Zm-2 8v2h18v-2H3Z"/>
+  </svg>
+  <a href="https://www.ustb.edu.cn/" target="_blank" rel="noopener">
+    University of Science and Technology Beijing (USTB)
   </a>
 </li>
+
 <li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 8 8-6H4l8 6Zm0 2.4L4 9.4V17h16V9.4l-8 6Z" fill="currentColor"></path>
-</svg>
-<a href="mailto:feith@ieee.org">feith@ieee.org</a>
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 8 8-6H4l8 6Zm0 2.4L4 9.4V17h16V9.4l-8 6Z"/>
+  </svg>
+  <a href="mailto:feith@ieee.org">feith@ieee.org</a>
 </li>
+
 <li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<path d="M12 3 1.5 8.5 12 14l10.5-5.5L12 3Zm-6 8.1V16c2.6 2 9.4 2 12 0v-4.9L12 14.2 6 11.1ZM4 18.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Z" fill="currentColor"></path>
-</svg>
-<a href="https://scholar.google.com/citations?hl=en&amp;tzom=-480&amp;user=-kMGVUAAAAAJ" rel="noopener" target="_blank">
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M12 3 1.5 8.5 12 14l10.5-5.5L12 3Zm-6 8.1V16c2.6 2 9.4 2 12 0v-4.9L12 14.2 6 11.1ZM4 18.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Z"/>
+  </svg>
+  <a href="https://scholar.google.com/citations?hl=en&tzom=-480&user=-kMGVUAAAAAJ" target="_blank" rel="noopener">
     Google Scholar
   </a>
 </li>
+
 <li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<circle cx="12" cy="12" fill="currentColor" r="10"></circle>
-<text fill="#fff" font-family="Arial, sans-serif" font-size="8.5" font-weight="700" text-anchor="middle" x="12" y="15.5">iD</text>
-</svg>
-<a href="https://orcid.org/my-orcid?orcid=0009-0000-0169-1294" rel="noopener" target="_blank">
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10" fill="currentColor"/>
+    <text x="12" y="15.5" text-anchor="middle" font-size="8.5" font-family="Arial, sans-serif" font-weight="700" fill="#fff">iD</text>
+  </svg>
+  <a href="https://orcid.org/my-orcid?orcid=0009-0000-0169-1294" target="_blank" rel="noopener">
     ORCID
   </a>
 </li>
 <li>
-<svg aria-hidden="true" class="icon" viewbox="0 0 24 24">
-<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm6.3 8h-3.1a14.4 14.4 0 0 0-1.1-4.2A7.1 7.1 0 0 1 18.3 11ZM12 5.1c.7 1 1.3 2.9 1.5 5.9h-3c.2-3 .8-4.9 1.5-5.9ZM5.7 13h3.1c.1 1.6.4 3.1.9 4.2A7.1 7.1 0 0 1 5.7 13Zm3.1-2H5.7a7.1 7.1 0 0 1 4-4.2A14.4 14.4 0 0 0 8.8 11Zm3.2 7.9c-.7-1-1.3-2.9-1.5-5.9h3c-.2 3-.8 4.9-1.5 5.9Zm1.9-1.7c.5-1.1.8-2.6.9-4.2h3.1a7.1 7.1 0 0 1-4 4.2Z" fill="currentColor"></path>
-</svg>
-<a href="/blog/">My Blog</a>
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm6.3 8h-3.1a14.4 14.4 0 0 0-1.1-4.2A7.1 7.1 0 0 1 18.3 11ZM12 5.1c.7 1 1.3 2.9 1.5 5.9h-3c.2-3 .8-4.9 1.5-5.9ZM5.7 13h3.1c.1 1.6.4 3.1.9 4.2A7.1 7.1 0 0 1 5.7 13Zm3.1-2H5.7a7.1 7.1 0 0 1 4-4.2A14.4 14.4 0 0 0 8.8 11Zm3.2 7.9c-.7-1-1.3-2.9-1.5-5.9h3c-.2 3-.8 4.9-1.5 5.9Zm1.9-1.7c.5-1.1.8-2.6.9-4.2h3.1a7.1 7.1 0 0 1-4 4.2Z"/>
+  </svg>
+  <a href="/blog/">My Blog</a>
 </li>
 </ul>
 </aside>
 <main class="content">
 <nav aria-label="Section navigation" class="content-nav">
-<a href="/">Tianhao Fei / Feith</a>
-<a href="/about/cv/">CV</a>
-<a href="/about/publications/">Publications</a>
-<a class="active" href="/about/research/">Research</a>
+  <a href="/">Tianhao Fei / Feith</a>
+  <a href="/about/cv/">CV</a>
+  <a href="/about/publications/">Publications</a>
+  <a class="active" href="/about/research/">Research</a>
 </nav>
-<h1>Data-Efficient Composite Actor–Critic Reinforcement Learning</h1>
-<section class="detail-block research-figure-block">
-  <h2>Methodological Framework</h2>
-  <figure class="method-figure">
-    <svg class="method-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-labelledby="composite_actor_critic_learning_title composite_actor_critic_learning_desc">
-  <title id="composite_actor_critic_learning_title">Composite actor-critic reinforcement learning framework</title>
-  <desc id="composite_actor_critic_learning_desc">A multi-player nonzero-sum differential game diagram showing actors, critics, historical data, instantaneous and recorded Bellman errors, composite critic learning, actor improvement, and approximate Nash equilibrium.</desc>
-  <defs>
-    <marker id="composite_actor_critic_learning_arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2,2 L10,6 L2,10 Z" fill="#344f6f"/></marker>
-    <filter id="composite_actor_critic_learning_shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#1f2d3d" flood-opacity="0.16"/></filter>
-    <style>
-      .bg{fill:#f7fafc}.title{font:700 30px Arial,Helvetica,sans-serif;fill:#142537}.subtitle{font:400 16px Arial,Helvetica,sans-serif;fill:#536272}.box{fill:#fff;stroke:#8ea8c2;stroke-width:1.5;rx:18;filter:url(#composite_actor_critic_learning_shadow)}.blue{fill:#eef6ff;stroke:#6c99c5}.green{fill:#edf8f1;stroke:#67a77f}.orange{fill:#fff5e8;stroke:#d6994a}.purple{fill:#f3efff;stroke:#8d77bf}.gray{fill:#f3f6f8;stroke:#99a9b7}.label{font:700 17px Arial,Helvetica,sans-serif;fill:#172635}.small{font:400 13.5px Arial,Helvetica,sans-serif;fill:#405160}.tiny{font:400 12px Arial,Helvetica,sans-serif;fill:#5b6876}.arrow{stroke:#344f6f;stroke-width:2.2;fill:none;marker-end:url(#composite_actor_critic_learning_arrow)}.dashed{stroke-dasharray:7 6}.outcome{fill:#12324d;rx:18}.outtxt{font:700 14px Arial,Helvetica,sans-serif;fill:#fff}.note{font:italic 14px Georgia,serif;fill:#35475a}.formula{font:italic 15px Georgia,serif;fill:#24384d}
-    </style>
-  </defs>
-  <rect width="1100" height="650" class="bg" rx="24"/>
-  <text x="550" y="48" text-anchor="middle" class="title">Composite Actor–Critic Learning for Nonzero-Sum Differential Games</text>
-  <text x="550" y="76" text-anchor="middle" class="subtitle">historical data reuse, relaxed excitation, coupled policy learning, and approximate Nash seeking</text>
 
-  <rect x="70" y="175" width="210" height="120" class="box blue"/>
-  <text x="175" y="208" text-anchor="middle" class="label">Multi-Player</text>
-  <text x="175" y="231" text-anchor="middle" class="label">Differential Game</text>
-  <text x="175" y="259" text-anchor="middle" class="small">shared dynamics</text>
-  <text x="175" y="279" text-anchor="middle" class="small">coupled individual costs</text>
-
-  <rect x="70" y="355" width="210" height="100" class="box gray"/>
-  <text x="175" y="388" text-anchor="middle" class="label">Recorded Data Buffer</text>
-  <text x="175" y="416" text-anchor="middle" class="small">state, policy, cost samples</text>
-  <text x="175" y="436" text-anchor="middle" class="small">rank / excitation check</text>
-
-  <rect x="350" y="130" width="250" height="135" class="box green"/>
-  <text x="475" y="163" text-anchor="middle" class="label">Instantaneous Bellman Error</text>
-  <text x="475" y="191" text-anchor="middle" class="formula">δᵢ(t): online trajectory information</text>
-  <text x="475" y="221" text-anchor="middle" class="small">uses current state and current policies</text>
-  <text x="475" y="242" text-anchor="middle" class="small">captures immediate game dynamics</text>
-
-  <rect x="350" y="335" width="250" height="135" class="box orange"/>
-  <text x="475" y="368" text-anchor="middle" class="label">Recorded Bellman Errors</text>
-  <text x="475" y="396" text-anchor="middle" class="formula">δᵢʰ: historical data information</text>
-  <text x="475" y="426" text-anchor="middle" class="small">reuse informative samples</text>
-  <text x="475" y="447" text-anchor="middle" class="small">reduce dependence on PE</text>
-
-  <rect x="670" y="185" width="235" height="125" class="box purple"/>
-  <text x="787.5" y="218" text-anchor="middle" class="label">Composite Critic Learning</text>
-  <text x="787.5" y="246" text-anchor="middle" class="formula">δᵢᶜ = δᵢ(t) + Σ δᵢʰ</text>
-  <text x="787.5" y="276" text-anchor="middle" class="small">value-function weights updated</text>
-  <text x="787.5" y="296" text-anchor="middle" class="small">under finite / sufficient excitation</text>
-
-  <rect x="670" y="380" width="235" height="105" class="box blue"/>
-  <text x="787.5" y="413" text-anchor="middle" class="label">Actor Policy Improvement</text>
-  <text x="787.5" y="442" text-anchor="middle" class="small">decentralized policy networks</text>
-  <text x="787.5" y="462" text-anchor="middle" class="small">for all players i = 1, …, N</text>
-
-  <rect x="930" y="280" width="125" height="105" class="box green"/>
-  <text x="992.5" y="313" text-anchor="middle" class="label">Approx.</text>
-  <text x="992.5" y="336" text-anchor="middle" class="label">Nash Policy</text>
-  <text x="992.5" y="364" text-anchor="middle" class="small">stable closed loop</text>
-
-  <path class="arrow" d="M280 225 C310 216 320 204 347 198"/>
-  <path class="arrow" d="M280 405 C310 405 320 405 347 405"/>
-  <path class="arrow" d="M600 198 C632 202 643 226 667 241"/>
-  <path class="arrow" d="M600 405 C634 388 643 298 667 265"/>
-  <path class="arrow" d="M787 310 C787 337 787 350 787 377"/>
-  <path class="arrow" d="M905 432 C946 420 968 393 984 386"/>
-  <path class="arrow dashed" d="M992 280 C965 145 290 118 175 175"/>
-  <path class="arrow dashed" d="M175 295 C175 318 175 330 175 352"/>
-
-  <text x="540" y="545" text-anchor="middle" class="note">Composite learning turns stored trajectories into excitation resources instead of passive archives.</text>
-
-  <rect x="155" y="575" width="165" height="42" class="outcome"/>
-  <text x="237.5" y="601" text-anchor="middle" class="outtxt">relaxed PE demand</text>
-  <rect x="340" y="575" width="175" height="42" class="outcome"/>
-  <text x="427.5" y="601" text-anchor="middle" class="outtxt">data-efficient learning</text>
-  <rect x="535" y="575" width="180" height="42" class="outcome"/>
-  <text x="625" y="601" text-anchor="middle" class="outtxt">bounded weight errors</text>
-  <rect x="735" y="575" width="190" height="42" class="outcome"/>
-  <text x="830" y="601" text-anchor="middle" class="outtxt">approximate Nash seeking</text>
-</svg>
-
-    <figcaption>Figure 1. Composite Actor–Critic learning framework. The diagram highlights how instantaneous Bellman errors and recorded Bellman errors are combined so that historical data become an excitation resource for critic learning and subsequent multi-player policy improvement.</figcaption>
-  </figure>
+<h1 class="research-page-title" style="font-size: 25px;">Data-Efficient Composite Actor–Critic Reinforcement Learning</h1>
+<p class="research-lead">This research direction studies data-efficient Nash equilibrium learning for continuous-time nonzero-sum differential games. The main objective is to obtain reliable Actor-Critic convergence without injecting probing noise into the players' actions.</p>
+<!-- <div class="quick-links">
+  <a href="#fe-composite-nzsg">Finite-Excitation Composite Learning</a>
+</div> -->
+<section class="paper-section" id="fe-composite-nzsg">
+  <h2>Finite-Excitation Composite Actor-Critic Learning for Nash Equilibrium Seeking</h2>
+  <p class="paper-ref"><strong>Representative paper:</strong> Y. Yang, T. Fei et al., <em>IEEE Trans on Neural Networks and Learning Systems</em>, under review.</p>
+  <div class="subsection">
+    <h3>Research Problem</h3>
+    <p>The problem is that conventional online Actor-Critic reinforcement learning for continuous-time nonzero-sum games commonly depends on <strong>persistence of excitation</strong>. In practice, PE is <strong>hard to verify online</strong> and is often enforced by probing-noise injection, which can <strong>degrade action smoothness, performance, and safety</strong>. A weaker but verifiable excitation mechanism is needed for coupled Hamilton-Jacobi learning.</p>
+  </div>
+  <div class="subsection">
+    <h3>Research Method</h3>
+    <p>The method develops a composite Actor-Critic framework that combines instantaneous Bellman errors with filtered historical information. Instead of maintaining a large replay buffer, an <strong>exponentially weighted integral-memory operator</strong> stores informative signals. The resulting finite-excitation condition is <strong>online-verifiable</strong>, and each player updates its Actor and Critic networks fully online through a synchronous composite architecture designed for coupled nonzero-sum games.</p>
+    <figure class="research-figure">
+  <img src="/files/Research/topic3/tnnls_method.png" alt="Finite-Excitation Composite Actor-Critic Learning for Nash Equilibrium Seeking method" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+  <div class="image-placeholder">Image placeholder: /files/Research/topic3/tnnls_method.png
+Replace this path with a PNG/JPG figure in /source/files/Research/.</div>
+  <!-- <figcaption>Suggested method figure: multi-player system, coupled Hamilton-Jacobi equations, instantaneous critic error, filtered historical information, finite-excitation test, and synchronous Actor-Critic updates.</figcaption> -->
+</figure>
+  </div>
+  <div class="subsection">
+    <h3>Main Conclusion</h3>
+    <p>The proposed composite learning framework removes the need for PE and probing noise while maintaining closed-loop stability, bounded actor-critic weight estimation errors, and convergence of the learned policy tuple to a neighborhood of the Nash equilibrium. It extends composite learning from single-player adaptive control to coupled multi-player game learning.</p>
+  </div>
+  <div class="subsection">
+    <h3>Simulation Results</h3>
+    <p>The simulations include a three-player linear system and a nonlinear system. In the linear case, both the PE-based baseline and the proposed finite-excitation method stabilize the system within about 7 seconds, but the composite method achieves smaller performance indices and smoother convergence without probing noise. In the nonlinear case, state and action trajectories approach a neighborhood of the origin, and the proposed method again achieves smaller convergent costs for all three players. Weight trajectories converge more smoothly to their ideal values than under the PE-based scheme, which shows the benefit of filtered historical information.</p>
+    <figure class="research-figure">
+  <img src="/files/Research/topic3/tnnls_simulation.png" alt="Finite-Excitation Composite Actor-Critic Learning for Nash Equilibrium Seeking simulation results" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+  <div class="image-placeholder">Image placeholder: /files/Research/topic3/tnnls_simulation.png
+Replace this path with a PNG/JPG figure in /source/files/Research/.</div>
+  <!-- <figcaption>Suggested simulation figure: state/action comparisons under FE and PE, performance-index bar charts, and actor-critic weight convergence for all players.</figcaption> -->
+</figure>
+  </div>
 </section>
-<section class="detail-block">
-  <h2>Overview</h2>
-  <p>This research line studies Actor–Critic reinforcement learning for multi-player nonzero-sum differential games. The central difficulty is that each player’s value function and policy are coupled through the other players’ actions, leading to coupled Hamilton–Jacobi equations that are hard to solve analytically.</p>
-  <p>The work aims to improve data efficiency and convergence reliability by combining instantaneous Bellman errors with historical data. This composite-learning viewpoint weakens the dependence on persistent excitation and makes online Nash policy learning more practical for continuous-time nonlinear systems.</p>
-</section>
-<section class="detail-block">
-  <h2>Research Questions</h2>
-  <ul>
-    <li><strong>How can Nash policies be learned without exact system knowledge?</strong> Actor–Critic structures are used to approximate value functions and decentralized policies for each player.</li>
-    <li><strong>How can the restrictive persistence-of-excitation condition be relaxed?</strong> Historical data and composite Bellman errors are introduced to replace pure reliance on current online excitation.</li>
-    <li><strong>How can coupled learning errors be controlled?</strong> The critic and actor updates of different players interact through the coupled cost functions and dynamics, requiring a joint stability analysis.</li>
-    <li><strong>How can recorded data be made useful rather than merely stored?</strong> Data must be selected, verified, and incorporated into the update law so that it contributes to excitation and convergence.</li>
-  </ul>
-</section>
-<section class="detail-block">
-  <h2>Technical Core</h2>
-  <ul>
-    <li><strong>Composite Bellman error:</strong> the learning error combines instantaneous information with stored historical samples, producing a richer update signal for the Critic.</li>
-    <li><strong>Finite or sufficient excitation:</strong> excitation is characterized over recorded data rather than requiring persistent excitation along the entire trajectory.</li>
-    <li><strong>Multi-player Actor–Critic learning:</strong> each player maintains a Critic for value-function approximation and an Actor for policy approximation under coupled game costs.</li>
-    <li><strong>Historical data reuse:</strong> recorded data are used to strengthen parameter learning, reduce online probing burden, and improve sample efficiency.</li>
-    <li><strong>Lyapunov convergence analysis:</strong> stability and convergence properties are analyzed for the closed-loop system and neural-network weight errors.</li>
-  </ul>
-</section>
-<section class="detail-block">
-  <h2>Paper-Based Contributions</h2>
-  <ul>
-    <li><strong>Nonzero-sum game formulation:</strong> the control problem is modeled as a multi-player differential game where each player minimizes an individual cost coupled with the system state and other players’ policies.</li>
-    <li><strong>Composite critic learning:</strong> instantaneous and recorded Bellman errors are integrated to improve critic convergence under weaker excitation requirements.</li>
-    <li><strong>Actor policy improvement:</strong> learned critic information is used to update each player’s Actor network toward an approximate Nash equilibrium policy.</li>
-    <li><strong>Data-efficient online implementation:</strong> historical data buffers and excitation conditions are used to reduce dependence on continuous exploration signals.</li>
-  </ul>
-</section>
-<section class="detail-block">
-  <h2>Representative Outcomes</h2>
-  <ul>
-    <li>Persistence-of-excitation assumptions are relaxed through finite or sufficient excitation over recorded data.</li>
-    <li>Critic and Actor weight errors are driven to bounded neighborhoods under the proposed update laws.</li>
-    <li>Approximate Nash equilibrium policies are learned for multi-player differential games.</li>
-    <li>The closed-loop system remains stable during online learning.</li>
-    <li>Online data requirements are reduced by reusing informative historical samples.</li>
-  </ul>
-</section>
-<section class="detail-block">
-  <h2>Application Relevance</h2>
-  <p>This direction supports learning-based decision-making for multi-agent autonomous systems, intelligent transportation, cooperative robotics, and networked control problems where agents pursue individual objectives while sharing coupled dynamics.</p>
-</section>
-<section class="detail-block">
-  <h2>Related Manuscript</h2>
-  <ul class="related-list">
-    <li>T. Fei, et al., “Composite Actor–Critic Reinforcement Learning for Nonzero-Sum Differential Games,” manuscript.</li>
-  </ul>
+
+<section class="topic-summary">
+  <h2>Summary and Significance</h2>
+  <p>This research direction addresses a structural weakness of many continuous-time Actor-Critic algorithms: <strong>convergence claims often depend on excitation that is difficult to guarantee without disturbing the system</strong>. The composite learning approach replaces this with filtered historical information and an online-verifiable finite-excitation condition. Its significance is practical as well as theoretical: the learned policies can approach the Nash equilibrium <strong>without auxiliary probing noise</strong>, while the closed-loop system retains smooth behavior and lower accumulated cost.</p>
 </section>
 <a class="back-link" href="/about/research/">← Back to Research</a>
-  <p class="footer-note">Research contents are summarized from representative publications and ongoing research themes.</p>
+  <!-- <p class="footer-note">Research contents are summarized from representative publications.</p> -->
 </main>
 </div>
 </body>
