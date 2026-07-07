@@ -507,3 +507,20 @@ strong { color: #3f464d; }
     padding: 20px 20px;
   }
 }
+
+.work-logo-figure {
+  margin: 24px 0 22px;
+  padding: 18px 0;
+  text-align: center;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.work-logo {
+  display: block;
+  width: 420px;
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+}
