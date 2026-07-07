@@ -405,3 +405,105 @@ strong { color: #3f464d; }
   .lead-title { font-size: 25px; }
   .sub-title { font-size: 23px; }
 }
+
+/* Work experience page */
+.work-intro {
+  color: #4a5661;
+  font-size: 17px;
+  line-height: 1.82;
+  margin-bottom: 24px;
+}
+
+.work-item {
+  margin: 26px 0 32px;
+  padding: 24px 26px;
+  border: 1px solid #e4e8ec;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.work-item-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.work-item h2 {
+  margin: 0 0 6px;
+  font-size: 23px;
+}
+
+.work-role {
+  margin: 0;
+  color: #4d5964;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.work-date {
+  flex: 0 0 auto;
+  color: #66737f;
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: nowrap;
+  padding-top: 3px;
+}
+
+.work-project-title {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #3f464d;
+}
+
+.work-description {
+  margin-bottom: 14px;
+  color: #4a535c;
+  font-size: 16px;
+  line-height: 1.82;
+}
+
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work-tags li {
+  margin: 0;
+  padding: 4px 11px;
+  border: 1px solid #d9e8f0;
+  border-radius: 999px;
+  background: #f4fafc;
+  color: #407185;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.work-note {
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-left: 4px solid var(--link);
+  background: #f7f9fb;
+  color: #52606d;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+@media (max-width: 700px) {
+  .work-item-header {
+    display: block;
+  }
+  .work-date {
+    margin-top: 6px;
+    white-space: normal;
+  }
+  .work-item {
+    padding: 20px 20px;
+  }
+}
