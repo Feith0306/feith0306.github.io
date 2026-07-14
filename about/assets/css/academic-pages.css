@@ -524,3 +524,7 @@ strong { color: #3f464d; }
   margin: 0 auto;
   object-fit: contain;
 }
+
+.personal-status {
+  margin-top: 28px;
+}
