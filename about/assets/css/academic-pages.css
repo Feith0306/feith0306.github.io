@@ -28,6 +28,32 @@ body.academic-body {
   line-height: 1.72;
 }
 
+body.academic-body.about-page {
+  font-family: Georgia, "Times New Roman", "Microsoft YaHei", "PingFang SC", serif;
+}
+
+body.academic-body.about-page.about-home-page,
+body.academic-body.about-page.about-home-page :where(
+  h1, h2, h3, h4, h5, h6,
+  p, a, span, strong, em, b, small, time,
+  ul, ol, li, dl, dt, dd, blockquote,
+  figcaption, caption, th, td,
+  label, button, input, textarea, select, option, summary, address
+):not(:where(
+  pre *, code *, kbd *, samp *, var *, math *,
+  .katex *, .MathJax *, svg *,
+  .fa, .fas, .far, .fab, .fal, .fad,
+  [class^="fa-"], [class*=" fa-"], .iconfont,
+  [class^="icon-"], [class*=" icon-"]
+)) {
+  font-family: Georgia, "Times New Roman", "Microsoft YaHei", "PingFang SC", serif !important;
+}
+
+body.academic-body.about-page #publications,
+body.academic-body.about-page #publications :where(h2, h3, p, li, a, span, em, strong) {
+  font-family: Georgia, "Times New Roman", "Microsoft YaHei", "PingFang SC", serif !important;
+}
+
 a { color: var(--link); text-decoration: none; }
 a:hover { color: var(--link-dark); text-decoration: underline; }
 
