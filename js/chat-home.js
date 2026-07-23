@@ -60,7 +60,7 @@
         contact: {
           question: "如何与你联系？",
           answers: [
-            "如果我的背景与您的研究兴趣契合，并有合适的合作机会或博士名额，我将非常期待与您取得联系。",
+            "如果我的背景与您的研究兴趣契合，并且您有合适的博士名额，我将非常期待与您取得联系。",
             '邮箱：<a href="mailto:feith@ieee.org">feith@ieee.org</a>',
             '电话：<a href="tel:+8618201430306">(+86) 182 0143 0306</a>',
             "微信：FTH18201430306"
@@ -126,7 +126,7 @@
         contact: {
           question: "How can I contact you?",
           answers: [
-            "If my research interests you and you would like to discuss a potential collaboration or PhD opportunity, please feel free to contact me.",
+            "If my background aligns with your research, and you have PhD openings, I would be appreciative to receive your message.",
             'Email: <a href="mailto:feith@ieee.org">feith@ieee.org</a>',
             'Phone: <a href="tel:+8618201430306">(+86) 182 0143 0306</a>',
             "WeChat: FTH18201430306"
