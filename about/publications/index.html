@@ -117,163 +117,239 @@
 
 
 <style>
-  #publications {
-    font-family: "Times New Roman", Times, "SimSun", serif;
+  #publications { font-family: Arial, Helvetica, sans-serif; }
+  #publications h3 { margin: 38px 0 24px; font: 700 24px/1.25 Arial, Helvetica, sans-serif; color: #111; }
+  #publications .publication-list { list-style: none; margin: 0; padding: 0; }
+  #publications .publication-card {
+    display: grid; grid-template-columns: 158px minmax(0, 1fr); gap: 36px;
+    align-items: start; margin: 0 0 34px; padding: 0;
   }
-
-  #publications h2,
-  #publications h3,
-  #publications li,
-  #publications a,
-  #publications span,
-  #publications em,
-  #publications strong {
-    font-family: "Times New Roman", Times, "SimSun", serif;
+  #publications .publication-visual { width: 158px; }
+  #publications .publication-tag {
+    display: block; box-sizing: border-box; width: 100%; margin: 0 0 10px; padding: 4px 8px;
+    border-radius: 5px; background: #56309a; box-shadow: 0 4px 10px rgba(0,0,0,.22);
+    color: #fff; font-size: 14px; font-weight: 700; line-height: 1.1; text-align: center;
   }
-
-  #publications .publication-list {
-    padding-left: 24px;
-    margin-bottom: 24px;
+  #publications .publication-image-wrap {
+    position: relative; width: 158px; height: 96px; overflow: hidden; border-radius: 3px;
+    background: linear-gradient(135deg, #f8f8fb, #e4e0ef); box-shadow: 0 3px 10px rgba(0,0,0,.18);
   }
-
-  #publications .publication-list li {
-    margin-bottom: 14px;
-    line-height: 1.65;
-    text-align: justify;
+  #publications .publication-image-wrap::before {
+    content: attr(data-label); position: absolute; inset: 0; display: grid; place-items: center;
+    padding: 12px; color: #56309a; font-size: 13px; font-weight: 700; line-height: 1.25; text-align: center;
   }
-
-  #publications a {
-    color: #19a0c7;
-    text-decoration: none;
+  #publications .publication-image { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: contain; background: #fff; }
+  #publications .publication-info { min-width: 0; }
+  #publications .publication-title { margin: -3px 0 5px; color: #050505; font-size: 19px; font-weight: 400; line-height: 1.28; }
+  #publications .publication-authors, #publications .publication-venue, #publications .publication-note {
+    margin: 0 0 5px; color: #111; font-size: 18px; line-height: 1.35;
   }
-
-  #publications a:hover {
-    text-decoration: underline;
+  #publications .publication-venue { margin-bottom: 10px; }
+  #publications .publication-note { color: #555; font-size: 15px; }
+  #publications .my-name { color: #000; font-weight: 700; }
+  #publications .publication-button {
+    display: inline-block; box-sizing: border-box; min-width: 70px; margin: 0 6px 0 0; padding: 6px 12px;
+    border: 1px solid #111; border-radius: 2px; background: #fff; color: #000;
+    font: 400 13px/1.1 Georgia, "Times New Roman", serif; text-align: center; text-decoration: none;
+    cursor: pointer;
   }
-
-  #publications .pdf-link {
-    font-weight: 700;
-    margin-left: 4px;
+  #publications .publication-button:hover { background: #56309a; color: #fff; text-decoration: none; }
+  body.bib-modal-open { overflow: hidden; }
+  .bib-modal[hidden] { display: none; }
+  .bib-modal {
+    position: fixed; z-index: 9999; inset: 0; display: grid; place-items: center;
+    box-sizing: border-box; padding: 24px; background: rgba(0, 0, 0, .55);
   }
-
-  #publications .chinese-title {
-    color: #666;
-    font-size: 0.95em;
+  .bib-modal-dialog {
+    width: min(760px, 100%); max-height: min(680px, calc(100vh - 48px)); overflow: hidden;
+    border-radius: 8px; background: #fff; box-shadow: 0 18px 55px rgba(0, 0, 0, .35);
   }
-  #publications .my-name {
-    color: #2a19c7;
-    font-weight: 700;
+  .bib-modal-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 20px; border-bottom: 1px solid #ddd;
+  }
+  .bib-modal-title { margin: 0; color: #111; font: 700 18px/1.3 Arial, Helvetica, sans-serif; }
+  .bib-modal-close {
+    width: 34px; height: 34px; padding: 0; border: 0; border-radius: 4px;
+    background: transparent; color: #333; font-size: 28px; line-height: 1; cursor: pointer;
+  }
+  .bib-modal-close:hover { background: #eee; }
+  .bib-modal-body { padding: 18px 20px 20px; }
+  .bib-content {
+    box-sizing: border-box; width: 100%; height: 360px; margin: 0 0 14px; padding: 15px;
+    resize: vertical; border: 1px solid #bbb; border-radius: 4px; background: #f7f7f9;
+    color: #171717; font: 14px/1.55 Consolas, "Courier New", monospace; white-space: pre;
+  }
+  .bib-modal-actions { display: flex; align-items: center; gap: 12px; }
+  .bib-copy-button {
+    min-width: 110px; padding: 8px 16px; border: 1px solid #111; border-radius: 3px;
+    background: #56309a; color: #fff; font: 14px/1.2 Arial, Helvetica, sans-serif; cursor: pointer;
+  }
+  .bib-copy-button:hover { background: #402176; }
+  .bib-copy-status { color: #444; font: 14px/1.3 Arial, Helvetica, sans-serif; }
+  /* Targeted desktop line control for selected publication entries. */
+  #publications .publication-title.one-line-title {
+    white-space: nowrap;
+    font-size: 17px;
+  }
+  #publications .publication-title.two-line-title {
+    font-size: 17px;
+  }
+  #publications .publication-title.two-line-title .title-line {
+    display: block;
+    white-space: nowrap;
+  }
+  #publications .publication-venue.one-line-venue {
+    white-space: nowrap;
+    font-size: 16px;
+  }
+  @media (max-width: 700px) {
+    #publications .publication-card { grid-template-columns: 1fr; gap: 15px; margin-bottom: 38px; }
+    #publications .publication-visual { width: min(220px, 100%); }
+    #publications .publication-image-wrap { width: 100%; height: 132px; }
+    #publications .publication-title { margin-top: 0; }
+    #publications .publication-title.one-line-title,
+    #publications .publication-title.two-line-title .title-line,
+    #publications .publication-venue.one-line-venue {
+      white-space: normal;
+    }
+    .bib-modal { padding: 12px; }
+    .bib-modal-dialog { max-height: calc(100vh - 24px); }
+    .bib-content { height: 52vh; font-size: 12px; }
   }
 </style>
-
 
 <section id="publications">
   <h3>Journal Papers</h3>
   <ol class="publication-list">
-    <li>
-      <strong class="my-name">T. Fei</strong>, J. Lee, K. Zhang, Y. Yang*, Z. Li, C. K. Ahn*, and C.-Z. Xu,
-      “<a class="pdf-link" href="/files/Publications/Journal/IEEETFS.pdf" target="_blank">Game-Theoretic Fuzzy Reinforcement Learning via Self-Triggered Mechanism</a>,”
-      <em>IEEE Trans. on Fuzzy Systems</em>, early access.
-      <a href="https://ieeexplore.ieee.org/document/11574564" target="_blank">doi: 10.1109/TFUZZ.2026.3706062</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">IEEE TFS</span><div class="publication-image-wrap" data-label="Fuzzy Reinforcement Learning"><img class="publication-image" src="/img/publications/IEEETFS.jpg" alt="Graphical abstract of the IEEE TFS paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title one-line-title">Game-Theoretic Fuzzy Reinforcement Learning via Self-Triggered Mechanism</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, J. Lee, K. Zhang, Y. Yang<sup>*</sup>, Z. Li, C. K. Ahn<sup>*</sup>, and C.-Z. Xu</p><p class="publication-venue"><em>IEEE Transactions on Fuzzy Systems</em>, early access, 2026</p><a class="publication-button" href="/files/Publications/Journal/IEEETFS.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://ieeexplore.ieee.org/document/11574564" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/IEEETFS.bib" data-bib-title="IEEE TFS">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, J. Lee, Y. Yang*, Z. Li, and C.-Z. Xu,
-      “<a class="pdf-link" href="/files/Publications/Journal/IEEETETCI.pdf" target="_blank">Self-Triggered <em>H<sub>&infin;</sub></em> Control Using Projected Actor-Critic-Disturbance Learning</a>,”
-      <em>IEEE Trans. on Emerging Topics in Computational Intelligence</em>, early access, 2026.
-      <a href="https://ieeexplore.ieee.org/document/11512002" target="_blank">doi: 10.1109/TETCI.2026.3683743</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">IEEE TETCI</span><div class="publication-image-wrap" data-label="Self-Triggered H∞ Control"><img class="publication-image" src="/img/publications/IEEETETCI.jpg" alt="Graphical abstract of the IEEE TETCI paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title one-line-title">Self-Triggered H<sub>&infin;</sub> Control Using Projected Actor–Critic–Disturbance Learning</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, J. Lee, Y. Yang<sup>*</sup>, Z. Li, and C.-Z. Xu</p><p class="publication-venue one-line-venue"><em>IEEE Transactions on Emerging Topics in Computational Intelligence</em>, early access, 2026</p><a class="publication-button" href="/files/Publications/Journal/IEEETETCI.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://ieeexplore.ieee.org/document/11512002" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/IEEETETCI.bib" data-bib-title="IEEE TETCI">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, Y. Yang*, C. Zheng, H. Zhang, and G. Yuan,
-      “<a class="pdf-link" href="/files/Publications/Journal/Neurocomputing.pdf" target="_blank">Adaptive Neural Design for Permanent Magnet Synchronous Motor with Asymmetric Constraints and Input Dead-Zone</a>,”
-      <em>Neurocomputing</em>, vol. 640, article no. 130294, 2025.
-      <a href="https://doi.org/10.1016/j.neucom.2025.130294" target="_blank">doi: 10.1016/j.neucom.2025.130294</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">Neurocomputing</span><div class="publication-image-wrap" data-label="Adaptive Neural PMSM Control"><img class="publication-image" src="/img/publications/Neurocomputing.jpg" alt="Graphical abstract of the Neurocomputing paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title">Adaptive Neural Design for Permanent Magnet Synchronous Motor with Asymmetric Constraints and Input Dead-Zone</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, Y. Yang<sup>*</sup>, C. Zheng, H. Zhang, and G. Yuan</p><p class="publication-venue"><em>Neurocomputing</em>, vol. 640, article no. 130294, 2025</p><a class="publication-button" href="/files/Publications/Journal/Neurocomputing.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://doi.org/10.1016/j.neucom.2025.130294" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/Neurocomputing.bib" data-bib-title="Neurocomputing">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, Y. Yang*, and X. Zhao,
-      “<a class="pdf-link" href="/files/Publications/Journal/JFI.pdf" target="_blank">Command Filtered Adaptive Bipartite Synchronization for Heterogeneous Switched Multi-Agent Systems with State Delays and Input Nonlinearity</a>,”
-      <em>Journal of the Franklin Institute</em>, vol. 363, no. 2, p. 108395, 2026.
-      <a href="https://doi.org/10.1016/j.jfranklin.2025.108395" target="_blank">doi: 10.1016/j.jfranklin.2025.108395</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">JFI</span><div class="publication-image-wrap" data-label="Bipartite Synchronization"><img class="publication-image" src="/img/publications/JFI.jpg" alt="Graphical abstract of the JFI paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title">Command Filtered Adaptive Bipartite Synchronization for Heterogeneous Switched Multi-Agent Systems with State Delays and Input Nonlinearity</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, Y. Yang<sup>*</sup>, and X. Zhao</p><p class="publication-venue"><em>Journal of the Franklin Institute</em>, vol. 363, no. 2, p. 108395, 2026</p><a class="publication-button" href="/files/Publications/Journal/JFI.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://doi.org/10.1016/j.jfranklin.2025.108395" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/JFI.bib" data-bib-title="Journal of the Franklin Institute">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, Y. Yang*, and X. Zhao,
-      “<a class="pdf-link" href="/files/Publications/Journal/IJRNC.pdf" target="_blank">Robust Adaptive <em>H<sub>&infin;</sub></em> Tracking Control for Nonlinear Strict-Feedback System via Actor-Critic-Disturbance Learning: A Zero-Sum Game-Based Approach</a>,”
-      <em>International Journal of Robust and Nonlinear Control</em>, vol. 36, no. 8, pp. 4517–4536, 2026.
-      <a href="https://onlinelibrary.wiley.com/doi/10.1002/rnc.70441" target="_blank">doi: 10.1002/rnc.70441</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">IJRNC</span><div class="publication-image-wrap" data-label="Robust Adaptive H∞ Control"><img class="publication-image" src="/img/publications/IJRNC.jpg" alt="Graphical abstract of the IJRNC paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title two-line-title"><span class="title-line">Robust Adaptive H<sub>&infin;</sub> Tracking Control for Nonlinear Strict-Feedback System</span><span class="title-line">via Actor–Critic–Disturbance Learning: A Zero-Sum Game-Based Approach</span></p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, Y. Yang<sup>*</sup>, and X. Zhao</p><p class="publication-venue one-line-venue"><em>International Journal of Robust and Nonlinear Control</em>, vol. 36, no. 8, pp. 4517–4536, 2026</p><a class="publication-button" href="/files/Publications/Journal/IJRNC.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://onlinelibrary.wiley.com/doi/10.1002/rnc.70441" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/IJRNC.bib" data-bib-title="IJRNC">BIB</button></div>
     </li>
-
-    <li>
-      Y. Yang, <strong class="my-name">T. Fei</strong>, et al.,
-      “Composite Actor-Critic Reinforcement Learning of Nash Equilibrium in Nonzero-Sum Games,”
-      <em>submitted to IEEE Trans. on Neural Networks and Learning Systems</em>. (Major Revision &rarr; Under Review)
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">Under Review</span><div class="publication-image-wrap" data-label="Composite Actor–Critic Learning"><img class="publication-image" src="/img/publications/IEEETNNLS.jpg" alt="Graphical abstract of the submitted TNNLS paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title one-line-title">Composite Actor–Critic Reinforcement Learning of Nash Equilibrium in Nonzero-Sum Games</p><p class="publication-authors">Y. Yang, <strong class="my-name">T. Fei</strong>, et al.</p><p class="publication-venue"><em>Submitted to IEEE Transactions on Neural Networks and Learning Systems</em></p><p class="publication-note">Major Revision &rarr; Under Review</p></div>
     </li>
   </ol>
 
   <h3>Conference Papers</h3>
   <ol class="publication-list">
-    <li>
-      <strong class="my-name">T. Fei</strong>, Y. Yang*, and X. Zhao,
-      “<a class="pdf-link" href="/files/Publications/Conference/CAC2025.pdf" target="_blank">Self-Triggered Sampling Design for Continuous-Time Linear Dynamical System</a>,”
-      in <em>2025 China Automation Congress</em>, Harbin, China, October 10-14, 2025, pp. 3164–3169.
-      <a href="https://ieeexplore.ieee.org/document/11487443" target="_blank">doi: 10.1109/CAC67268.2025.1148744</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">CAC 2025</span><div class="publication-image-wrap" data-label="Self-Triggered Sampling"><img class="publication-image" src="/img/publications/CAC2025.jpg" alt="Graphical abstract of the CAC 2025 paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title one-line-title">Self-Triggered Sampling Design for Continuous-Time Linear Dynamical System</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, Y. Yang<sup>*</sup>, and X. Zhao</p><p class="publication-venue one-line-venue"><em>2025 China Automation Congress</em>, Harbin, China, October 10–14, 2025, pp. 3164–3169</p><a class="publication-button" href="/files/Publications/Conference/CAC2025.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://ieeexplore.ieee.org/document/11487443" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/CAC2025.bib" data-bib-title="CAC 2025">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, and Y. Yang*,
-      “<a class="pdf-link" href="/files/Publications/Conference/CCDC2026.pdf" target="_blank">Self-Triggered Nash Equilibrium Seeking for Multi-Player Linear Quadratic Differential Games</a>,”
-      in <em>2026 Chinese Control and Decision Conference</em>, Nanjing, China, May 15-18, 2026, pp. 3445-3450. 
-      <a href="https://ieeexplore.ieee.org/document/11560048" target="_blank">doi: 10.1109/CCDC69976.2026.11560048</a>.
-      (<strong>Oral Presentation</strong>)
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">CCDC 2026</span><div class="publication-image-wrap" data-label="Nash Equilibrium Seeking"><img class="publication-image" src="/img/publications/CCDC2026.jpg" alt="Graphical abstract of the CCDC 2026 paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title one-line-title">Self-Triggered Nash Equilibrium Seeking for Multi-Player Linear Quadratic Differential Games</p><p class="publication-authors"><strong class="my-name">T. Fei</strong> and Y. Yang<sup>*</sup>. (<strong>Oral Presentation</strong>)</p><p class="publication-venue one-line-venue"><em>2026 Chinese Control and Decision Conference</em>, Nanjing, China, May 15–18, 2026, pp. 3445–3450</p><a class="publication-button" href="/files/Publications/Conference/CCDC2026.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://ieeexplore.ieee.org/document/11560048" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/CCDC2026.bib" data-bib-title="CCDC 2026">BIB</button></div>
     </li>
-
-    <li>
-      <strong class="my-name">T. Fei</strong>, Z. Shan, Y. Wang, Y. Yang*, and J. Wang,
-      “<a class="pdf-link" href="/files/Publications/Conference/CSISIAC2026.pdf" target="_blank">Communication-Efficient Reinforcement Learning for Linear Quadratic Differential Zero-Sum Games</a>,”
-      in <em>2026 International Annual Conference on Complex Systems and Intelligent Science</em>, Hefei, China, May 15-17, 2026， pp. 491-496. (<strong>Best Paper Award</strong>)
-      <a href="https://ieeexplore.ieee.org/document/11585071" target="_blank">doi: 10.1109/CSIS-IAC70275.2026.11585071</a>.
+    <li class="publication-card">
+      <div class="publication-visual"><span class="publication-tag">CSIS-IAC 2026</span><div class="publication-image-wrap" data-label="Communication-Efficient RL"><img class="publication-image" src="/img/publications/CSISIAC2026.jpg" alt="Graphical abstract of the CSIS-IAC 2026 paper" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="publication-info"><p class="publication-title">Communication-Efficient Reinforcement Learning for Linear Quadratic Differential Zero-Sum Games</p><p class="publication-authors"><strong class="my-name">T. Fei</strong>, Z. Shan, Y. Wang, Y. Yang<sup>*</sup>, and J. Wang. (<strong>Best Paper Award</strong>)</p><p class="publication-venue"><em>2026 International Annual Conference on Complex Systems and Intelligent Science</em>, Hefei, China, May 15–17, 2026, pp. 491–496</p><a class="publication-button" href="/files/Publications/Conference/CSISIAC2026.pdf" target="_blank" rel="noopener">PDF</a><a class="publication-button" href="https://ieeexplore.ieee.org/document/11585071" target="_blank" rel="noopener">Link</a><button class="publication-button bib-button" type="button" data-bib-url="/files/Publications/bib/CSISIAC.bib" data-bib-title="CSIS-IAC 2026">BIB</button></div>
     </li>
   </ol>
 
   <h3>Patents</h3>
   <ol class="publication-list">
-    <li>
-      Y. Yang, <strong class="my-name">T. Fei</strong>, Z. Shan, et al.,
-      “<a href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank">Self-Triggered Robust Reinforcement Learning Method and Apparatus for Zero-Sum Games of Unmanned Surface Vehicles</a>,”
-      Publication No. CN122151484A.
-      <br>
-      In Chinese: <span class="chinese-title">面向无人艇的零和博弈自触发抗扰强化学习方法及装置</span>
-    </li>
-
-    <li>
-      Y. Yang, <strong class="my-name">T. Fei</strong>, Z. Shan, and Q. Li,
-      “<a href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank">Resilient Control for Power Buffers in DC Microgrids Against Denial-of-Service Attacks</a>,”
-      Publication No. CN121566407A.
-      <br>
-      In Chinese: <span class="chinese-title">面向拒绝服务攻击的直流微电网功率缓冲器弹性控制方法</span>
-    </li>
-
-    <li>
-      Y. Yang, Z. Shan, <strong class="my-name">T. Fei</strong>, et al.,
-      “<a href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank">Composite Game-Theoretic Reinforcement Learning for Quadrotor UAV Swarms</a>,”
-      Publication No. CN121879395B.
-      <br>
-      In Chinese: <span class="chinese-title">针对四旋翼无人机集群的复合博弈强化学习方法及装置</span>
-    </li>
-
-    <li>
-      Y. Yang, Z. Shan, <strong class="my-name">T. Fei</strong>, and Q. Li,
-      “<a href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank">Secure Control Method and Device for Power Buffers in DC Microgrids Against FDI Attacks</a>,”
-      Publication No. CN121440520A.
-      <br>
-      In Chinese: <span class="chinese-title">针对FDI攻击的直流微电网功率缓冲器安全控制方法及装置</span>
-    </li>
+    <li class="publication-card"><div class="publication-visual"><span class="publication-tag">Patent</span><div class="publication-image-wrap" data-label="USV Robust Reinforcement Learning"></div></div><div class="publication-info"><p class="publication-title">Self-Triggered Robust Reinforcement Learning Method and Apparatus for Zero-Sum Games of Unmanned Surface Vehicles</p><p class="publication-authors">Y. Yang, <strong class="my-name">T. Fei</strong>, Z. Shan, et al.</p><p class="publication-venue">Publication No. CN122151484A</p><p class="publication-note">面向无人艇的零和博弈自触发抗扰强化学习方法及装置</p><a class="publication-button" href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank" rel="noopener">LINK</a></div></li>
+    <li class="publication-card"><div class="publication-visual"><span class="publication-tag">Patent</span><div class="publication-image-wrap" data-label="DC Microgrid Resilient Control"></div></div><div class="publication-info"><p class="publication-title">Resilient Control for Power Buffers in DC Microgrids Against Denial-of-Service Attacks</p><p class="publication-authors">Y. Yang, <strong class="my-name">T. Fei</strong>, Z. Shan, and Q. Li</p><p class="publication-venue">Publication No. CN121566407A</p><p class="publication-note">面向拒绝服务攻击的直流微电网功率缓冲器弹性控制方法</p><a class="publication-button" href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank" rel="noopener">LINK</a></div></li>
+    <li class="publication-card"><div class="publication-visual"><span class="publication-tag">Patent</span><div class="publication-image-wrap" data-label="Quadrotor Swarm Game Learning"></div></div><div class="publication-info"><p class="publication-title">Composite Game-Theoretic Reinforcement Learning for Quadrotor UAV Swarms</p><p class="publication-authors">Y. Yang, Z. Shan, <strong class="my-name">T. Fei</strong>, et al.</p><p class="publication-venue">Publication No. CN121879395B</p><p class="publication-note">针对四旋翼无人机集群的复合博弈强化学习方法及装置</p><a class="publication-button" href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank" rel="noopener">LINK</a></div></li>
+    <li class="publication-card"><div class="publication-visual"><span class="publication-tag">Patent</span><div class="publication-image-wrap" data-label="DC Microgrid Secure Control"></div></div><div class="publication-info"><p class="publication-title">Secure Control Method and Device for Power Buffers in DC Microgrids Against FDI Attacks</p><p class="publication-authors">Y. Yang, Z. Shan, <strong class="my-name">T. Fei</strong>, and Q. Li</p><p class="publication-venue">Publication No. CN121440520A</p><p class="publication-note">针对FDI攻击的直流微电网功率缓冲器安全控制方法及装置</p><a class="publication-button" href="https://pss-system.cponline.cnipa.gov.cn/documents/detail?prevPageTit=changgui" target="_blank" rel="noopener">LINK</a></div></li>
   </ol>
 </section>
-  <!-- <p class="footer-note">Last updated manually.</p> -->
-</section>
+
+<div class="bib-modal" id="bib-modal" role="dialog" aria-modal="true" aria-labelledby="bib-modal-title" hidden>
+  <div class="bib-modal-dialog">
+    <div class="bib-modal-header">
+      <h4 class="bib-modal-title" id="bib-modal-title">BibTeX</h4>
+      <button class="bib-modal-close" id="bib-modal-close" type="button" aria-label="Close BibTeX window">&times;</button>
+    </div>
+    <div class="bib-modal-body">
+      <textarea class="bib-content" id="bib-content" readonly spellcheck="false" aria-label="BibTeX citation"></textarea>
+      <div class="bib-modal-actions">
+        <button class="bib-copy-button" id="bib-copy-button" type="button">Copy BibTeX</button>
+        <span class="bib-copy-status" id="bib-copy-status" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const modal = document.getElementById('bib-modal');
+    const modalTitle = document.getElementById('bib-modal-title');
+    const bibContent = document.getElementById('bib-content');
+    const closeButton = document.getElementById('bib-modal-close');
+    const copyButton = document.getElementById('bib-copy-button');
+    const copyStatus = document.getElementById('bib-copy-status');
+    let opener = null;
+
+    const closeModal = () => {
+      modal.hidden = true;
+      document.body.classList.remove('bib-modal-open');
+      copyStatus.textContent = '';
+      if (opener) opener.focus();
+    };
+
+    document.querySelectorAll('.bib-button').forEach((button) => {
+      button.addEventListener('click', async () => {
+        opener = button;
+        modalTitle.textContent = `${button.dataset.bibTitle} — BibTeX`;
+        bibContent.value = 'Loading BibTeX…';
+        copyButton.disabled = true;
+        copyStatus.textContent = '';
+        modal.hidden = false;
+        document.body.classList.add('bib-modal-open');
+        closeButton.focus();
+
+        try {
+          const response = await fetch(button.dataset.bibUrl, { cache: 'no-cache' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          bibContent.value = (await response.text()).trim();
+          copyButton.disabled = false;
+        } catch (error) {
+          bibContent.value = 'Unable to load the BibTeX file. Please check that the .bib filename and path are correct.';
+          copyStatus.textContent = `Failed to load: ${button.dataset.bibUrl}`;
+        }
+      });
+    });
+
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(bibContent.value);
+      } catch (error) {
+        bibContent.focus();
+        bibContent.select();
+        document.execCommand('copy');
+      }
+      copyStatus.textContent = 'Copied';
+    });
+
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.hidden) closeModal();
+    });
+  })();
+</script>
+<!-- <p class="footer-note">Last updated manually.</p> -->
 </main>
 </div>
 </body>
