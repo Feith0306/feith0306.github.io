@@ -19,7 +19,7 @@
         publications: "学术成果"
       },
       welcome: [
-        "您好，我是<strong>费天浩（Tianhao Fei）</strong>。欢迎访问我的交互式学术主页。",
+        "您好，我是<strong>费天浩（Tianhao Fei）</strong>。欢迎访问我的主页。",
         "您可以通过下方菜单了解我的教育背景、研究经历、学术成果与联系方式。"
       ],
       stories: {
@@ -60,7 +60,7 @@
         contact: {
           question: "如何与你联系？",
           answers: [
-            "如果您对我的研究感兴趣，并有合适的合作机会或博士名额，欢迎与我联系。",
+            "如果我的背景与您的研究兴趣契合，并有合适的合作机会或博士名额，我将非常期待与您取得联系。",
             '邮箱：<a href="mailto:feith@ieee.org">feith@ieee.org</a>',
             '电话：<a href="tel:+8618201430306">(+86) 182 0143 0306</a>',
             "微信：FTH18201430306"
@@ -85,8 +85,8 @@
         publications: "Publications"
       },
       welcome: [
-        "Hello, I am <strong>Tianhao Fei</strong>. You can also call me <strong>Feith</strong>. Welcome to my interactive academic profile.",
-        "Use the menu below to explore my education, research, publications, and contact details."
+        "Hello, I am <strong>Tianhao Fei</strong>. You can also call me <strong>Feith</strong>. Welcome to my homepage.",
+        "Please feel free to use the menu below to explore my education, research, publications, and contact details."
       ],
       stories: {
         profile: {
