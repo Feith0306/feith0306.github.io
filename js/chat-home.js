@@ -85,7 +85,7 @@
         publications: "Publications"
       },
       welcome: [
-        "Hello, I am <strong>Tianhao Fei</strong>. You can also call me <strong>Feith</strong>. Welcome to my homepage.",
+        "Hello, I am <strong>Tianhao Fei</strong>. Welcome to my homepage.",
         "Please feel free to use the menu below to explore my education, research, publications, and contact details."
       ],
       stories: {
