@@ -37,3 +37,10 @@ th {
 [class*=" fa-"] {
   font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands" !important;
 }
+
+/* Fluid 主题导航栏及功能按钮使用阿里 Iconfont，不能继承 Georgia */
+.iconfont {
+  font-family: "iconfont" !important;
+  font-style: normal;
+  font-weight: normal;
+}
