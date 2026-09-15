@@ -530,11 +530,15 @@ strong { color: #3f464d; }
     white-space: normal;
   }
   .work-item {
-    padding: 20px 20px;
+     border: 1px solid #d9e2e8;
+  border-radius: 14px;
+  padding: 28px 26px 22px;
+  margin-bottom: 28px;
+  box-sizing: border-box;
   }
 }
 
-.work-logo-figure {
+/* .work-logo-figure {
   margin: 24px 0 22px;
   padding: 18px 0;
   text-align: center;
@@ -549,6 +553,167 @@ strong { color: #3f464d; }
   height: auto;
   margin: 0 auto;
   object-fit: contain;
+} */
+
+/* 主体：左侧 LOGO + 右侧文字 */
+.work-main {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
+}
+
+
+/* ==============================
+   左侧 LOGO
+   ============================== */
+
+.work-logo-figure {
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+
+/* LOGO 图片本身 */
+.work-logo {
+  display: block;
+
+  width: 100%;
+  max-width: 230px;
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* ==============================
+   右侧内容
+   ============================== */
+
+.work-content {
+  min-width: 0;
+}
+
+
+/* 顶部机构 + 日期 */
+.work-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+
+  margin-bottom: 26px;
+}
+
+
+.work-header-text {
+  min-width: 0;
+}
+
+
+/* 单位名称 */
+.work-item-header h2 {
+  margin: 0 0 6px 0;
+  line-height: 1.25;
+}
+
+
+/* 岗位 */
+.work-role {
+  margin: 0;
+}
+
+
+/* 日期 */
+.work-date {
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: right;
+}
+
+
+/* 项目名称 */
+.work-project-title {
+  margin: 0 0 8px 0;
+}
+
+
+/* 项目描述 */
+.work-description {
+  margin: 0;
+  line-height: 1.7;
+}
+
+
+/* ==============================
+   标签
+   ============================== */
+
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  list-style: none;
+
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+
+.work-tags li {
+  padding: 5px 12px;
+
+  border: 1px solid #cfe3ec;
+  border-radius: 999px;
+
+  white-space: nowrap;
+}
+
+
+/* ==============================
+   Mobile
+   ============================== */
+
+@media (max-width: 768px) {
+
+  .work-item {
+    padding: 22px 18px;
+  }
+
+  .work-main {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .work-logo-figure {
+    justify-content: flex-start;
+  }
+
+  .work-logo {
+    max-width: 220px;
+  }
+
+  .work-item-header {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .work-date {
+    text-align: left;
+  }
+
+  .work-tags {
+    margin-top: 20px;
+  }
+
 }
 
 .personal-status {
