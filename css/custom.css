@@ -70,3 +70,44 @@ th {
 .custom-footer-update {
   margin: 0;
 }
+
+/* References: Two-column layout */
+.references-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.reference-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.reference-name {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.reference-item ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.reference-item li {
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+/* Mobile responsive layout */
+@media (max-width: 768px) {
+  .references-container {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .reference-item {
+    width: 100%;
+  }
+}
