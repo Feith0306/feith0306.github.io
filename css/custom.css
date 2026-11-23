@@ -71,3 +71,38 @@ th {
   margin: 0;
 }
 
+
+
+.references-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.reference-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.reference-card p {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+.reference-card a {
+  text-decoration: none;
+}
+
+.reference-card a:hover {
+  text-decoration: underline;
+}
+
+/* 手机或窄屏自动改为单列 */
+@media (max-width: 900px) {
+  .references-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
